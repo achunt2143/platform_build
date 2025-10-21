@@ -1,0 +1,33 @@
+################################################
+## A thin wrapper around BUILD_HOST_EXECUTABLE
+## Common flags for host native tests are added.
+################################################
+<<<<<<< HEAD
+$(call record-module-type,HOST_NATIVE_TEST)
+
+ifdef LOCAL_MODULE_CLASS
+ifneq ($(LOCAL_MODULE_CLASS),NATIVE_TESTS)
+$(error $(LOCAL_PATH): LOCAL_MODULE_CLASS must be NATIVE_TESTS with BUILD_HOST_NATIVE_TEST)
+endif
+endif
+
+LOCAL_MODULE_CLASS := NATIVE_TESTS
+
+include $(BUILD_SYSTEM)/host_test_internal.mk
+
+ifndef LOCAL_MULTILIB
+ifndef LOCAL_32_BIT_ONLY
+LOCAL_MULTILIB := both
+endif
+endif
+=======
+
+LOCAL_CFLAGS += -DGTEST_OS_LINUX -DGTEST_HAS_STD_STRING -O0 -g
+LOCAL_C_INCLUDES +=  \
+    external/gtest/include
+
+LOCAL_STATIC_LIBRARIES += libgtest_host libgtest_main_host
+LOCAL_SHARED_LIBRARIES +=
+>>>>>>> origin
+
+include $(BUILD_HOST_EXECUTABLE)

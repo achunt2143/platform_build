@@ -1,0 +1,37 @@
+###########################################
+## A thin wrapper around BUILD_EXECUTABLE
+## Common flags for native tests are added.
+###########################################
+<<<<<<< HEAD
+$(call record-module-type,NATIVE_TEST)
+
+ifdef LOCAL_MODULE_CLASS
+ifneq ($(LOCAL_MODULE_CLASS),NATIVE_TESTS)
+$(error $(LOCAL_PATH): LOCAL_MODULE_CLASS must be NATIVE_TESTS with BUILD_HOST_NATIVE_TEST)
+endif
+endif
+
+LOCAL_MODULE_CLASS := NATIVE_TESTS
+
+include $(BUILD_SYSTEM)/target_test_internal.mk
+
+ifndef LOCAL_MULTILIB
+ifndef LOCAL_32_BIT_ONLY
+LOCAL_MULTILIB := both
+endif
+=======
+
+LOCAL_CFLAGS += -DGTEST_OS_LINUX -DGTEST_HAS_STD_STRING
+LOCAL_C_INCLUDES += bionic \
+                    bionic/libstdc++/include \
+                    external/gtest/include \
+                    external/stlport/stlport
+LOCAL_STATIC_LIBRARIES += libgtest libgtest_main
+LOCAL_SHARED_LIBRARIES += libstlport
+
+ifndef LOCAL_MODULE_PATH
+LOCAL_MODULE_PATH := $(TARGET_OUT_DATA_NATIVE_TESTS)/$(LOCAL_MODULE)
+>>>>>>> origin
+endif
+
+include $(BUILD_EXECUTABLE)
