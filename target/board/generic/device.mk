@@ -14,7 +14,6 @@
 # limitations under the License.
 #
 
-<<<<<<< HEAD
 # NFC:
 #   Provide default libnfc-nci.conf file for devices that does not have one in
 #   vendor/etc because aosp system image (of aosp_$arch products) is going to
@@ -23,19 +22,3 @@
 #   NFC configuration file should be in vendor/etc, instead of system/etc
 PRODUCT_COPY_FILES += \
     device/generic/common/nfc/libnfc-nci.conf:system/etc/libnfc-nci.conf
-=======
-# This is a build configuration for the product aspects that
-# are specific to the emulator.
-
-PRODUCT_PROPERTY_OVERRIDES := \
-    ro.ril.hsxpa=1 \
-    ro.ril.gprsclass=10 \
-    ro.adb.qemud=1
-
-PRODUCT_COPY_FILES := \
-    development/data/etc/vold.conf:system/etc/vold.conf \
-    development/tools/emulator/system/camera/media_profiles.xml:system/etc/media_profiles.xml \
-
-PRODUCT_PACKAGES := \
-    audio.primary.goldfish
->>>>>>> origin

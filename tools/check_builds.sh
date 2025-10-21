@@ -41,11 +41,7 @@ function do_builds
     do
         rm -rf $TEST_BUILD_DIR/$PREFIX-$1
         make PRODUCT-$(echo $1 | sed "s/-.*//" )-installclean
-<<<<<<< HEAD
         make -j16 PRODUCT-$1 dist DIST_DIR=$TEST_BUILD_DIR/$PREFIX-$1
-=======
-        make -j6 PRODUCT-$1 dist DIST_DIR=$TEST_BUILD_DIR/$PREFIX-$1
->>>>>>> origin
         if [ $? -ne 0 ] ; then
             echo FAILED
             return
@@ -69,11 +65,7 @@ function compare_builds
         inputs="$inputs $TEST_BUILD_DIR/dist-$1/installed-files.txt"
         shift
     done
-<<<<<<< HEAD
     build/make/tools/compare_fileslist.py $inputs > $TEST_BUILD_DIR/sizes.html
-=======
-    build/tools/compare_fileslist.py $inputs > $TEST_BUILD_DIR/sizes.html
->>>>>>> origin
 }
 
 function check_builds
@@ -95,10 +87,6 @@ function diff_builds
         fi
         shift
     done
-<<<<<<< HEAD
     build/make/tools/compare_fileslist.py $inputs > $TEST_BUILD_DIR/sizes.html
-=======
-    build/tools/compare_fileslist.py $inputs > $TEST_BUILD_DIR/sizes.html
->>>>>>> origin
 }
 

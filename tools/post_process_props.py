@@ -16,7 +16,6 @@
 
 import sys
 
-<<<<<<< HEAD
 # Usage: post_process_props.py file.prop [blacklist_key, ...]
 # Blacklisted keys are removed from the property file, if present
 
@@ -25,14 +24,11 @@ import sys
 # so we decrease the value by 1 here.
 PROP_VALUE_MAX = 91
 
-=======
->>>>>>> origin
 # Put the modifications that you need to make into the /system/build.prop into this
 # function. The prop object has get(name) and put(name,value) methods.
 def mangle_build_prop(prop):
   pass
 
-<<<<<<< HEAD
 # Put the modifications that you need to make into /vendor/default.prop and
 # /odm/default.prop into this function. The prop object has get(name) and
 # put(name,value) methods.
@@ -40,17 +36,12 @@ def mangle_default_prop_override(prop):
   pass
 
 # Put the modifications that you need to make into the /system/etc/prop.default into this
-=======
-
-# Put the modifications that you need to make into the /system/build.prop into this
->>>>>>> origin
 # function. The prop object has get(name) and put(name,value) methods.
 def mangle_default_prop(prop):
   # If ro.debuggable is 1, then enable adb on USB by default
   # (this is for userdebug builds)
   if prop.get("ro.debuggable") == "1":
     val = prop.get("persist.sys.usb.config")
-<<<<<<< HEAD
     if "adb" not in val:
       if val == "":
         val = "adb"
@@ -94,18 +85,6 @@ class PropFile:
         key, value = line.split("=", 1)
         props[key] = value
     return props
-=======
-    if val == "":
-      val = "adb"
-    else:
-      val = val + ",adb"
-    prop.put("persist.sys.usb.config", val)
-
-
-class PropFile:
-  def __init__(self, lines):
-    self.lines = [s[:-1] for s in lines]
->>>>>>> origin
 
   def get(self, name):
     key = name + "="
@@ -122,13 +101,10 @@ class PropFile:
         return
     self.lines.append(key + value)
 
-<<<<<<< HEAD
   def delete(self, name):
     key = name + "="
     self.lines = [ line for line in self.lines if not line.startswith(key) ]
 
-=======
->>>>>>> origin
   def write(self, f):
     f.write("\n".join(self.lines))
     f.write("\n")
@@ -140,7 +116,6 @@ def main(argv):
   f.close()
 
   properties = PropFile(lines)
-<<<<<<< HEAD
 
   if filename.endswith("/build.prop"):
     mangle_build_prop(properties)
@@ -149,17 +124,11 @@ def main(argv):
     mangle_default_prop_override(properties)
   elif (filename.endswith("/default.prop") or # legacy
         filename.endswith("/prop.default")):
-=======
-  if filename.endswith("/build.prop"):
-    mangle_build_prop(properties)
-  elif filename.endswith("/default.prop"):
->>>>>>> origin
     mangle_default_prop(properties)
   else:
     sys.stderr.write("bad command line: " + str(argv) + "\n")
     sys.exit(1)
 
-<<<<<<< HEAD
   if not validate(properties):
     sys.exit(1)
 
@@ -167,8 +136,6 @@ def main(argv):
   for key in argv[2:]:
     properties.delete(key)
 
-=======
->>>>>>> origin
   f = open(filename, 'w+')
   properties.write(f)
   f.close()

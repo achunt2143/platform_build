@@ -14,65 +14,16 @@
 # limitations under the License.
 #
 
-# This is a generic phone product that isn't specialized for a specific device.
-# It includes the base Android platform.
+# This product is a generic phone or tablet, that doesn't have telephony.
+#
+# Note: Do not add any contents directly to this file. Choose either
+# handheld_system or handheld_vendor depending on partition (also consider
+# base_<x>.mk or media_<x>.mk.
 
-PRODUCT_POLICY := android.policy_phone
+$(call inherit-product, $(SRC_TARGET_DIR)/product/handheld_system.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/handheld_vendor.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/handheld_product.mk)
 
-PRODUCT_PACKAGES := \
-    DeskClock \
-    Bluetooth \
-    Calculator \
-    Calendar \
-    CertInstaller \
-    DrmProvider \
-    Email \
-    Exchange \
-    Gallery2 \
-    LatinIME \
-    Launcher2 \
-    Music \
-    MusicFX \
-    Provision \
-    Phone \
-    QuickSearchBox \
-    Settings \
-    Sync \
-    SystemUI \
-    Updater \
-    CalendarProvider \
-    SyncProvider \
-    bluetooth-health \
-    hostapd \
-    wpa_supplicant.conf
-
-PRODUCT_PACKAGES += \
-    icu.dat
-
-PRODUCT_PACKAGES += \
-    libvideoeditor_jni \
-    libvideoeditorplayer \
-    libvideoeditor_core
-
-PRODUCT_PACKAGES += \
-    audio.primary.default \
-    audio_policy.default
-
-PRODUCT_COPY_FILES := \
-        system/bluetooth/data/audio.conf:system/etc/bluetooth/audio.conf \
-        system/bluetooth/data/auto_pairing.conf:system/etc/bluetooth/auto_pairing.conf \
-        system/bluetooth/data/blacklist.conf:system/etc/bluetooth/blacklist.conf \
-        system/bluetooth/data/input.conf:system/etc/bluetooth/input.conf \
-        system/bluetooth/data/network.conf:system/etc/bluetooth/network.conf \
-        system/bluetooth/data/main.conf:system/etc/bluetooth/main.conf \
-        frameworks/base/media/libeffects/data/audio_effects.conf:system/etc/audio_effects.conf
-
-$(call inherit-product-if-exists, external/moztt/fonts.mk)
-$(call inherit-product-if-exists, external/lohit-fonts/fonts.mk)
-$(call inherit-product-if-exists, frameworks/base/data/keyboards/keyboards.mk)
-$(call inherit-product, $(SRC_TARGET_DIR)/product/core.mk)
-
-# Overrides
 PRODUCT_BRAND := generic
 PRODUCT_DEVICE := generic
 PRODUCT_NAME := generic_no_telephony

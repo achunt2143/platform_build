@@ -22,19 +22,15 @@
 # If running on an emulator or some other device that has a LAN connection
 # that isn't a wifi connection. This will instruct init.rc to enable the
 # network connection so that you can use it with ADB
-<<<<<<< HEAD
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/emulator.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base_telephony.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/board/generic_x86/device.mk)
 
-=======
->>>>>>> origin
 ifdef NET_ETH0_STARTONBOOT
   PRODUCT_PROPERTY_OVERRIDES += net.eth0.startonboot=1
 endif
 
-<<<<<<< HEAD
 # Ensure we package the BIOS files too.
 PRODUCT_HOST_PACKAGES += \
 	bios.bin \
@@ -43,25 +39,8 @@ PRODUCT_HOST_PACKAGES += \
 # Enable dynamic partition size
 PRODUCT_USE_DYNAMIC_PARTITION_SIZE := true
 
-=======
-PRODUCT_PACKAGES := \
-    Camera
-
-$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base.mk)
-$(call inherit-product, $(SRC_TARGET_DIR)/board/generic_x86/device.mk)
-
-# Ensure we package the BIOS files too.
-PRODUCT_PACKAGES += \
-	bios.bin \
-	vgabios-cirrus.bin \
-
->>>>>>> origin
 # Overrides
 PRODUCT_NAME := full_x86
 PRODUCT_DEVICE := generic_x86
 PRODUCT_BRAND := Android
-<<<<<<< HEAD
 PRODUCT_MODEL := AOSP on IA Emulator
-=======
-PRODUCT_MODEL := Full Android on x86 Emulator
->>>>>>> origin

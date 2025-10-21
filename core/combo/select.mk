@@ -18,71 +18,19 @@
 #
 # Inputs:
 #	combo_target -- prefix for final variables (HOST_ or TARGET_)
+#	combo_2nd_arch_prefix -- it's defined if this is loaded for the 2nd arch.
 #
 
 # Build a target string like "linux-arm" or "darwin-x86".
-combo_os_arch := $($(combo_target)OS)-$($(combo_target)ARCH)
+combo_os_arch := $($(combo_target)OS)-$($(combo_target)$(combo_2nd_arch_prefix)ARCH)
+
+combo_var_prefix := $(combo_2nd_arch_prefix)$(combo_target)
 
 # Set reasonable defaults for the various variables
 
-$(combo_target)CC := $(CC)
-$(combo_target)CXX := $(CXX)
-$(combo_target)AR := $(AR)
-$(combo_target)STRIP := $(STRIP)
+$(combo_var_prefix)GLOBAL_ARFLAGS := cqsD -format=gnu
 
-$(combo_target)BINDER_MINI := 0
-
-$(combo_target)HAVE_EXCEPTIONS := 0
-$(combo_target)HAVE_UNIX_FILE_PATH := 1
-$(combo_target)HAVE_WINDOWS_FILE_PATH := 0
-$(combo_target)HAVE_RTTI := 1
-$(combo_target)HAVE_CALL_STACKS := 1
-$(combo_target)HAVE_64BIT_IO := 1
-$(combo_target)HAVE_CLOCK_TIMERS := 1
-$(combo_target)HAVE_PTHREAD_RWLOCK := 1
-$(combo_target)HAVE_STRNLEN := 1
-$(combo_target)HAVE_STRERROR_R_STRRET := 1
-$(combo_target)HAVE_STRLCPY := 0
-$(combo_target)HAVE_STRLCAT := 0
-$(combo_target)HAVE_KERNEL_MODULES := 0
-
-$(combo_target)GLOBAL_CFLAGS := -fno-exceptions -Wno-multichar $($(combo_target)EXTRA_GLOBAL_CFLAGS)
-$(combo_target)RELEASE_CFLAGS := -O2 -g -fno-strict-aliasing $($(combo_target)EXTRA_RELEASE_CFLAGS)
-$(combo_target)GLOBAL_LDFLAGS := $($(combo_target)EXTRA_GLOBAL_LDFLAGS)
-$(combo_target)GLOBAL_ARFLAGS := crsP
-
-$(combo_target)EXECUTABLE_SUFFIX :=
-$(combo_target)SHLIB_SUFFIX := .so
-$(combo_target)JNILIB_SUFFIX := $($(combo_target)SHLIB_SUFFIX)
-$(combo_target)STATIC_LIB_SUFFIX := .a
+$(combo_var_prefix)STATIC_LIB_SUFFIX := .a
 
 # Now include the combo for this specific target.
 include $(BUILD_COMBOS)/$(combo_target)$(combo_os_arch).mk
-
-# If using distcc, make sure we get full static paths to the compilers
-ifneq ($(USE_DISTCC),)
-  $(combo_target)CC := $(realpath $($(combo_target)CC))
-  $(combo_target)CXX := $(realpath $($(combo_target)CXX))
-endif
-
-ifneq ($(USE_CCACHE),)
-  CCACHE_HOST_TAG := $(HOST_PREBUILT_TAG)
-  # If we are cross-compiling Windows binaries on Linux
-  # then use the linux ccache binary instead.
-  ifeq ($(HOST_OS)-$(BUILD_OS),windows-linux)
-    CCACHE_HOST_TAG := linux-$(BUILD_ARCH)
-  endif
-  ccache := prebuilt/$(CCACHE_HOST_TAG)/ccache/ccache
-  # Check that the executable is here.
-  ccache := $(strip $(wildcard $(ccache)))
-  ifdef ccache
-    # prepend ccache if necessary
-    ifneq ($(ccache),$(firstword $($(combo_target)CC)))
-      $(combo_target)CC := $(ccache) $($(combo_target)CC)
-    endif
-    ifneq ($(ccache),$(firstword $($(combo_target)CXX)))
-      $(combo_target)CXX := $(ccache) $($(combo_target)CXX)
-    endif
-    ccache =
-  endif
-endif

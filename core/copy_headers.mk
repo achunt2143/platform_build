@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ifneq (,$(strip $(LOCAL_COPY_HEADERS)))
 ###########################################################
 ## Copy headers to the install tree
@@ -26,15 +25,6 @@ ifndef LOCAL_USE_VNDK
 $(shell echo $(LOCAL_MODULE_MAKEFILE): $(LOCAL_MODULE): Only vendor modules using LOCAL_USE_VNDK may use LOCAL_COPY_HEADERS >&2)
 $(error done)
 endif
-=======
-###########################################################
-## Copy headers to the install tree
-###########################################################
-ifneq ($(strip $(LOCAL_IS_HOST_MODULE)),)
-  my_prefix := HOST_
-else
-  my_prefix := TARGET_
->>>>>>> origin
 endif
 
 # Create a rule to copy each header, and make the
@@ -45,7 +35,6 @@ endif
 $(foreach header,$(LOCAL_COPY_HEADERS), \
   $(eval _chFrom := $(LOCAL_PATH)/$(header)) \
   $(eval _chTo := \
-<<<<<<< HEAD
       $(if $(LOCAL_COPY_HEADERS_TO),\
         $(TARGET_OUT_HEADERS)/$(LOCAL_COPY_HEADERS_TO)/$(notdir $(header)),\
         $(TARGET_OUT_HEADERS)/$(notdir $(header)))) \
@@ -58,11 +47,3 @@ _chFrom :=
 _chTo :=
 
 endif # LOCAL_COPY_HEADERS
-=======
-      $($(my_prefix)OUT_HEADERS)/$(LOCAL_COPY_HEADERS_TO)/$(notdir $(header))) \
-  $(eval $(call copy-one-header,$(_chFrom),$(_chTo))) \
-  $(eval all_copied_headers: $(_chTo)) \
- )
-_chFrom :=
-_chTo :=
->>>>>>> origin

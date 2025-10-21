@@ -5,10 +5,7 @@ usage: zipalign [-f] [-v] <align> infile.zip outfile.zip
 
   -c : check alignment only (does not modify file)
   -f : overwrite existing outfile.zip
-<<<<<<< HEAD
   -p : page align stored shared object files
-=======
->>>>>>> origin
   -v : verbose output
   <align> is in bytes, e.g. "4" provides 32-bit alignment
   infile.zip is an existing Zip archive
@@ -37,10 +34,7 @@ By default, zipalign will not overwrite an existing output file.  With the
 
 You can use the "-c" flag to test whether a zip archive is properly aligned.
 
-<<<<<<< HEAD
 The "-p" flag aligns any file with a ".so" extension, and which is stored
 uncompressed in the zip archive, to a 4096-byte page boundary.  This
 facilitates directly loading shared libraries from inside a zip archive.
 
-=======
->>>>>>> origin

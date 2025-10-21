@@ -26,10 +26,7 @@ tags in the given input file.
 import cStringIO
 import getopt
 import os
-<<<<<<< HEAD
 import os.path
-=======
->>>>>>> origin
 import re
 import sys
 
@@ -54,20 +51,14 @@ for o, a in opts:
     print >> sys.stderr, "unhandled option %s" % (o,)
     sys.exit(1)
 
-<<<<<<< HEAD
 if len(args) != 1 and len(args) != 2:
   print "need one or two input files, not %d" % (len(args),)
-=======
-if len(args) != 2:
-  print "need exactly two input files, not %d" % (len(args),)
->>>>>>> origin
   print __doc__
   sys.exit(1)
 
 fn = args[0]
 tagfile = event_log_tags.TagFile(fn)
 
-<<<<<<< HEAD
 if len(args) > 1:
   # Load the merged tag file (which should have numbers assigned for all
   # tags.  Use the numbers from the merged file to fill in any missing
@@ -91,24 +82,6 @@ else:
   for t in tagfile.tags:
     if t.tagnum is None:
       tagfilef.AddError("tag \"%s\" has no number" % (tagname,), tag.linenum)
-=======
-# Load the merged tag file (which should have numbers assigned for all
-# tags.  Use the numbers from the merged file to fill in any missing
-# numbers from the input file.
-merged_fn = args[1]
-merged_tagfile = event_log_tags.TagFile(merged_fn)
-merged_by_name = dict([(t.tagname, t) for t in merged_tagfile.tags])
-for t in tagfile.tags:
-  if t.tagnum is None:
-    if t.tagname in merged_by_name:
-      t.tagnum = merged_by_name[t.tagname].tagnum
-    else:
-      # We're building something that's not being included in the
-      # product, so its tags don't appear in the merged file.  Assign
-      # them all an arbitrary number so we can emit the java and
-      # compile the (unused) package.
-      t.tagnum = 999999
->>>>>>> origin
 
 if "java_package" not in tagfile.options:
   tagfile.AddError("java_package option not specified", linenum=0)
@@ -163,11 +136,7 @@ def javaName(name):
     out += "_"
   return out
 
-<<<<<<< HEAD
 javaTypes = ["ERROR", "int", "long", "String", "Object[]", "float"]
-=======
-javaTypes = ["ERROR", "int", "long", "String", "Object[]"]
->>>>>>> origin
 for t in tagfile.tags:
   methodName = javaName("write_" + t.tagname)
   if t.description:
@@ -183,11 +152,8 @@ for t in tagfile.tags:
 
 buffer.write("}\n");
 
-<<<<<<< HEAD
 output_dir = os.path.dirname(output_file)
 if not os.path.exists(output_dir):
   os.makedirs(output_dir)
 
-=======
->>>>>>> origin
 event_log_tags.WriteOutput(output_file, buffer)

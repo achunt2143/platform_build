@@ -41,16 +41,9 @@
 int process(int argc, char* const argv[], unsigned int options)
 {
     int retVal = 0;
-<<<<<<< HEAD
     int i;
     char* stripDest = NULL;
     int stripDestLen;
-=======
-    int i, cc;
-    char* stripDest = NULL;
-    int stripDestLen;
-    struct stat destStat;
->>>>>>> origin
     bool destMustBeDir = false;
     struct stat sb;
 

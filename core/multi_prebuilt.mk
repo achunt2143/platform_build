@@ -14,15 +14,12 @@
 # limitations under the License.
 #
 
-<<<<<<< HEAD
 $(call record-module-type,MULTI_PREBUILT)
 ifneq ($(LOCAL_MODULE)$(LOCAL_MODULE_CLASS),)
 $(error $(LOCAL_PATH): LOCAL_MODULE or LOCAL_MODULE_CLASS not needed by \
   BUILD_MULTI_PREBUILT, use BUILD_PREBUILT instead!)
 endif
 
-=======
->>>>>>> origin
 # Save these before they get cleared by CLEAR_VARS.
 prebuilt_static_libs := $(filter %.a,$(LOCAL_PREBUILT_LIBS))
 prebuilt_shared_libs := $(filter-out %.a,$(LOCAL_PREBUILT_LIBS))
@@ -41,10 +38,6 @@ multi_prebuilt_once := true
 # $(2): IS_HOST_MODULE
 # $(3): MODULE_CLASS
 # $(4): MODULE_TAGS
-<<<<<<< HEAD
-=======
-# $(5): OVERRIDE_BUILT_MODULE_PATH
->>>>>>> origin
 # $(6): UNINSTALLABLE_MODULE
 # $(7): BUILT_MODULE_STEM
 # $(8): LOCAL_STRIP_MODULE
@@ -62,10 +55,6 @@ $(foreach t,$(1), \
   $(eval LOCAL_IS_HOST_MODULE := $(2)) \
   $(eval LOCAL_MODULE_CLASS := $(3)) \
   $(eval LOCAL_MODULE_TAGS := $(4)) \
-<<<<<<< HEAD
-=======
-  $(eval OVERRIDE_BUILT_MODULE_PATH := $(5)) \
->>>>>>> origin
   $(eval LOCAL_UNINSTALLABLE_MODULE := $(6)) \
   $(eval tw := $(subst :, ,$(strip $(t)))) \
   $(if $(word 3,$(tw)),$(error $(LOCAL_PATH): Bad prebuilt filename '$(t)')) \
@@ -79,7 +68,6 @@ $(foreach t,$(1), \
   $(if $(7), \
     $(eval LOCAL_BUILT_MODULE_STEM := $(7)) \
    , \
-<<<<<<< HEAD
     $(if $(word 2,$(tw)), \
       $(eval LOCAL_BUILT_MODULE_STEM := $(LOCAL_MODULE)$(suffix $(LOCAL_SRC_FILES))) \
      , \
@@ -88,13 +76,6 @@ $(foreach t,$(1), \
    ) \
   $(eval LOCAL_MODULE_SUFFIX := $(suffix $(LOCAL_SRC_FILES))) \
   $(eval LOCAL_STRIP_MODULE := $(8)) \
-=======
-    $(eval LOCAL_BUILT_MODULE_STEM := $(notdir $(LOCAL_SRC_FILES))) \
-   ) \
-  $(eval LOCAL_MODULE_SUFFIX := $(suffix $(LOCAL_SRC_FILES))) \
-  $(if $(filter user,$(TARGET_BUILD_VARIANT)), \
-    $(eval LOCAL_STRIP_MODULE := $(8))) \
->>>>>>> origin
   $(eval include $(BUILD_PREBUILT)) \
  )
 endef
@@ -115,11 +96,7 @@ $(call auto-prebuilt-boilerplate, \
     $(prebuilt_is_host), \
     SHARED_LIBRARIES, \
     $(prebuilt_module_tags), \
-<<<<<<< HEAD
     , \
-=======
-    $($(if $(prebuilt_is_host),HOST,TARGET)_OUT_INTERMEDIATE_LIBRARIES), \
->>>>>>> origin
     , \
     , \
     $(prebuilt_strip_module))

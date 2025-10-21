@@ -19,12 +19,6 @@
 # build quite specifically for the emulator, and might not be
 # entirely appropriate to inherit from for on-device configurations.
 
-<<<<<<< HEAD
-=======
-PRODUCT_PACKAGES := \
-    VoiceDialer
-
->>>>>>> origin
 PRODUCT_PROPERTY_OVERRIDES := \
     keyguard.no_require_sim=true \
     ro.com.android.dataroaming=true
@@ -35,10 +29,4 @@ PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/handheld_core_hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/handheld_core_hardware.xml
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base.mk)
-=======
-#PRODUCT_COPY_FILES := \
-    development/data/etc/apns-conf.xml:system/etc/apns-conf.xml
-
-$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base.mk)
->>>>>>> origin
 $(call inherit-product, $(SRC_TARGET_DIR)/product/telephony.mk)

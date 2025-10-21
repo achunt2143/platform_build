@@ -19,7 +19,6 @@
 # classpaths.  They can, however, be included wholesale in
 # other java modules.
 
-<<<<<<< HEAD
 $(call record-module-type,STATIC_JAVA_LIBRARY)
 LOCAL_UNINSTALLABLE_MODULE := true
 LOCAL_IS_STATIC_JAVA_LIBRARY := true
@@ -245,9 +244,4 @@ endif  # need_compile_res
 # Reset internal variables.
 aar_classes_jar :=
 all_res_assets :=
-=======
-LOCAL_UNINSTALLABLE_MODULE := true
-LOCAL_IS_STATIC_JAVA_LIBRARY := true
-include $(BUILD_SYSTEM)/java_library.mk
->>>>>>> origin
 LOCAL_IS_STATIC_JAVA_LIBRARY :=

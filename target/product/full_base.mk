@@ -20,21 +20,29 @@
 # in inherited configurations.
 
 PRODUCT_PACKAGES := \
-    drmserver \
-    libdrmframework \
-    libdrmframework_jni \
     libfwdlockengine \
-    OpenWnn \
-    PinyinIME \
-    libWnnEngDic \
-    libWnnJpnDic \
-    libwnndict \
-    VideoEditor \
     WAPPushManager
+
+PRODUCT_PACKAGES += \
+    LiveWallpapersPicker \
+    PhotoTable
+
+# Bluetooth:
+#   audio.a2dp.default is a system module. Generic system image includes
+#   audio.a2dp.default to support A2DP if board has the capability.
+PRODUCT_PACKAGES += \
+    audio.a2dp.default
+
+# Net:
+#   Vendors can use the platform-provided network configuration utilities (ip,
+#   iptable, etc.) to configure the Linux networking stack, but these utilities
+#   do not yet include a HIDL interface wrapper. This is a solution on
+#   Android O.
+PRODUCT_PACKAGES += \
+    netutils-wrapper-1.0
 
 # Additional settings used in all AOSP builds
 PRODUCT_PROPERTY_OVERRIDES := \
-    ro.com.android.dateformat=MM-dd-yyyy \
     ro.config.ringtone=Ring_Synth_04.ogg \
     ro.config.notification_sound=pixiedust.ogg
 
@@ -44,13 +52,11 @@ PRODUCT_LOCALES := en_US
 # Get some sounds
 # $(call inherit-product-if-exists, frameworks/base/data/sounds/AllAudio.mk)
 
-# Get the TTS language packs
-$(call inherit-product-if-exists, external/svox/pico/lang/all_pico_languages.mk)
-
 # Get a list of languages.
-$(call inherit-product, $(SRC_TARGET_DIR)/product/locales_full.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 
 # Get everything else from the parent package
 $(call inherit-product, $(SRC_TARGET_DIR)/product/generic_no_telephony.mk)
 
-$(call inherit-product, gonk-misc/b2g.mk)
+# Add adb keys to debuggable AOSP builds (if they exist)
+$(call inherit-product-if-exists, vendor/google/security/adb/vendor_key.mk)

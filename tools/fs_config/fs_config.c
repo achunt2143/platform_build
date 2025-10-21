@@ -15,21 +15,15 @@
  */
 
 #include <stdio.h>
-<<<<<<< HEAD
 #include <stdlib.h>
-=======
->>>>>>> origin
 #include <sys/stat.h>
 #include <errno.h>
 #include <unistd.h>
 #include <string.h>
-<<<<<<< HEAD
 #include <inttypes.h>
 
 #include <selinux/selinux.h>
 #include <selinux/label.h>
-=======
->>>>>>> origin
 
 #include "private/android_filesystem_config.h"
 
@@ -38,7 +32,6 @@
 // filename along with its desired uid, gid, and mode (in octal).
 // The leading slash should be stripped from the input.
 //
-<<<<<<< HEAD
 // After the first 4 columns, optional key=value pairs are emitted
 // for each file.  Currently, the following keys are supported:
 // * -S: selabel=[selinux_label]
@@ -58,22 +51,10 @@
 //
 //      system/etc/dbus.conf 1002 1002 440 selabel=u:object_r:system_file:s0
 //      data/app 1000 1000 771 selabel=u:object_r:apk_data_file:s0
-=======
-// Example input:
-//
-//    system/etc/dbus.conf
-//    data/app/
-//
-// Output:
-//
-//    system/etc/dbus.conf 1002 1002 440
-//    data/app 1000 1000 771
->>>>>>> origin
 //
 // Note that the output will omit the trailing slash from
 // directories.
 
-<<<<<<< HEAD
 static struct selabel_handle* get_sehnd(const char* context_file) {
   struct selinux_opt seopts[] = { { SELABEL_OPT_PATH, context_file } };
   struct selabel_handle* sehnd = selabel_open(SELABEL_CTX_FILE, seopts, 1);
@@ -128,10 +109,6 @@ int main(int argc, char** argv) {
       root_path[root_len] = '\0';
     }
   }
-=======
-int main(int argc, char** argv) {
-  char buffer[1024];
->>>>>>> origin
 
   while (fgets(buffer, 1023, stdin) != NULL) {
     int is_dir = 0;
@@ -140,12 +117,9 @@ int main(int argc, char** argv) {
       switch (buffer[i]) {
         case '\n':
           buffer[i-is_dir] = '\0';
-<<<<<<< HEAD
           if (i == 0) {
             is_dir = 1; // empty line is considered as root directory
           }
-=======
->>>>>>> origin
           i = 1025;
           break;
         case '/':
@@ -158,7 +132,6 @@ int main(int argc, char** argv) {
     }
 
     unsigned uid = 0, gid = 0, mode = 0;
-<<<<<<< HEAD
     uint64_t capabilities;
     fs_config(buffer, is_dir, product_out_path, &uid, &gid, &mode, &capabilities);
     if (root_path != NULL && strcmp(buffer, root_path) == 0) {
@@ -199,10 +172,6 @@ int main(int argc, char** argv) {
     }
 
     printf("\n");
-=======
-    fs_config(buffer, is_dir, &uid, &gid, &mode);
-    printf("%s %d %d %o\n", buffer, uid, gid, mode);
->>>>>>> origin
   }
   return 0;
 }

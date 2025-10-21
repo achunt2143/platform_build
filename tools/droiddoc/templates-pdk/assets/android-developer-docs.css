@@ -34,13 +34,6 @@
   font-size:12px;
 }
 
-<<<<<<< HEAD
-=======
-#side-nav.not-resizable {
-  background:url('images/sidenav-rule.png') no-repeat 243px 0;
-}
-
->>>>>>> origin
 #resize-packages-nav {
 /* keeps the resize handle below the h-scroll handle */
   height:270px;
@@ -68,17 +61,12 @@
 }
 
 #side-nav ul ul {
-<<<<<<< HEAD
   margin: .5em 0 0 0;
-=======
-  margin: .35em 0 0 0;
->>>>>>> origin
   padding: 0;
 }
 
 #side-nav li {
   padding:0;
-<<<<<<< HEAD
   padding:1px 0 1px 0;
   zoom:1;
 }
@@ -86,14 +74,6 @@
 #side-nav li span.heading,
 #side-nav li h2 {
   display:block;
-=======
-  line-height:16px;
-  white-space:nowrap;
-  zoom:1;
-}
-
-#side-nav li h2 {
->>>>>>> origin
   font-size:12px;
   font-weight: bold;
   margin:.5em 0 0 0;
@@ -101,10 +81,7 @@
 }
 
 #side-nav li a {
-<<<<<<< HEAD
   display: inline-block; /* needed to apply padding to line-wraps */
-=======
->>>>>>> origin
   text-decoration:none;
   padding: 0 0 0 18px;
   zoom:1;
@@ -406,7 +383,6 @@ div.api-level a {
   color:#999;
 }
 
-<<<<<<< HEAD
 div#deprecatedSticker {
   display:none;
   z-index:99;
@@ -422,8 +398,6 @@ div#deprecatedSticker {
   -webkit-box-shadow:-5px 5px 10px #ccc;
 }
 
-=======
->>>>>>> origin
 div#naMessage {
   display:none;
   width:555px;
@@ -432,24 +406,16 @@ div#naMessage {
 }
 
 div#naMessage div {
-<<<<<<< HEAD
   z-index:99;
-=======
->>>>>>> origin
   width:450px;
   position:fixed;
   margin:50px 0;
   padding:4em 4em 3em;
   background:#FFF;
-<<<<<<< HEAD
   border:1px solid #dddd00;
   box-shadow:-10px 10px 40px #888;
   -moz-box-shadow:-10px 10px 40px #888;
   -webkit-box-shadow:-10px 10px 40px #888;
-=======
-  background:rgba(255,255,255,0.7);
-  border:1px solid #dddd00;
->>>>>>> origin
 }
 /* IE6 can't position fixed */
 * html div#naMessage div { position:absolute; }
@@ -571,22 +537,14 @@ hr {
 }
 
 #jd-content h3 {
-<<<<<<< HEAD
   font-size:1.3em;
   color:#3a3a3a;
   padding: 0;
   margin: 1.5em 0 .65em 0;
-=======
-  font-size:1.2em;
-  color:#222;
-  padding: .75em 0 .65em 0;
-  margin:0;
->>>>>>> origin
 }
 
 #jd-content h4 {
   font-size:1.1em;
-<<<<<<< HEAD
   color:#3a3a3a;
   padding: 0;
   margin: 1.25em 0 .65em 0;
@@ -597,10 +555,6 @@ hr {
   color:#3a3a3a;
   padding: 0;
   margin: 1em 0 .65em 0;
-=======
-  margin-bottom:.5em;
-  color:#222;
->>>>>>> origin
 }
 
 #jd-content .small-header {
@@ -623,11 +577,7 @@ hr {
 
 #jd-content li img,
 #jd-content dd img {
-<<<<<<< HEAD
   margin:.5em 0 .5em 1em;
-=======
-  margin:.5em 0 0 1em;
->>>>>>> origin
 }
 
 .nolist {
@@ -756,7 +706,6 @@ h5.jd-tagtitle {
   width:auto;
 }
 
-<<<<<<< HEAD
 div.design-announce {
   border-top:1px solid #33B5E5;
   border-bottom:1px solid #33B5E5;
@@ -769,8 +718,6 @@ div.design-announce p {
   margin: .5em 0 0 0;
 }
 
-=======
->>>>>>> origin
 div.special {
   padding: .5em 1em 1em 1em;
   margin: 0 0 1em;
@@ -781,25 +728,6 @@ div.special {
   -webkit-border-radius:5px;
 }
 
-<<<<<<< HEAD
-=======
-.toggle-content-toggleme {
-  display:none;
-}
-
-.toggle-content-button {
-  font-size:.9em;
-  line-height:.9em;
-  text-decoration:none;
-  position:relative;
-  top:5px;
-}
-
-.toggle-content-button:hover {
-  text-decoration:underline;
-}
-
->>>>>>> origin
 div.special p {
   margin: .5em 0 0 0;
 }
@@ -822,7 +750,6 @@ div.special ol li {
   padding:0;
 }
 
-<<<<<<< HEAD
 #jd-content div.special.reference h2,
 #jd-content div.special.reference h3,
 #jd-content div.special.reference h4 {
@@ -837,26 +764,18 @@ div.special ol li {
 p.note, div.note,
 p.caution, div.caution,
 p.warning, div.warning {
-=======
-p.note, p.caution, p.warning {
->>>>>>> origin
   margin: 1em;
   padding: 0 0 0 .5em;
   border-left: 4px solid;
 }
 
-<<<<<<< HEAD
 p.special-note,
 div.special-note {
-=======
-p.special-note {
->>>>>>> origin
   background-color:#EBF3DB;
   padding:10px 20px;
   margin:0 0 1em;
 }
 
-<<<<<<< HEAD
 p.note,
 div.note {
  border-color: #99aacc;
@@ -877,6 +796,7 @@ li .caution,
 li .warning {
   margin: .5em 0 0 0;
   padding: .2em .5em .2em .9em;
+>>>>>>> origin
 }
 
 /* Makes sure the first paragraph does not add top-whitespace within the box*/
@@ -885,27 +805,6 @@ li .caution>p:first-child,
 li .warning>p:first-child {
   margin-top:0;
   padding-top:0;
-=======
-p.note {
- border-color: #99aacc;
-}
-
-p.warning {
-  border-color: #aa0033;
-}
-
-p.caution {
-  border-color: #ffcf00;
-}
-
-p.warning b, p.warning strong {
-  font-weight: bold;
-}
-
-li p.note, li p.warning {
-  margin: .5em 0 0 0;
-  padding: .2em .5em .2em .9em;
->>>>>>> origin
 }
 
 dl.xml dt {
@@ -936,26 +835,19 @@ ul.no-style {
   padding-left:1em;
 }
 
-<<<<<<< HEAD
 .new,
 .new-child {
-=======
-.new {
->>>>>>> origin
   font-size: .78em;
   font-weight: bold;
   color: #ff3d3d;
   text-decoration: none;
   vertical-align:top;
   line-height:.9em;
-<<<<<<< HEAD
   white-space:nowrap;
 }
 
 .toggle-list.open .new-child {
   display:none;
-=======
->>>>>>> origin
 }
 
 pre.classic {
@@ -990,7 +882,6 @@ p.table-caption {
   margin: 0 0 0.5em 1em; /* matches default table left-margin */
 }
 
-<<<<<<< HEAD
 
 /* toggle for misc content (such as long sample code) 
    see toggleContent() script in android-developer-docs.js */
@@ -1012,8 +903,6 @@ p.table-caption {
 }
 
 
-=======
->>>>>>> origin
 /* BEGIN quickview sidebar element styles */
 
 #qv-wrapper {
@@ -1076,23 +965,6 @@ p.table-caption {
   padding:0 10px;
 }
 
-<<<<<<< HEAD
-=======
-#qv-extra #rule {
-  padding: 0 10px;
-  margin: 0;
-}
-
-#qv-sub-rule {
-  padding: 6px 20px;
-  margin: 0;
-}
-
-#qv-sub-rule p {
-  margin: 0;
-}
-
->>>>>>> origin
 #jd-content #qv h2 {
   font-size:1.05em;
   font-weight:bold;
@@ -1105,7 +977,6 @@ p.table-caption {
   z-index:1;
 }
 
-<<<<<<< HEAD
 #qv-extra #rule {
   padding: 0 10px;
   margin: 0;
@@ -1121,8 +992,6 @@ p.table-caption {
   margin: 0 0 .5em 0;
 }
 
-=======
->>>>>>> origin
 /* END quickview sidebar element styles */
 
 /* Begin sidebox sidebar element styles */
@@ -1146,11 +1015,7 @@ p.table-caption {
 }
 
 .sidebox p {
-<<<<<<< HEAD
   margin-bottom: .75em;
-=======
-  margin-bottom: .25em;
->>>>>>> origin
 }
 
 .sidebox ul {
@@ -1185,7 +1050,6 @@ padding:0 0 0 0em;
 
 /* End sidebox sidebar element styles */
 
-<<<<<<< HEAD
 /* BEGIN developer training bar styles */
 
 div#tb-wrapper {
@@ -1322,8 +1186,6 @@ span.training-nav-button-title {
 
 /* End training nav bar */
 
-=======
->>>>>>> origin
 /* BEGIN image and caption styles (originally for UI Guidelines docs) */
 
 table.image-caption {
@@ -1400,11 +1262,7 @@ ol.toc li ol {
   margin: 0;
   padding: 0;
 }
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> origin
 ol.toc li li {
   padding: 0;
   margin: 0 0 0 1em;
@@ -1531,7 +1389,6 @@ table.download th {
   float: right;
 }
 
-<<<<<<< HEAD
 /* 200px */
 .g-tpl-200 .g-unit,
 .g-unit .g-tpl-200 .g-unit,
@@ -1602,8 +1459,6 @@ table.download th {
   float: right;
 }
 
-=======
->>>>>>> origin
 /* 180px */
 .g-tpl-180 .g-unit,
 .g-unit .g-tpl-180 .g-unit,
@@ -1639,11 +1494,7 @@ table.download th {
   float: right;
 }
 
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> origin
 /* JQUERY RESIZABLE STYLES */
 .ui-resizable { position: relative; }
 .ui-resizable-handle { position: absolute; display: none; font-size: 0.1px; z-index:1; }
@@ -1679,11 +1530,7 @@ body .ui-resizable-autohide .ui-resizable-handle { display: none; }
   #body-content {
     position:inherit;
   }
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> origin
   #doc-content {
     margin-left:0 !important;
     height:auto !important;

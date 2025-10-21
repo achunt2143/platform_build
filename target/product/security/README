@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 For detailed information on key types and image signing, please see:
 
 https://source.android.com/devices/tech/ota/sign_builds.html
@@ -10,8 +9,6 @@ open a major security hole).
 key generation
 --------------
 
-=======
->>>>>>> origin
 The following commands were used to generate the test key pairs:
 
   development/tools/make_key testkey  '/C=US/ST=California/L=Mountain View/O=Android/OU=Android/CN=Android/emailAddress=android@android.com'
@@ -19,21 +16,6 @@ The following commands were used to generate the test key pairs:
   development/tools/make_key shared   '/C=US/ST=California/L=Mountain View/O=Android/OU=Android/CN=Android/emailAddress=android@android.com'
   development/tools/make_key media    '/C=US/ST=California/L=Mountain View/O=Android/OU=Android/CN=Android/emailAddress=android@android.com'
 
-<<<<<<< HEAD
-=======
-The following standard test keys are currently included:
-
-testkey -- a generic key for packages that do not otherwise specify a key.
-platform -- a test key for packages that are part of the core platform.
-shared -- a test key for things that are shared in the home/contacts process.
-media -- a test key for packages that are part of the media/download system.
-
-These test keys are used strictly in development, and should never be assumed
-to convey any sort of validity.  When $BUILD_SECURE=true, the code should not
-honor these keys in any context.
-
-
->>>>>>> origin
 signing using the openssl commandline (for boot/system images)
 --------------------------------------------------------------
 
@@ -45,7 +27,6 @@ signing using the openssl commandline (for boot/system images)
 
 extracting public keys for embedding
 ------------------------------------
-<<<<<<< HEAD
 
 dumpkey.jar is a Java tool that takes an x.509 certificate in PEM format as
 input and prints a C structure to standard output:
@@ -55,9 +36,3 @@ input and prints a C structure to standard output:
 
 This is called by build/make/core/Makefile to incorporate the OTA signing keys
 into the recovery image.
-=======
-it's a Java tool
-but it generates C code
-take a look at commands/recovery/Android.mk
-you'll see it running $(HOST_OUT_JAVA_LIBRARIES)/dumpkey.jar
->>>>>>> origin

@@ -57,11 +57,7 @@ public:
     /*
      * Open a new or existing archive.
      */
-<<<<<<< HEAD
     enum {
-=======
-    typedef enum {
->>>>>>> origin
         kOpenReadOnly   = 0x01,
         kOpenReadWrite  = 0x02,
         kOpenCreate     = 0x04,     // create if it doesn't exist
@@ -90,30 +86,10 @@ public:
         int compressionMethod, ZipEntry** ppEntry)
     {
         return addCommon(fileName, NULL, 0, storageName,
-<<<<<<< HEAD
-=======
-                         ZipEntry::kCompressStored,
->>>>>>> origin
                          compressionMethod, ppEntry);
     }
 
     /*
-<<<<<<< HEAD
-=======
-     * Add a file that is already compressed with gzip.
-     *
-     * If "ppEntry" is non-NULL, a pointer to the new entry will be returned.
-     */
-    status_t addGzip(const char* fileName, const char* storageName,
-        ZipEntry** ppEntry)
-    {
-        return addCommon(fileName, NULL, 0, storageName,
-                         ZipEntry::kCompressDeflated,
-                         ZipEntry::kCompressDeflated, ppEntry);
-    }
-
-    /*
->>>>>>> origin
      * Add a file from an in-memory data buffer.
      *
      * If "ppEntry" is non-NULL, a pointer to the new entry will be returned.
@@ -122,10 +98,6 @@ public:
         int compressionMethod, ZipEntry** ppEntry)
     {
         return addCommon(NULL, data, size, storageName,
-<<<<<<< HEAD
-=======
-                         ZipEntry::kCompressStored,
->>>>>>> origin
                          compressionMethod, ppEntry);
     }
 
@@ -140,7 +112,6 @@ public:
         int padding, ZipEntry** ppEntry);
 
     /*
-<<<<<<< HEAD
      * Add an entry by copying it from another zip file, recompressing with
      * Zopfli if already compressed.
      *
@@ -150,8 +121,6 @@ public:
         ZipEntry** ppEntry);
 
     /*
-=======
->>>>>>> origin
      * Mark an entry as having been removed.  It is not actually deleted
      * from the archive or our internal data structures until flush() is
      * called.
@@ -172,11 +141,7 @@ public:
      */
     //bool uncompress(const ZipEntry* pEntry, void* buf) const;
     //bool uncompress(const ZipEntry* pEntry, FILE* fp) const;
-<<<<<<< HEAD
     void* uncompress(const ZipEntry* pEntry) const;
-=======
-    void* uncompress(const ZipEntry* pEntry);
->>>>>>> origin
 
     /*
      * Get an entry, by name.  Returns NULL if not found.
@@ -214,7 +179,6 @@ private:
             delete[] mComment;
         }
 
-<<<<<<< HEAD
         status_t readBuf(const uint8_t* buf, int len);
         status_t write(FILE* fp);
 
@@ -227,20 +191,6 @@ private:
         uint32_t mCentralDirOffset;      // offset from first disk
         uint16_t mCommentLen;
         uint8_t* mComment;
-=======
-        status_t readBuf(const unsigned char* buf, int len);
-        status_t write(FILE* fp);
-
-        //unsigned long   mSignature;
-        unsigned short  mDiskNumber;
-        unsigned short  mDiskWithCentralDir;
-        unsigned short  mNumEntries;
-        unsigned short  mTotalNumEntries;
-        unsigned long   mCentralDirSize;
-        unsigned long   mCentralDirOffset;      // offset from first disk
-        unsigned short  mCommentLen;
-        unsigned char*  mComment;
->>>>>>> origin
 
         enum {
             kSignature      = 0x06054b50,
@@ -266,7 +216,6 @@ private:
 
     /* common handler for all "add" functions */
     status_t addCommon(const char* fileName, const void* data, size_t size,
-<<<<<<< HEAD
         const char* storageName, int compressionMethod, ZipEntry** ppEntry);
 
     /* copy all of "srcFp" into "dstFp" */
@@ -277,28 +226,11 @@ private:
     /* copy some of "srcFp" into "dstFp" */
     status_t copyPartialFpToFp(FILE* dstFp, FILE* srcFp, size_t length,
         uint32_t* pCRC32);
-=======
-        const char* storageName, int sourceType, int compressionMethod,
-        ZipEntry** ppEntry);
-
-    /* copy all of "srcFp" into "dstFp" */
-    status_t copyFpToFp(FILE* dstFp, FILE* srcFp, unsigned long* pCRC32);
-    /* copy all of "data" into "dstFp" */
-    status_t copyDataToFp(FILE* dstFp,
-        const void* data, size_t size, unsigned long* pCRC32);
-    /* copy some of "srcFp" into "dstFp" */
-    status_t copyPartialFpToFp(FILE* dstFp, FILE* srcFp, long length,
-        unsigned long* pCRC32);
->>>>>>> origin
     /* like memmove(), but on parts of a single file */
     status_t filemove(FILE* fp, off_t dest, off_t src, size_t n);
     /* compress all of "srcFp" into "dstFp", using Deflate */
     status_t compressFpToFp(FILE* dstFp, FILE* srcFp,
-<<<<<<< HEAD
         const void* data, size_t size, uint32_t* pCRC32);
-=======
-        const void* data, size_t size, unsigned long* pCRC32);
->>>>>>> origin
 
     /* get modification date from a file descriptor */
     time_t getModTime(int fd);

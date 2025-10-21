@@ -64,10 +64,6 @@ INTERNAL_CLEAN_BUILD_VERSION := 6
 # ************************************************
 
 subdir_cleanspecs := \
-<<<<<<< HEAD
     $(file <$(OUT_DIR)/.module_paths/CleanSpec.mk.list)
-=======
-    $(shell build/tools/findleaves.py --prune=out --prune=.repo --prune=.git . CleanSpec.mk)
->>>>>>> origin
 include $(subdir_cleanspecs)
 subdir_cleanspecs :=

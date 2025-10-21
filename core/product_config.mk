@@ -74,11 +74,7 @@ endif
 ###########################################################
 
 define find-copy-subdir-files
-<<<<<<< HEAD
 $(sort $(shell find $(2) -name "$(1)" -type f | $(SED_EXTENDED) "s:($(2)/?(.*)):\\1\\:$(3)/\\2:" | sed "s://:/:g"))
-=======
-$(shell find $(2) -name "$(1)" | $(SED_EXTENDED) "s:($(2)/?(.*)):\\1\\:$(3)/\\2:" | sed "s://:/:g")
->>>>>>> origin
 endef
 
 # ---------------------------------------------------------------
@@ -86,20 +82,13 @@ endef
 # These are the valid values of TARGET_BUILD_VARIANT.  Also, if anything else is passed
 # as the variant in the PRODUCT-$TARGET_BUILD_PRODUCT-$TARGET_BUILD_VARIANT form,
 # it will be treated as a goal, and the eng variant will be used.
-<<<<<<< HEAD
 INTERNAL_VALID_VARIANTS := user userdebug eng
-=======
-INTERNAL_VALID_VARIANTS := user userdebug eng tests
->>>>>>> origin
 
 # ---------------------------------------------------------------
 # Provide "PRODUCT-<prodname>-<goal>" targets, which lets you build
 # a particular configuration without needing to set up the environment.
 #
-<<<<<<< HEAD
 ifeq ($(CALLED_FROM_SETUP),true)
-=======
->>>>>>> origin
 product_goals := $(strip $(filter PRODUCT-%,$(MAKECMDGOALS)))
 ifdef product_goals
   # Scrape the product and build names out of the goal,
@@ -121,7 +110,6 @@ ifdef product_goals
   # The variant they want
   TARGET_BUILD_VARIANT := $(word 2,$(product_goals))
 
-<<<<<<< HEAD
   ifeq ($(TARGET_BUILD_VARIANT),tests)
     $(error "tests" has been deprecated as a build variant. Use it as a build goal instead.)
   endif
@@ -134,53 +122,20 @@ ifdef product_goals
     default_goal_substitution :=
   else
     default_goal_substitution := droid
-=======
-  # The build server wants to do make PRODUCT-dream-installclean
-  # which really means TARGET_PRODUCT=dream make installclean.
-  ifneq ($(filter-out $(INTERNAL_VALID_VARIANTS),$(TARGET_BUILD_VARIANT)),)
-    MAKECMDGOALS := $(MAKECMDGOALS) $(TARGET_BUILD_VARIANT)
-    TARGET_BUILD_VARIANT := eng
-    default_goal_substitution :=
-  else
-    default_goal_substitution := $(DEFAULT_GOAL)
-  endif
-
-  # For tests build, only build tests-build-target
-  ifeq (tests,$(TARGET_BUILD_VARIANT))
-    default_goal_substitution := tests-build-target
->>>>>>> origin
   endif
 
   # Replace the PRODUCT-* goal with the build goal that it refers to.
   # Note that this will ensure that it appears in the same relative
   # position, in case it matters.
-<<<<<<< HEAD
   override MAKECMDGOALS := $(patsubst $(goal_name),$(default_goal_substitution),$(MAKECMDGOALS))
 endif
 endif # CALLED_FROM_SETUP
-=======
-  #
-  # Note that modifying this will not affect the goals that make will
-  # attempt to build, but it's important because we inspect this value
-  # in certain situations (like for "make sdk").
-  #
-  MAKECMDGOALS := $(patsubst $(goal_name),$(default_goal_substitution),$(MAKECMDGOALS))
-
-  # Define a rule for the PRODUCT-* goal, and make it depend on the
-  # patched-up command-line goals as well as any other goals that we
-  # want to force.
-  #
-.PHONY: $(goal_name)
-$(goal_name): $(MAKECMDGOALS)
-endif
->>>>>>> origin
 # else: Use the value set in the environment or buildspec.mk.
 
 # ---------------------------------------------------------------
 # Provide "APP-<appname>" targets, which lets you build
 # an unbundled app.
 #
-<<<<<<< HEAD
 ifeq ($(CALLED_FROM_SETUP),true)
 unbundled_goals := $(strip $(filter APP-%,$(MAKECMDGOALS)))
 ifdef unbundled_goals
@@ -202,23 +157,6 @@ TARGET_BUILD_APPS ?=
   TARGET_PRODUCT \
   TARGET_BUILD_VARIANT \
   TARGET_BUILD_APPS
-=======
-unbundled_goals := $(strip $(filter APP-%,$(MAKECMDGOALS)))
-ifdef unbundled_goals
-  ifneq ($(words $(unbundled_goals)),1)
-    $(error Only one APP-* goal may be specified; saw "$(unbundled_goals)"))
-  endif
-  TARGET_BUILD_APPS := $(strip $(subst -, ,$(patsubst APP-%,%,$(unbundled_goals))))
-  ifneq ($(filter $(DEFAULT_GOAL),$(MAKECMDGOALS)),)
-    MAKECMDGOALS := $(patsubst $(unbundled_goals),,$(MAKECMDGOALS))
-  else
-    MAKECMDGOALS := $(patsubst $(unbundled_goals),$(DEFAULT_GOAL),$(MAKECMDGOALS))
-  endif
-
-.PHONY: $(unbundled_goals)
-$(unbundled_goals): $(MAKECMDGOALS)
-endif # unbundled_goals
->>>>>>> origin
 
 # Default to building dalvikvm on hosts that support it...
 ifeq ($(HOST_OS),linux)
@@ -237,7 +175,6 @@ include $(BUILD_SYSTEM)/node_fns.mk
 include $(BUILD_SYSTEM)/product.mk
 include $(BUILD_SYSTEM)/device.mk
 
-<<<<<<< HEAD
 # Read in all of the product definitions specified by the AndroidProducts.mk
 # files in the tree.
 all_product_configs := $(get-all-product-makefiles)
@@ -298,35 +235,16 @@ $(foreach makefile,$(ARTIFACT_PATH_REQUIREMENT_PRODUCTS),\
 )
 
 # Sanity check
-=======
-ifneq ($(strip $(TARGET_BUILD_APPS)),)
-  # An unbundled app build needs only the core product makefiles.
-  $(call import-products,$(call get-product-makefiles,\
-      $(SRC_TARGET_DIR)/product/AndroidProducts.mk))
-else
-  # Read in all of the product definitions specified by the AndroidProducts.mk
-  # files in the tree.
-  #
-  #TODO: when we start allowing direct pointers to product files,
-  #    guarantee that they're in this list.
-  $(call import-products, $(get-all-product-makefiles))
-endif # TARGET_BUILD_APPS
->>>>>>> origin
 $(check-all-products)
 
 ifneq ($(filter dump-products, $(MAKECMDGOALS)),)
 $(dump-products)
-<<<<<<< HEAD
-=======
-$(error done)
->>>>>>> origin
 endif
 
 # Convert a short name like "sooner" into the path to the product
 # file defining that product.
 #
 INTERNAL_PRODUCT := $(call resolve-short-product-name, $(TARGET_PRODUCT))
-<<<<<<< HEAD
 ifneq ($(current_product_makefile),$(INTERNAL_PRODUCT))
 $(error PRODUCT_NAME inconsistent in $(current_product_makefile) and $(INTERNAL_PRODUCT))
 endif
@@ -347,18 +265,6 @@ TARGET_DEVICE := $(PRODUCT_DEVICE)
 
 # Figure out which resoure configuration options to use for this
 # product.
-=======
-#$(error TARGET_PRODUCT $(TARGET_PRODUCT) --> $(INTERNAL_PRODUCT))
-
-# Find the device that this product maps to.
-TARGET_DEVICE := $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_DEVICE)
-
-# Figure out which resoure configuration options to use for this
-# product.
-PRODUCT_LOCALES := $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_LOCALES))
-# TODO: also keep track of things like "port", "land" in product files.
-
->>>>>>> origin
 # If CUSTOM_LOCALES contains any locales not already included
 # in PRODUCT_LOCALES, add them to PRODUCT_LOCALES.
 extra_locales := $(filter-out $(PRODUCT_LOCALES),$(CUSTOM_LOCALES))
@@ -372,7 +278,6 @@ ifneq (,$(extra_locales))
 endif
 
 # Add PRODUCT_LOCALES to PRODUCT_AAPT_CONFIG
-<<<<<<< HEAD
 PRODUCT_AAPT_CONFIG := $(PRODUCT_LOCALES) $(PRODUCT_AAPT_CONFIG)
 
 # Keep a copy of the space-separated config
@@ -515,99 +420,3 @@ $(foreach image, \
 product-build-image-config :=
 
 $(call readonly-product-vars)
-=======
-PRODUCT_AAPT_CONFIG := $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_AAPT_CONFIG))
-PRODUCT_AAPT_CONFIG := $(PRODUCT_LOCALES) $(PRODUCT_AAPT_CONFIG)
-PRODUCT_AAPT_PREF_CONFIG := $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_AAPT_PREF_CONFIG))
-
-# Default to medium-density assets.
-# (Can be overridden in the device config, e.g.: PRODUCT_AAPT_CONFIG += hdpi)
-PRODUCT_AAPT_CONFIG := $(strip \
-    $(PRODUCT_AAPT_CONFIG) \
-    $(if $(filter %dpi,$(PRODUCT_AAPT_CONFIG)),,mdpi))
-PRODUCT_AAPT_PREF_CONFIG := $(strip $(PRODUCT_AAPT_PREF_CONFIG))
-
-# Everyone gets nodpi assets which are density-independent.
-PRODUCT_AAPT_CONFIG += nodpi
-
-# Convert spaces to commas.
-comma := ,
-PRODUCT_AAPT_CONFIG := \
-    $(subst $(space),$(comma),$(strip $(PRODUCT_AAPT_CONFIG)))
-PRODUCT_AAPT_PREF_CONFIG := \
-    $(subst $(space),$(comma),$(strip $(PRODUCT_AAPT_PREF_CONFIG)))
-
-PRODUCT_BRAND := $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_BRAND))
-
-PRODUCT_MODEL := $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_MODEL))
-ifndef PRODUCT_MODEL
-  PRODUCT_MODEL := $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_NAME))
-endif
-
-PRODUCT_MANUFACTURER := \
-    $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_MANUFACTURER))
-ifndef PRODUCT_MANUFACTURER
-  PRODUCT_MANUFACTURER := unknown
-endif
-
-ifeq ($(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_CHARACTERISTICS),)
-  TARGET_AAPT_CHARACTERISTICS := default
-else
-  TARGET_AAPT_CHARACTERISTICS := $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_CHARACTERISTICS))
-endif
-
-PRODUCT_DEFAULT_WIFI_CHANNELS := \
-    $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_DEFAULT_WIFI_CHANNELS))
-
-PRODUCT_DEFAULT_DEV_CERTIFICATE := \
-    $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_DEFAULT_DEV_CERTIFICATE))
-ifdef PRODUCT_DEFAULT_DEV_CERTIFICATE
-ifneq (1,$(words $(PRODUCT_DEFAULT_DEV_CERTIFICATE)))
-    $(error PRODUCT_DEFAULT_DEV_CERTIFICATE='$(PRODUCT_DEFAULT_DEV_CERTIFICATE)', \
-      only 1 certificate is allowed.)
-endif
-endif
-
-# A list of words like <source path>:<destination path>.  The file at
-# the source path should be copied to the destination path when building
-# this product.  <destination path> is relative to $(PRODUCT_OUT), so
-# it should look like, e.g., "system/etc/file.xml".  The rules
-# for these copy steps are defined in config/Makefile.
-PRODUCT_COPY_FILES := \
-    $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_COPY_FILES))
-
-# A list of property assignments, like "key = value", with zero or more
-# whitespace characters on either side of the '='.
-PRODUCT_PROPERTY_OVERRIDES := \
-    $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_PROPERTY_OVERRIDES))
-
-# A list of property assignments, like "key = value", with zero or more
-# whitespace characters on either side of the '='.
-# used for adding properties to default.prop
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES := \
-    $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_DEFAULT_PROPERTY_OVERRIDES))
-
-# Should we use the default resources or add any product specific overlays
-PRODUCT_PACKAGE_OVERLAYS := \
-    $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_PACKAGE_OVERLAYS))
-DEVICE_PACKAGE_OVERLAYS := \
-        $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).DEVICE_PACKAGE_OVERLAYS))
-
-# An list of whitespace-separated words.
-PRODUCT_TAGS := $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_TAGS))
-
-# Add the product-defined properties to the build properties.
-ADDITIONAL_BUILD_PROPERTIES := \
-    $(ADDITIONAL_BUILD_PROPERTIES) \
-    $(PRODUCT_PROPERTY_OVERRIDES)
-
-# The OTA key(s) specified by the product config, if any.  The names
-# of these keys are stored in the target-files zip so that post-build
-# signing tools can substitute them for the test key embedded by
-# default.
-PRODUCT_OTA_PUBLIC_KEYS := $(sort \
-    $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_OTA_PUBLIC_KEYS))
-
-PRODUCT_EXTRA_RECOVERY_KEYS := $(sort \
-    $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_EXTRA_RECOVERY_KEYS))
->>>>>>> origin

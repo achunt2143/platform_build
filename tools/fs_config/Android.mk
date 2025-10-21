@@ -13,7 +13,6 @@
 # limitations under the License.
 
 LOCAL_PATH := $(call my-dir)
-<<<<<<< HEAD
 
 # One can override the default android_filesystem_config.h file by using TARGET_FS_CONFIG_GEN.
 #   Set TARGET_FS_CONFIG_GEN to contain a list of intermediate format files
@@ -386,13 +385,3 @@ endif
 system_android_filesystem_config :=
 system_capability_header :=
 fs_config_generate_extra_partition_list :=
-=======
-include $(CLEAR_VARS)
-
-LOCAL_SRC_FILES := fs_config.c
-LOCAL_MODULE := fs_config
-LOCAL_FORCE_STATIC_EXECUTABLE := true
-LOCAL_MODULE_TAGS := eng optional
-
-include $(BUILD_HOST_EXECUTABLE)
->>>>>>> origin

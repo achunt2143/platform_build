@@ -63,18 +63,7 @@ remove_recursively(const string& path)
             string full = path;
             full += '/';
             full += ent->d_name;
-<<<<<<< HEAD
             bool is_directory = (ent->d_type == DT_DIR);
-=======
-#ifdef HAVE_DIRENT_D_TYPE
-            bool is_directory = (ent->d_type == DT_DIR);
-#else
-            // If dirent.d_type is missing, then use stat instead
-            struct stat stat_buf;
-            stat(full.c_str(), &stat_buf);
-            bool is_directory = S_ISDIR(stat_buf.st_mode);
-#endif
->>>>>>> origin
             if (is_directory) {
                 dirs.push_back(full);
             } else {
@@ -156,13 +145,8 @@ copy_file(const string& src, const string& dst)
 int
 strip_file(const string& path)
 {
-<<<<<<< HEAD
     // Default strip command to run is "strip" unless overridden by the ATREE_STRIP env var.
     const char* strip_cmd = getenv("ATREE_STRIP");
-=======
-    // Default strip command to run is "strip" unless overridden by the STRIP env var.
-    const char* strip_cmd = getenv("STRIP");
->>>>>>> origin
     if (!strip_cmd || !strip_cmd[0]) {
         strip_cmd = "strip";
     }
@@ -172,7 +156,6 @@ strip_file(const string& path)
         return -1;
     } else if (pid == 0) {
         // Exec in the child. Only returns if execve failed.
-<<<<<<< HEAD
 
         int num_args = 0;
         const char *s = strip_cmd;
@@ -219,9 +202,6 @@ strip_file(const string& path)
             free(cmd);
             return ret;
         }
-=======
-        return execlp(strip_cmd, strip_cmd, path.c_str(), (char *)NULL);
->>>>>>> origin
     } else {
         // Wait for child pid and return its exit code.
         int status;

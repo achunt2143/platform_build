@@ -55,13 +55,6 @@ ALL_MODULE_TAGS:=
 # its sub-variables.)
 ALL_MODULE_NAME_TAGS:=
 
-<<<<<<< HEAD
-=======
-# Full paths to all prebuilt files that will be copied
-# (used to make the dependency on acp)
-ALL_PREBUILT:=
-
->>>>>>> origin
 # Full path to all files that are made by some tool
 ALL_GENERATED_SOURCES:=
 
@@ -81,7 +74,6 @@ INTERNAL_DALVIK_MODULES:=
 # All findbugs xml files
 ALL_FINDBUGS_FILES:=
 
-<<<<<<< HEAD
 # GPL module license files
 ALL_GPL_MODULE_LICENSE_FILES:=
 
@@ -116,8 +108,6 @@ ALL_VINTF_MANIFEST_FRAGMENTS_LIST:=
 # All tests that should be skipped in presubmit check.
 ALL_DISABLED_PRESUBMIT_TESTS :=
 
-=======
->>>>>>> origin
 ###########################################################
 ## Debugging; prints a variable list to stdout
 ###########################################################
@@ -142,7 +132,6 @@ define true-or-empty
 $(filter true, $(1))
 endef
 
-<<<<<<< HEAD
 ###########################################################
 ## Rule for touching GCNO files.
 ###########################################################
@@ -156,37 +145,21 @@ endef
 ###########################################################
 ## Retrieve the directory of the current makefile
 ## Must be called before including any other makefile!!
-=======
-
-###########################################################
-## Retrieve the directory of the current makefile
->>>>>>> origin
 ###########################################################
 
 # Figure out where we are.
 define my-dir
 $(strip \
-<<<<<<< HEAD
   $(eval LOCAL_MODULE_MAKEFILE := $$(lastword $$(MAKEFILE_LIST))) \
   $(if $(filter $(BUILD_SYSTEM)/% $(OUT_DIR)/%,$(LOCAL_MODULE_MAKEFILE)), \
     $(error my-dir must be called before including any other makefile.) \
    , \
     $(patsubst %/,%,$(dir $(LOCAL_MODULE_MAKEFILE))) \
-=======
-  $(eval md_file_ := $$(lastword $$(MAKEFILE_LIST))) \
-  $(if $(filter $(CLEAR_VARS),$(md_file_)), \
-    $(error LOCAL_PATH must be set before including $$(CLEAR_VARS)) \
-   , \
-    $(patsubst %/,%,$(dir $(md_file_))) \
->>>>>>> origin
    ) \
  )
 endef
 
-<<<<<<< HEAD
 
-=======
->>>>>>> origin
 ###########################################################
 ## Retrieve a list of all makefiles immediately below some directory
 ###########################################################
@@ -203,21 +176,13 @@ endef
 # $(1): directory to search under
 # Ignores $(1)/Android.mk
 define first-makefiles-under
-<<<<<<< HEAD
 $(shell build/make/tools/findleaves.py $(FIND_LEAVES_EXCLUDES) \
         --mindepth=2 $(addprefix --dir=,$(1)) Android.mk)
-=======
-$(shell build/tools/findleaves.py --prune=out --prune=.repo --prune=.git \
-        --mindepth=2 $(1) Android.mk)
->>>>>>> origin
 endef
 
 ###########################################################
 ## Retrieve a list of all makefiles immediately below your directory
-<<<<<<< HEAD
 ## Must be called before including any other makefile!!
-=======
->>>>>>> origin
 ###########################################################
 
 define all-subdir-makefiles
@@ -227,10 +192,7 @@ endef
 ###########################################################
 ## Look in the named list of directories for makefiles,
 ## relative to the current directory.
-<<<<<<< HEAD
 ## Must be called before including any other makefile!!
-=======
->>>>>>> origin
 ###########################################################
 
 # $(1): List of directories to look for under this directory
@@ -239,7 +201,6 @@ $(wildcard $(addsuffix /Android.mk, $(addprefix $(call my-dir)/,$(1))))
 endef
 
 ###########################################################
-<<<<<<< HEAD
 ## Find all of the directories under the named directories with
 ## the specified name.
 ## Meant to be used like:
@@ -280,22 +241,13 @@ $(call all-named-files-under,$(1),.)
 endef
 
 ###########################################################
-=======
->>>>>>> origin
 ## Find all of the java files under the named directories.
 ## Meant to be used like:
 ##    SRC_FILES := $(call all-java-files-under,src tests)
 ###########################################################
 
 define all-java-files-under
-<<<<<<< HEAD
 $(call all-named-files-under,*.java,$(1))
-=======
-$(patsubst ./%,%, \
-  $(shell cd $(LOCAL_PATH) ; \
-          find $(1) -name "*.java" -and -not -name ".*") \
- )
->>>>>>> origin
 endef
 
 ###########################################################
@@ -314,14 +266,7 @@ endef
 ###########################################################
 
 define all-c-files-under
-<<<<<<< HEAD
 $(call all-named-files-under,*.c,$(1))
-=======
-$(patsubst ./%,%, \
-  $(shell cd $(LOCAL_PATH) ; \
-          find $(1) -name "*.c" -and -not -name ".*") \
- )
->>>>>>> origin
 endef
 
 ###########################################################
@@ -334,7 +279,6 @@ $(call all-c-files-under,.)
 endef
 
 ###########################################################
-<<<<<<< HEAD
 ## Find all of the cpp files under the named directories.
 ## LOCAL_CPP_EXTENSION is respected if set.
 ## Meant to be used like:
@@ -358,22 +302,13 @@ $(call all-cpp-files-under,.)
 endef
 
 ###########################################################
-=======
->>>>>>> origin
 ## Find all files named "I*.aidl" under the named directories,
 ## which must be relative to $(LOCAL_PATH).  The returned list
 ## is relative to $(LOCAL_PATH).
 ###########################################################
 
 define all-Iaidl-files-under
-<<<<<<< HEAD
 $(call all-named-files-under,I*.aidl,$(1))
-=======
-$(patsubst ./%,%, \
-  $(shell cd $(LOCAL_PATH) ; \
-          find $(1) -name "I*.aidl" -and -not -name ".*") \
- )
->>>>>>> origin
 endef
 
 ###########################################################
@@ -385,7 +320,6 @@ $(call all-Iaidl-files-under,.)
 endef
 
 ###########################################################
-<<<<<<< HEAD
 ## Find all files named "*.vts" under the named directories,
 ## which must be relative to $(LOCAL_PATH).  The returned list
 ## is relative to $(LOCAL_PATH).
@@ -404,22 +338,13 @@ $(call all-vts-files-under,.)
 endef
 
 ###########################################################
-=======
->>>>>>> origin
 ## Find all of the logtags files under the named directories.
 ## Meant to be used like:
 ##    SRC_FILES := $(call all-logtags-files-under,src)
 ###########################################################
 
 define all-logtags-files-under
-<<<<<<< HEAD
 $(call all-named-files-under,*.logtags,$(1))
-=======
-$(patsubst ./%,%, \
-  $(shell cd $(LOCAL_PATH) ; \
-          find $(1) -name "*.logtags" -and -not -name ".*") \
-  )
->>>>>>> origin
 endef
 
 ###########################################################
@@ -429,14 +354,7 @@ endef
 ###########################################################
 
 define all-proto-files-under
-<<<<<<< HEAD
 $(call all-named-files-under,*.proto,$(1))
-=======
-$(patsubst ./%,%, \
-  $(shell cd $(LOCAL_PATH) ; \
-          find $(1) -name "*.proto" -and -not -name ".*") \
-  )
->>>>>>> origin
 endef
 
 ###########################################################
@@ -446,7 +364,6 @@ endef
 ###########################################################
 
 define all-renderscript-files-under
-<<<<<<< HEAD
 $(call find-subdir-files,$(1) \( -name "*.rs" -or -name "*.fs" \) -and -not -name ".*")
 endef
 
@@ -458,12 +375,6 @@ endef
 
 define all-S-files-under
 $(call all-named-files-under,*.S,$(1))
-=======
-$(patsubst ./%,%, \
-  $(shell cd $(LOCAL_PATH) ; \
-          find $(1) -name "*.rs" -and -not -name ".*") \
-  )
->>>>>>> origin
 endef
 
 ###########################################################
@@ -473,14 +384,7 @@ endef
 ###########################################################
 
 define all-html-files-under
-<<<<<<< HEAD
 $(call all-named-files-under,*.html,$(1))
-=======
-$(patsubst ./%,%, \
-  $(shell cd $(LOCAL_PATH) ; \
-          find $(1) -name "*.html" -and -not -name ".*") \
- )
->>>>>>> origin
 endef
 
 ###########################################################
@@ -498,11 +402,7 @@ endef
 ###########################################################
 
 define find-subdir-files
-<<<<<<< HEAD
 $(sort $(patsubst ./%,%,$(shell cd $(LOCAL_PATH) ; find -L $(1))))
-=======
-$(patsubst ./%,%,$(shell cd $(LOCAL_PATH) ; find $(1)))
->>>>>>> origin
 endef
 
 ###########################################################
@@ -514,13 +414,8 @@ endef
 ###########################################################
 
 define find-subdir-subdir-files
-<<<<<<< HEAD
 $(sort $(filter-out $(patsubst %,$(1)/%,$(3)),$(patsubst ./%,%,$(shell cd \
             $(LOCAL_PATH) ; find -L $(1) -maxdepth 1 -name $(2)))))
-=======
-$(filter-out $(patsubst %,$(1)/%,$(3)),$(patsubst ./%,%,$(shell cd \
-            $(LOCAL_PATH) ; find $(1) -maxdepth 1 -name $(2))))
->>>>>>> origin
 endef
 
 ###########################################################
@@ -529,17 +424,10 @@ endef
 ###########################################################
 
 define find-subdir-assets
-<<<<<<< HEAD
 $(sort $(if $(1),$(patsubst ./%,%, \
 	$(shell if [ -d $(1) ] ; then cd $(1) ; find -L ./ -not -name '.*' -and -type f ; fi)), \
 	$(warning Empty argument supplied to find-subdir-assets in $(LOCAL_PATH)) \
 ))
-=======
-$(if $(1),$(patsubst ./%,%, \
-	$(shell if [ -d $(1) ] ; then cd $(1) ; find ./ -not -name '.*' -and -type f -and -not -type l ; fi)), \
-	$(warning Empty argument supplied to find-subdir-assets) \
-)
->>>>>>> origin
 endef
 
 ###########################################################
@@ -547,7 +435,6 @@ endef
 ###########################################################
 
 define find-other-java-files
-<<<<<<< HEAD
 $(call all-java-files-under,$(1))
 endef
 
@@ -569,13 +456,6 @@ $(sort $(patsubst ./%,%, \
   $(shell cd $(1) ; \
           find -L $(3) -name $(2) -and -not -name ".*") \
  ))
-=======
-	$(call find-subdir-files,$(1) -name "*.java" -and -not -name ".*")
-endef
-
-define find-other-html-files
-	$(call find-subdir-files,$(1) -name "*.html" -and -not -name ".*")
->>>>>>> origin
 endef
 
 ###########################################################
@@ -588,11 +468,7 @@ endef
 
 define find-parent-file
 $(strip \
-<<<<<<< HEAD
   $(eval _fpf := $(sort $(wildcard $(foreach f, $(2), $(strip $(1))/$(f))))) \
-=======
-  $(eval _fpf := $(wildcard $(foreach f, $(2), $(strip $(1))/$(f)))) \
->>>>>>> origin
   $(if $(_fpf),$(_fpf), \
        $(if $(filter-out ./ .,$(1)), \
              $(call find-parent-file,$(patsubst %/,%,$(dir $(1))),$(2)) \
@@ -602,7 +478,6 @@ $(strip \
 endef
 
 ###########################################################
-<<<<<<< HEAD
 ## Find test data in a form required by LOCAL_TEST_DATA
 ## $(1): the base dir, relative to the root of the source tree.
 ## $(2): the file name pattern to be passed to find as "-name"
@@ -617,8 +492,6 @@ $(foreach f,$(sort $(patsubst ./%,%, \
 endef
 
 ###########################################################
-=======
->>>>>>> origin
 ## Function we can evaluate to introduce a dynamic dependency
 ###########################################################
 
@@ -627,7 +500,6 @@ $(1): $(2)
 endef
 
 ###########################################################
-<<<<<<< HEAD
 ## Reverse order of a list
 ###########################################################
 
@@ -657,37 +529,6 @@ $(strip \
 )
 endef
 
-=======
-## Set up the dependencies for a prebuilt target
-##  $(call add-prebuilt-file, srcfile, [targetclass])
-###########################################################
-
-define add-prebuilt-file
-    $(eval $(include-prebuilt))
-endef
-
-define include-prebuilt
-    include $$(CLEAR_VARS)
-    LOCAL_SRC_FILES := $(1)
-    LOCAL_BUILT_MODULE_STEM := $(1)
-    LOCAL_MODULE_SUFFIX := $$(suffix $(1))
-    LOCAL_MODULE := $$(basename $(1))
-    LOCAL_MODULE_CLASS := $(2)
-    include $$(BUILD_PREBUILT)
-endef
-
-###########################################################
-## do multiple prebuilts
-##  $(call target class, files ...)
-###########################################################
-
-define add-prebuilt-files
-    $(foreach f,$(2),$(call add-prebuilt-file,$f,$(1)))
-endef
-
-
-
->>>>>>> origin
 ###########################################################
 ## The intermediates directory.  Where object files go for
 ## a given target.  We could technically get away without
@@ -698,15 +539,10 @@ endef
 
 # $(1): target class, like "APPS"
 # $(2): target name, like "NotePad"
-<<<<<<< HEAD
 # $(3): { HOST, HOST_CROSS, AUX, <empty (TARGET)>, <other non-empty (HOST)> }
 # $(4): if non-empty, force the intermediates to be COMMON
 # $(5): if non-empty, force the intermediates to be for the 2nd arch
 # $(6): if non-empty, force the intermediates to be for the host cross os
-=======
-# $(3): if non-empty, this is a HOST target.
-# $(4): if non-empty, force the intermediates to be COMMON
->>>>>>> origin
 define intermediates-dir-for
 $(strip \
     $(eval _idfClass := $(strip $(1))) \
@@ -715,7 +551,6 @@ $(strip \
     $(eval _idfName := $(strip $(2))) \
     $(if $(_idfName),, \
         $(error $(LOCAL_PATH): Name not defined in call to intermediates-dir-for)) \
-<<<<<<< HEAD
     $(eval _idfPrefix := $(call find-idf-prefix,$(3),$(6))) \
     $(eval _idf2ndArchPrefix := $(if $(strip $(5)),$(TARGET_2ND_ARCH_VAR_PREFIX))) \
     $(if $(filter $(_idfPrefix)-$(_idfClass),$(COMMON_MODULE_CLASSES))$(4), \
@@ -724,13 +559,6 @@ $(strip \
           $(eval _idfIntBase := $($(_idf2ndArchPrefix)$(_idfPrefix)_OUT_INTERMEDIATES)) \
        ,$(eval _idfIntBase := $($(_idfPrefix)_OUT_INTERMEDIATES)) \
        ) \
-=======
-    $(eval _idfPrefix := $(if $(strip $(3)),HOST,TARGET)) \
-    $(if $(filter $(_idfPrefix)-$(_idfClass),$(COMMON_MODULE_CLASSES))$(4), \
-        $(eval _idfIntBase := $($(_idfPrefix)_OUT_COMMON_INTERMEDIATES)) \
-      , \
-        $(eval _idfIntBase := $($(_idfPrefix)_OUT_INTERMEDIATES)) \
->>>>>>> origin
      ) \
     $(_idfIntBase)/$(_idfClass)/$(_idfName)_intermediates \
 )
@@ -740,27 +568,19 @@ endef
 # to determine the intermediates directory.
 #
 # $(1): if non-empty, force the intermediates to be COMMON
-<<<<<<< HEAD
 # $(2): if non-empty, force the intermediates to be for the 2nd arch
 # $(3): if non-empty, force the intermediates to be for the host cross os
-=======
->>>>>>> origin
 define local-intermediates-dir
 $(strip \
     $(if $(strip $(LOCAL_MODULE_CLASS)),, \
         $(error $(LOCAL_PATH): LOCAL_MODULE_CLASS not defined before call to local-intermediates-dir)) \
     $(if $(strip $(LOCAL_MODULE)),, \
         $(error $(LOCAL_PATH): LOCAL_MODULE not defined before call to local-intermediates-dir)) \
-<<<<<<< HEAD
     $(call intermediates-dir-for,$(LOCAL_MODULE_CLASS),$(LOCAL_MODULE),$(call def-host-aux-target),$(1),$(2),$(3)) \
-=======
-    $(call intermediates-dir-for,$(LOCAL_MODULE_CLASS),$(LOCAL_MODULE),$(LOCAL_IS_HOST_MODULE),$(1)) \
->>>>>>> origin
 )
 endef
 
 ###########################################################
-<<<<<<< HEAD
 ## The generated sources directory.  Placing generated
 ## source files directly in the intermediates directory
 ## causes problems for multiarch builds, where there are
@@ -803,24 +623,6 @@ $(strip \
         $(error $(LOCAL_PATH): LOCAL_MODULE not defined before call to local-generated-sources-dir)) \
     $(call generated-sources-dir-for,$(LOCAL_MODULE_CLASS),$(LOCAL_MODULE),$(call def-host-aux-target),$(1)) \
 )
-=======
-## Convert "path/to/libXXX.so" to "-lXXX".
-## Any "path/to/libXXX.a" elements pass through unchanged.
-###########################################################
-
-define normalize-libraries
-$(foreach so,$(filter %.so,$(1)),-l$(patsubst lib%.so,%,$(notdir $(so))))\
-$(filter-out %.so,$(1))
-endef
-
-# TODO: change users to call the common version.
-define normalize-host-libraries
-$(call normalize-libraries,$(1))
-endef
-
-define normalize-target-libraries
-$(call normalize-libraries,$(1))
->>>>>>> origin
 endef
 
 ###########################################################
@@ -849,7 +651,6 @@ endef
 
 ###########################################################
 ## Convert a list of short modules names (e.g., "framework", "Browser")
-<<<<<<< HEAD
 ## into the list of files that are built *for the target* for those modules.
 ## NOTE: this won't return reliable results until after all
 ## sub-makefiles have been included.
@@ -862,8 +663,6 @@ endef
 
 ###########################################################
 ## Convert a list of short modules names (e.g., "framework", "Browser")
-=======
->>>>>>> origin
 ## into the list of files that should be used when linking
 ## against that module as a public API.
 ## TODO: Allow this for more than JAVA_LIBRARIES modules
@@ -873,12 +672,8 @@ endef
 ###########################################################
 
 define module-stubs-files
-<<<<<<< HEAD
 $(foreach module,$(1),$(if $(filter $(module),$(JAVA_SDK_LIBRARIES)),\
 $(call java-lib-files,$(module).stubs),$(ALL_MODULES.$(module).STUBS)))
-=======
-$(foreach module,$(1),$(ALL_MODULES.$(module).STUBS))
->>>>>>> origin
 endef
 
 ###########################################################
@@ -898,7 +693,6 @@ endef
 ## $(2): Non-empty if IS_HOST_MODULE
 ###########################################################
 
-<<<<<<< HEAD
 # Get the jar files (you can pass to "javac -classpath") of static or shared
 # Java libraries that you want to link against.
 # $(1): library name list
@@ -958,116 +752,6 @@ endif
 # $(1): library name list
 define exported-sdk-libs-files
 $(foreach lib,$(1),$(call intermediates-dir-for,JAVA_LIBRARIES,$(lib),,COMMON)/exported-sdk-libs)
-=======
-# $(1): library name
-# $(2): Non-empty if IS_HOST_MODULE
-define _java-lib-dir
-$(call intermediates-dir-for, \
-	JAVA_LIBRARIES,$(1),$(2),COMMON)
-endef
-
-# $(1): library name
-# $(2): Non-empty if IS_HOST_MODULE
-define _java-lib-full-classes.jar
-$(call _java-lib-dir,$(1),$(2))/classes$(COMMON_JAVA_PACKAGE_SUFFIX)
-endef
-
-# $(1): library name list
-# $(2): Non-empty if IS_HOST_MODULE
-define java-lib-files
-$(foreach lib,$(1),$(call _java-lib-full-classes.jar,$(lib),$(2)))
-endef
-
-# $(1): library name
-# $(2): Non-empty if IS_HOST_MODULE
-define _java-lib-full-dep
-$(call _java-lib-dir,$(1),$(2))/javalib$(COMMON_JAVA_PACKAGE_SUFFIX)
-endef
-
-# $(1): library name list
-# $(2): Non-empty if IS_HOST_MODULE
-# $(foreach lib,$(1),$(call _java-lib-full-dep,$(lib),$(2)))
-define java-lib-deps
-endef
-
-###########################################################
-## Run rot13 on a string
-## $(1): the string.  Must be one line.
-###########################################################
-define rot13
-$(shell echo $(1) | tr 'a-zA-Z' 'n-za-mN-ZA-M')
-endef
-
-
-###########################################################
-## Returns true if $(1) and $(2) are equal.  Returns
-## the empty string if they are not equal.
-###########################################################
-define streq
-$(strip $(if $(strip $(1)),\
-  $(if $(strip $(2)),\
-    $(if $(filter-out __,_$(subst $(strip $(1)),,$(strip $(2)))$(subst $(strip $(2)),,$(strip $(1)))_),,true), \
-    ),\
-  $(if $(strip $(2)),\
-    ,\
-    true)\
- ))
-endef
-
-###########################################################
-## Convert "a b c" into "a:b:c"
-###########################################################
-
-empty :=
-space := $(empty) $(empty)
-
-define normalize-path-list
-$(subst $(space),:,$(strip $(1)))
-endef
-
-###########################################################
-## Read the word out of a colon-separated list of words.
-## This has the same behavior as the built-in function
-## $(word n,str).
-##
-## The individual words may not contain spaces.
-##
-## $(1): 1 based index
-## $(2): value of the form a:b:c...
-###########################################################
-
-define word-colon
-$(word $(1),$(subst :,$(space),$(2)))
-endef
-
-###########################################################
-## Convert "a=b c= d e = f" into "a=b c=d e=f"
-##
-## $(1): list to collapse
-## $(2): if set, separator word; usually "=", ":", or ":="
-##       Defaults to "=" if not set.
-###########################################################
-
-define collapse-pairs
-$(eval _cpSEP := $(strip $(if $(2),$(2),=)))\
-$(subst $(space)$(_cpSEP)$(space),$(_cpSEP),$(strip \
-    $(subst $(_cpSEP), $(_cpSEP) ,$(1))))
-endef
-
-###########################################################
-## Given a list of pairs, if multiple pairs have the same
-## first components, keep only the first pair.
-##
-## $(1): list of pairs
-## $(2): the separator word, such as ":", "=", etc.
-define uniq-pairs-by-first-component
-$(eval _upbfc_fc_set :=)\
-$(strip $(foreach w,$(1), $(eval _first := $(word 1,$(subst $(2),$(space),$(w))))\
-    $(if $(filter $(_upbfc_fc_set),$(_first)),,$(w)\
-        $(eval _upbfc_fc_set += $(_first)))))\
-$(eval _upbfc_fc_set :=)\
-$(eval _first:=)
->>>>>>> origin
 endef
 
 ###########################################################
@@ -1078,11 +762,7 @@ endef
 # any of those tags.
 # $(1): tag list
 define modules-for-tag-list
-<<<<<<< HEAD
 $(sort $(foreach tag,$(1),$(foreach m,$(ALL_MODULE_NAME_TAGS.$(tag)),$(ALL_MODULES.$(m).INSTALLED))))
-=======
-$(sort $(foreach tag,$(1),$(ALL_MODULE_TAGS.$(tag))))
->>>>>>> origin
 endef
 
 # Same as modules-for-tag-list, but operates on
@@ -1120,7 +800,6 @@ endef
 
 
 ###########################################################
-<<<<<<< HEAD
 ## Color-coded warnings and errors
 ## Use echo-(warning|error) in a build rule
 ## Use pretty-(warning|error) instead of $(warning)/$(error)
@@ -1198,125 +877,21 @@ endef
 define track-gen-file-obj
 $(call track-src-file-obj,$(foreach f,$(1),\
   $(or $(my_src_file_gen_$(f)),$(f))),$(2))
-=======
-## Package filtering
-###########################################################
-
-# Given a list of installed modules (short or long names)
-# return a list of the packages (yes, .apk packages, not
-# modules in general) that are overridden by this list and,
-# therefore, should not be installed.
-# $(1): mixed list of installed modules
-# TODO: This is fragile; find a reliable way to get this information.
-define _get-package-overrides
- $(eval ### Discard any words containing slashes, unless they end in .apk, \
-        ### in which case trim off the directory component and the suffix. \
-        ### If there are no slashes, keep the entire word.)
- $(eval _gpo_names := $(subst /,@@@ @@@,$(1)))
- $(eval _gpo_names := \
-     $(filter %.apk,$(_gpo_names)) \
-     $(filter-out %@@@ @@@%,$(_gpo_names)))
- $(eval _gpo_names := $(patsubst %.apk,%,$(_gpo_names)))
- $(eval _gpo_names := $(patsubst @@@%,%,$(_gpo_names)))
-
- $(eval ### Remove any remaining words that contain dots.)
- $(eval _gpo_names := $(subst .,@@@ @@@,$(_gpo_names)))
- $(eval _gpo_names := $(filter-out %@@@ @@@%,$(_gpo_names)))
-
- $(eval ### Now we have a list of any words that could possibly refer to \
-        ### packages, although there may be words that do not.  Only \
-        ### real packages will be present under PACKAGES.*, though.)
- $(foreach _gpo_name,$(_gpo_names),$(PACKAGES.$(_gpo_name).OVERRIDES))
-endef
-
-define get-package-overrides
-$(sort $(strip $(call _get-package-overrides,$(1))))
-endef
-
-###########################################################
-## Output the command lines, or not
-###########################################################
-
-ifeq ($(strip $(SHOW_COMMANDS)),)
-define pretty
-@echo $1
-endef
-hide := @
-else
-define pretty
-endef
-hide :=
-endif
-
-###########################################################
-## Dump the variables that are associated with targets
-###########################################################
-
-define dump-module-variables
-@echo all_dependencies=$^
-@echo PRIVATE_YACCFLAGS=$(PRIVATE_YACCFLAGS);
-@echo PRIVATE_CFLAGS=$(PRIVATE_CFLAGS);
-@echo PRIVATE_CPPFLAGS=$(PRIVATE_CPPFLAGS);
-@echo PRIVATE_DEBUG_CFLAGS=$(PRIVATE_DEBUG_CFLAGS);
-@echo PRIVATE_C_INCLUDES=$(PRIVATE_C_INCLUDES);
-@echo PRIVATE_LDFLAGS=$(PRIVATE_LDFLAGS);
-@echo PRIVATE_LDLIBS=$(PRIVATE_LDLIBS);
-@echo PRIVATE_ARFLAGS=$(PRIVATE_ARFLAGS);
-@echo PRIVATE_AAPT_FLAGS=$(PRIVATE_AAPT_FLAGS);
-@echo PRIVATE_DX_FLAGS=$(PRIVATE_DX_FLAGS);
-@echo PRIVATE_JAVACFLAGS=$(PRIVATE_JAVACFLAGS);
-@echo PRIVATE_JAVA_LIBRARIES=$(PRIVATE_JAVA_LIBRARIES);
-@echo PRIVATE_ALL_SHARED_LIBRARIES=$(PRIVATE_ALL_SHARED_LIBRARIES);
-@echo PRIVATE_ALL_STATIC_LIBRARIES=$(PRIVATE_ALL_STATIC_LIBRARIES);
-@echo PRIVATE_ALL_WHOLE_STATIC_LIBRARIES=$(PRIVATE_ALL_WHOLE_STATIC_LIBRARIES);
-@echo PRIVATE_ALL_OBJECTS=$(PRIVATE_ALL_OBJECTS);
-@echo PRIVATE_NO_CRT=$(PRIVATE_NO_CRT);
-endef
-
-###########################################################
-## Commands for using sed to replace given variable values
-###########################################################
-
-define transform-variables
-@mkdir -p $(dir $@)
-@echo "Sed: $(if $(PRIVATE_MODULE),$(PRIVATE_MODULE),$@) <= $<"
-$(hide) sed $(foreach var,$(REPLACE_VARS),-e "s/{{$(var)}}/$(subst /,\/,$(PWD)/$($(var)))/g") $< >$@
-$(hide) if [ "$(suffix $@)" = ".sh" ]; then chmod a+rx $@; fi
-endef
-
-
-###########################################################
-## Commands for munging the dependency files GCC generates
-###########################################################
-
-define transform-d-to-p
-$(hide) cp $(@:%.o=%.d) $(@:%.o=%.P); \
-	sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
-		-e '/^$$/ d' -e 's/$$/ :/' < $(@:%.o=%.d) >> $(@:%.o=%.P); \
-	rm -f $(@:%.o=%.d)
->>>>>>> origin
 endef
 
 ###########################################################
 ## Commands for running lex
 ###########################################################
 
-<<<<<<< HEAD
 define transform-l-to-c-or-cpp
 @echo "Lex: $(PRIVATE_MODULE) <= $<"
 @mkdir -p $(dir $@)
-=======
-define transform-l-to-cpp
-@mkdir -p $(dir $@)
-@echo "Lex: $(PRIVATE_MODULE) <= $<"
->>>>>>> origin
 $(hide) $(LEX) -o$@ $<
 endef
 
 ###########################################################
 ## Commands for running yacc
 ##
-<<<<<<< HEAD
 ###########################################################
 
 define transform-y-to-c-or-cpp
@@ -1352,45 +927,17 @@ endef
 # b/37755219
 RS_CC_ASAN_OPTIONS := ASAN_OPTIONS=detect_leaks=0:detect_container_overflow=0
 
-=======
-## Because the extension of c++ files can change, the
-## extension must be specified in $1.
-## E.g, "$(call transform-y-to-cpp,.cpp)"
-###########################################################
-
-define transform-y-to-cpp
-@mkdir -p $(dir $@)
-@echo "Yacc: $(PRIVATE_MODULE) <= $<"
-$(YACC) $(PRIVATE_YACCFLAGS) -o $@ $<
-touch $(@:$1=$(YACC_HEADER_SUFFIX))
-echo '#ifndef '$(@F:$1=_h) > $(@:$1=.h)
-echo '#define '$(@F:$1=_h) >> $(@:$1=.h)
-cat $(@:$1=$(YACC_HEADER_SUFFIX)) >> $(@:$1=.h)
-echo '#endif' >> $(@:$1=.h)
-rm -f $(@:$1=$(YACC_HEADER_SUFFIX))
-endef
-
-###########################################################
-## Commands to compile RenderScript
-###########################################################
-
->>>>>>> origin
 define transform-renderscripts-to-java-and-bc
 @echo "RenderScript: $(PRIVATE_MODULE) <= $(PRIVATE_RS_SOURCE_FILES)"
 $(hide) rm -rf $(PRIVATE_RS_OUTPUT_DIR)
 $(hide) mkdir -p $(PRIVATE_RS_OUTPUT_DIR)/res/raw
 $(hide) mkdir -p $(PRIVATE_RS_OUTPUT_DIR)/src
-<<<<<<< HEAD
 $(hide) $(RS_CC_ASAN_OPTIONS) $(PRIVATE_RS_CC) \
-=======
-$(hide) $(PRIVATE_RS_CC) \
->>>>>>> origin
   -o $(PRIVATE_RS_OUTPUT_DIR)/res/raw \
   -p $(PRIVATE_RS_OUTPUT_DIR)/src \
   -d $(PRIVATE_RS_OUTPUT_DIR) \
   -a $@ -MD \
   $(addprefix -target-api , $(PRIVATE_RS_TARGET_API)) \
-<<<<<<< HEAD
   $(PRIVATE_RS_FLAGS) \
   $(foreach inc,$(PRIVATE_RS_INCLUDES),$(addprefix -I , $(inc))) \
   $(PRIVATE_RS_SOURCE_FILES)
@@ -1433,12 +980,6 @@ $(hide) $(RS_CC_ASAN_OPTIONS) $(PRIVATE_RS_CC) \
   $(addprefix -I , $(PRIVATE_RS_INCLUDES)) \
   $(PRIVATE_RS_SOURCE_FILES)
 $(call _merge-renderscript-d,$(PRIVATE_DEP_FILES),$@.d)
-=======
-  $(foreach inc,$(PRIVATE_RS_INCLUDES),$(addprefix -I , $(inc))) \
-  $(PRIVATE_RS_SOURCE_FILES)
-#$(hide) $(LLVM_RS_LINK) \
-#  $(PRIVATE_RS_OUTPUT_DIR)/res/raw/*.bc
->>>>>>> origin
 $(hide) mkdir -p $(dir $@)
 $(hide) touch $@
 endef
@@ -1455,7 +996,6 @@ $(hide) $(AIDL) -d$(patsubst %.java,%.P,$@) $(PRIVATE_AIDL_FLAGS) $< $@
 endef
 #$(AIDL) $(PRIVATE_AIDL_FLAGS) $< - | indent -nut -br -npcs -l1000 > $@
 
-<<<<<<< HEAD
 define transform-aidl-to-cpp
 @mkdir -p $(dir $@)
 @mkdir -p $(PRIVATE_HEADER_OUTPUT_DIR)
@@ -1514,8 +1054,6 @@ $$(define-vts-cpp-rule-src) : $(LOCAL_PATH)/$(1) $(VTSC)
 	$$(transform-vts-to-cpp)
 $(3) += $$(define-vts-cpp-rule-src)
 endef
-=======
->>>>>>> origin
 
 ###########################################################
 ## Commands for running java-event-log-tags.py
@@ -1524,11 +1062,7 @@ endef
 define transform-logtags-to-java
 @mkdir -p $(dir $@)
 @echo "logtags: $@ <= $<"
-<<<<<<< HEAD
 $(hide) $(JAVATAGS) -o $@ $< $(PRIVATE_MERGED_TAG)
-=======
-$(hide) $(JAVATAGS) -o $@ $^
->>>>>>> origin
 endef
 
 
@@ -1544,21 +1078,14 @@ define transform-proto-to-java
 $(hide) for f in $(PRIVATE_PROTO_SRC_FILES); do \
         $(PROTOC) \
         $(addprefix --proto_path=, $(PRIVATE_PROTO_INCLUDES)) \
-<<<<<<< HEAD
         $(PRIVATE_PROTO_JAVA_OUTPUT_OPTION)="$(PRIVATE_PROTO_JAVA_OUTPUT_PARAMS):$(PRIVATE_PROTO_JAVA_OUTPUT_DIR)" \
         $(PRIVATE_PROTOC_FLAGS) \
         $$f || exit 33; \
-=======
-        $(PRIVATE_PROTO_JAVA_OUTPUT_OPTION)=$(PRIVATE_PROTO_JAVA_OUTPUT_DIR) \
-        $(PRIVATE_PROTOC_FLAGS) \
-        $$f; \
->>>>>>> origin
         done
 $(hide) touch $@
 endef
 
 ######################################################################
-<<<<<<< HEAD
 ## Commands for running protoc to compile .proto into .pb.cc (or.pb.c) and .pb.h
 ######################################################################
 
@@ -1589,39 +1116,13 @@ $(if $(PRIVATE_NO_DEFAULT_COMPILER_FLAGS),,\
         $(filter-out $(PRIVATE_C_INCLUDES), \
             $(PRIVATE_GLOBAL_C_SYSTEM_INCLUDES))))
 endef
-=======
-## Commands for running protoc to compile .proto into .pb.cc and .pb.h
-######################################################################
-define transform-proto-to-cc
-@mkdir -p $(dir $@)
-@echo "Protoc: $@ <= $<"
-$(hide) $(PROTOC) \
-	$(addprefix --proto_path=, $(PRIVATE_PROTO_INCLUDES)) \
-	$(PRIVATE_PROTOC_FLAGS) \
-	--cpp_out=$(PRIVATE_PROTO_CC_OUTPUT_DIR) $<
-endef
-
->>>>>>> origin
 
 ###########################################################
 ## Commands for running gcc to compile a C++ file
 ###########################################################
 
-<<<<<<< HEAD
 define transform-cpp-to-o-compiler-args
 	$(c-includes) \
-=======
-define transform-cpp-to-o
-@mkdir -p $(dir $@)
-@echo "target $(PRIVATE_ARM_MODE) C++: $(PRIVATE_MODULE) <= $<"
-$(hide) $(PRIVATE_CXX) \
-	$(addprefix -I , $(PRIVATE_C_INCLUDES)) \
-	$(addprefix -isystem ,\
-	    $(if $(PRIVATE_NO_DEFAULT_COMPILER_FLAGS),, \
-	        $(filter-out $(PRIVATE_C_INCLUDES), \
-	            $(PRIVATE_TARGET_PROJECT_INCLUDES) \
-	            $(PRIVATE_TARGET_C_INCLUDES)))) \
->>>>>>> origin
 	-c \
 	$(if $(PRIVATE_NO_DEFAULT_COMPILER_FLAGS),, \
 	    $(PRIVATE_TARGET_GLOBAL_CFLAGS) \
@@ -1632,7 +1133,6 @@ $(hide) $(PRIVATE_CXX) \
 	$(PRIVATE_CFLAGS) \
 	$(PRIVATE_CPPFLAGS) \
 	$(PRIVATE_DEBUG_CFLAGS) \
-<<<<<<< HEAD
 	$(PRIVATE_CFLAGS_NO_OVERRIDE) \
 	$(PRIVATE_CPPFLAGS_NO_OVERRIDE)
 endef
@@ -1666,19 +1166,12 @@ $(hide) $(RELATIVE_PWD) $(PRIVATE_CXX) \
 endef
 endif
 
-=======
-	-MD -MF $(patsubst %.o,%.d,$@) -o $@ $<
-$(transform-d-to-p)
-endef
-
->>>>>>> origin
 
 ###########################################################
 ## Commands for running gcc to compile a C file
 ###########################################################
 
 # $(1): extra flags
-<<<<<<< HEAD
 define transform-c-or-s-to-o-compiler-args
 	$(c-includes) \
 	-c \
@@ -1735,46 +1228,6 @@ $(hide) $(YASM) \
     $($(PRIVATE_2ND_ARCH_VAR_PREFIX)TARGET_GLOBAL_YASM_FLAGS) \
     $(PRIVATE_ASFLAGS) \
     -o $@ $<
-=======
-define transform-c-or-s-to-o-no-deps
-@mkdir -p $(dir $@)
-$(hide) $(PRIVATE_CC) \
-	$(addprefix -I , $(PRIVATE_C_INCLUDES)) \
-	$(addprefix -isystem ,\
-	    $(if $(PRIVATE_NO_DEFAULT_COMPILER_FLAGS),, \
-	        $(filter-out $(PRIVATE_C_INCLUDES), \
-	            $(PRIVATE_TARGET_PROJECT_INCLUDES) \
-	            $(PRIVATE_TARGET_C_INCLUDES)))) \
-	-c \
-	$(if $(PRIVATE_NO_DEFAULT_COMPILER_FLAGS),, \
-	    $(PRIVATE_TARGET_GLOBAL_CFLAGS) \
-	    $(PRIVATE_ARM_CFLAGS) \
-	 ) \
-	$(PRIVATE_CFLAGS) \
-	$(1) \
-	$(PRIVATE_DEBUG_CFLAGS) \
-	-MD -MF $(patsubst %.o,%.d,$@) -o $@ $<
-endef
-
-define transform-c-to-o-no-deps
-@echo "target $(PRIVATE_ARM_MODE) C: $(PRIVATE_MODULE) <= $<"
-$(call transform-c-or-s-to-o-no-deps, )
-endef
-
-define transform-s-to-o-no-deps
-@echo "target asm: $(PRIVATE_MODULE) <= $<"
-$(call transform-c-or-s-to-o-no-deps, $(PRIVATE_ASFLAGS))
-endef
-
-define transform-c-to-o
-$(transform-c-to-o-no-deps)
-$(transform-d-to-p)
-endef
-
-define transform-s-to-o
-$(transform-s-to-o-no-deps)
-$(transform-d-to-p)
->>>>>>> origin
 endef
 
 ###########################################################
@@ -1783,54 +1236,25 @@ endef
 ## will error at build time.
 ###########################################################
 
-<<<<<<< HEAD
 define transform-m-to-o
 @echo "$($(PRIVATE_PREFIX)DISPLAY) ObjC: $(PRIVATE_MODULE) <= $<"
 $(call transform-c-or-s-to-o, $(PRIVATE_CFLAGS) $(PRIVATE_DEBUG_CFLAGS))
-=======
-define transform-m-to-o-no-deps
-@echo "target ObjC: $(PRIVATE_MODULE) <= $<"
-$(call transform-c-or-s-to-o-no-deps)
-endef
-
-define transform-m-to-o
-$(transform-m-to-o-no-deps)
-$(transform-d-to-p)
->>>>>>> origin
 endef
 
 ###########################################################
 ## Commands for running gcc to compile a host C++ file
 ###########################################################
 
-<<<<<<< HEAD
 define transform-host-cpp-to-o-compiler-args
 	$(c-includes) \
 	-c \
 	$(if $(PRIVATE_NO_DEFAULT_COMPILER_FLAGS),, \
 	    $(PRIVATE_HOST_GLOBAL_CFLAGS) \
 	    $(PRIVATE_HOST_GLOBAL_CPPFLAGS) \
-=======
-define transform-host-cpp-to-o
-@mkdir -p $(dir $@)
-@echo "host C++: $(PRIVATE_MODULE) <= $<"
-$(hide) $(PRIVATE_CXX) \
-	$(addprefix -I , $(PRIVATE_C_INCLUDES)) \
-	$(addprefix -isystem ,\
-	    $(if $(PRIVATE_NO_DEFAULT_COMPILER_FLAGS),, \
-	        $(filter-out $(PRIVATE_C_INCLUDES), \
-	            $(HOST_PROJECT_INCLUDES) \
-	            $(HOST_C_INCLUDES)))) \
-	-c \
-	$(if $(PRIVATE_NO_DEFAULT_COMPILER_FLAGS),, \
-	    $(HOST_GLOBAL_CFLAGS) \
-	    $(HOST_GLOBAL_CPPFLAGS) \
->>>>>>> origin
 	 ) \
 	$(PRIVATE_CFLAGS) \
 	$(PRIVATE_CPPFLAGS) \
 	$(PRIVATE_DEBUG_CFLAGS) \
-<<<<<<< HEAD
 	$(PRIVATE_CFLAGS_NO_OVERRIDE) \
 	$(PRIVATE_CPPFLAGS_NO_OVERRIDE)
 endef
@@ -1856,18 +1280,11 @@ $(hide) $(RELATIVE_PWD) $(PRIVATE_CXX) \
 endef
 endif
 
-=======
-	-MD -MF $(patsubst %.o,%.d,$@) -o $@ $<
-$(transform-d-to-p)
-endef
-
->>>>>>> origin
 
 ###########################################################
 ## Commands for running gcc to compile a host C file
 ###########################################################
 
-<<<<<<< HEAD
 define transform-host-c-or-s-to-o-common-args
 	$(c-includes) \
 	-c \
@@ -1916,53 +1333,12 @@ endif
 define transform-host-s-to-o
 @echo "$($(PRIVATE_PREFIX)DISPLAY) asm: $(PRIVATE_MODULE) <= $<"
 $(call transform-host-c-or-s-to-o, $(PRIVATE_ASFLAGS))
-=======
-# $(1): extra flags
-define transform-host-c-or-s-to-o-no-deps
-@mkdir -p $(dir $@)
-$(hide) $(PRIVATE_CC) \
-	$(addprefix -I , $(PRIVATE_C_INCLUDES)) \
-	$(addprefix -isystem ,\
-	    $(if $(PRIVATE_NO_DEFAULT_COMPILER_FLAGS),, \
-	        $(filter-out $(PRIVATE_C_INCLUDES), \
-	            $(HOST_PROJECT_INCLUDES) \
-	            $(HOST_C_INCLUDES)))) \
-	-c \
-	$(if $(PRIVATE_NO_DEFAULT_COMPILER_FLAGS),, \
-	    $(HOST_GLOBAL_CFLAGS) \
-	 ) \
-	$(PRIVATE_CFLAGS) \
-	$(1) \
-	$(PRIVATE_DEBUG_CFLAGS) \
-	-MD -MF $(patsubst %.o,%.d,$@) -o $@ $<
-endef
-
-define transform-host-c-to-o-no-deps
-@echo "host C: $(PRIVATE_MODULE) <= $<"
-$(call transform-host-c-or-s-to-o-no-deps, )
-endef
-
-define transform-host-s-to-o-no-deps
-@echo "host asm: $(PRIVATE_MODULE) <= $<"
-$(call transform-host-c-or-s-to-o-no-deps, $(PRIVATE_ASFLAGS))
-endef
-
-define transform-host-c-to-o
-$(transform-host-c-to-o-no-deps)
-$(transform-d-to-p)
-endef
-
-define transform-host-s-to-o
-$(transform-host-s-to-o-no-deps)
-$(transform-d-to-p)
->>>>>>> origin
 endef
 
 ###########################################################
 ## Commands for running gcc to compile a host Objective-C file
 ###########################################################
 
-<<<<<<< HEAD
 define transform-host-m-to-o
 @echo "$($(PRIVATE_PREFIX)DISPLAY) ObjC: $(PRIVATE_MODULE) <= $<"
 $(call transform-host-c-or-s-to-o, $(PRIVATE_CFLAGS) $(PRIVATE_DEBUG_CFLAGS) $(PRIVATE_CFLAGS_NO_OVERRIDE))
@@ -2032,36 +1408,6 @@ o := $(intermediates)/$(patsubst %.s,%.o,$(subst ../,$(DOTDOT_REPLACEMENT),$(1))
 $$(o) : $(TOPDIR)$(LOCAL_PATH)/$(1) $(2)
 	$$(transform-$$(PRIVATE_HOST)s-to-o)
 $(3) += $$(o)
-=======
-# $(1): extra flags
-define really-transform-host-m-to-o-no-deps
-@mkdir -p $(dir $@)
-$(hide) $(PRIVATE_OBJCC) \
-	$(addprefix -I , $(PRIVATE_C_INCLUDES)) \
-	$(addprefix -isystem ,\
-	    $(if $(PRIVATE_NO_DEFAULT_COMPILER_FLAGS),, \
-	        $(filter-out $(PRIVATE_C_INCLUDES), \
-	            $(HOST_PROJECT_INCLUDES) \
-	            $(HOST_C_INCLUDES)))) \
-	-c \
-	$(if $(PRIVATE_NO_DEFAULT_COMPILER_FLAGS),, \
-	    $(HOST_GLOBAL_CFLAGS) \
-	 ) \
-	$(PRIVATE_CFLAGS) \
-	$(1) \
-	$(PRIVATE_DEBUG_CFLAGS) \
-	-MD -MF $(patsubst %.o,%.d,$@) -o $@ $<
-endef
-
-define transform-host-m-to-o-no-deps
-@echo "host ObjC: $(PRIVATE_MODULE) <= $<"
-$(call really-transform-host-m-to-o-no-deps)
-endef
-
-define transform-host-m-to-o
-$(transform-host-m-to-o-no-deps)
-$(transform-d-to-p)
->>>>>>> origin
 endef
 
 ###########################################################
@@ -2073,20 +1419,13 @@ $(if $(2),$(hide) $(1) $(2))
 endef
 
 # Split long argument list into smaller groups and call the command repeatedly
-<<<<<<< HEAD
 # Call the command at least once even if there are no arguments, as otherwise
 # the output file won't be created.
-=======
->>>>>>> origin
 #
 # $(1): the command without arguments
 # $(2): the arguments
 define split-long-arguments
-<<<<<<< HEAD
 $(hide) $(1) $(wordlist 1,500,$(2))
-=======
-$(call _concat-if-arg2-not-empty,$(1),$(wordlist 1,500,$(2)))
->>>>>>> origin
 $(call _concat-if-arg2-not-empty,$(1),$(wordlist 501,1000,$(2)))
 $(call _concat-if-arg2-not-empty,$(1),$(wordlist 1001,1500,$(2)))
 $(call _concat-if-arg2-not-empty,$(1),$(wordlist 1501,2000,$(2)))
@@ -2096,7 +1435,6 @@ $(call _concat-if-arg2-not-empty,$(1),$(wordlist 3001,99999,$(2)))
 endef
 
 # $(1): the full path of the source static library.
-<<<<<<< HEAD
 # $(2): the full path of the destination static library.
 define _extract-and-include-single-target-whole-static-lib
 $(hide) ldir=$(PRIVATE_INTERMEDIATES_DIR)/WHOLE/$(basename $(notdir $(1)))_objs;\
@@ -2135,31 +1473,11 @@ define extract-and-include-target-whole-static-libs
 $(call extract-and-include-whole-static-libs-first, $(firstword $(PRIVATE_ALL_WHOLE_STATIC_LIBRARIES)),$(1))
 $(foreach lib,$(wordlist 2,999,$(PRIVATE_ALL_WHOLE_STATIC_LIBRARIES)), \
     $(call _extract-and-include-single-target-whole-static-lib, $(lib), $(1)))
-=======
-define _extract-and-include-single-target-whole-static-lib
-@echo "preparing StaticLib: $(PRIVATE_MODULE) [including $(1)]"
-$(hide) ldir=$(PRIVATE_INTERMEDIATES_DIR)/WHOLE/$(basename $(notdir $(1)))_objs;\
-    rm -rf $$ldir; \
-    mkdir -p $$ldir; \
-    filelist=; \
-    for f in `$(TARGET_AR) t $(1)`; do \
-        $(TARGET_AR) p $(1) $$f > $$ldir/$$f; \
-        filelist="$$filelist $$ldir/$$f"; \
-    done ; \
-    $(TARGET_AR) $(TARGET_GLOBAL_ARFLAGS) $(PRIVATE_ARFLAGS) $@ $$filelist
-
-endef
-
-define extract-and-include-target-whole-static-libs
-$(foreach lib,$(PRIVATE_ALL_WHOLE_STATIC_LIBRARIES), \
-    $(call _extract-and-include-single-target-whole-static-lib, $(lib)))
->>>>>>> origin
 endef
 
 # Explicitly delete the archive first so that ar doesn't
 # try to add to an existing archive.
 define transform-o-to-static-lib
-<<<<<<< HEAD
 @echo "$($(PRIVATE_PREFIX)DISPLAY) StaticLib: $(PRIVATE_MODULE) ($@)"
 @mkdir -p $(dir $@)
 @rm -f $@ $@.tmp
@@ -2252,13 +1570,6 @@ define transform-o-to-aux-static-executable
 @echo "$(AUX_DISPLAY) StaticExecutable: $(PRIVATE_MODULE) ($@)"
 @mkdir -p $(dir $@)
 $(transform-o-to-aux-static-executable-inner)
-=======
-@mkdir -p $(dir $@)
-@rm -f $@
-$(extract-and-include-target-whole-static-libs)
-@echo "target StaticLib: $(PRIVATE_MODULE) ($@)"
-$(call split-long-arguments,$(TARGET_AR) $(TARGET_GLOBAL_ARFLAGS) $(PRIVATE_ARFLAGS) $@,$(filter %.o, $^))
->>>>>>> origin
 endef
 
 ###########################################################
@@ -2266,7 +1577,6 @@ endef
 ###########################################################
 
 # $(1): the full path of the source static library.
-<<<<<<< HEAD
 # $(2): the full path of the destination static library.
 define _extract-and-include-single-host-whole-static-lib
 $(hide) ldir=$(PRIVATE_INTERMEDIATES_DIR)/WHOLE/$(basename $(notdir $(1)))_objs;\
@@ -2290,24 +1600,10 @@ $(hide) ldir=$(PRIVATE_INTERMEDIATES_DIR)/WHOLE/$(basename $(notdir $(1)))_objs;
     done ; \
     $($(PRIVATE_2ND_ARCH_VAR_PREFIX)$(PRIVATE_PREFIX)AR) $($(PRIVATE_2ND_ARCH_VAR_PREFIX)$(PRIVATE_PREFIX)GLOBAL_ARFLAGS) \
         $(2) $$filelist
-=======
-define _extract-and-include-single-host-whole-static-lib
-@echo "preparing StaticLib: $(PRIVATE_MODULE) [including $(1)]"
-$(hide) ldir=$(PRIVATE_INTERMEDIATES_DIR)/WHOLE/$(basename $(notdir $(1)))_objs;\
-    rm -rf $$ldir; \
-    mkdir -p $$ldir; \
-    filelist=; \
-    for f in `$(HOST_AR) t $(1) | grep '\.o$$'`; do \
-        $(HOST_AR) p $(1) $$f > $$ldir/$$f; \
-        filelist="$$filelist $$ldir/$$f"; \
-    done ; \
-    $(HOST_AR) $(HOST_GLOBAL_ARFLAGS) $(PRIVATE_ARFLAGS) $@ $$filelist
->>>>>>> origin
 
 endef
 
 define extract-and-include-host-whole-static-libs
-<<<<<<< HEAD
 $(call extract-and-include-whole-static-libs-first, $(firstword $(PRIVATE_ALL_WHOLE_STATIC_LIBRARIES)),$(1))
 $(foreach lib,$(wordlist 2,999,$(PRIVATE_ALL_WHOLE_STATIC_LIBRARIES)), \
     $(call _extract-and-include-single-host-whole-static-lib, $(lib),$(1)))
@@ -2347,20 +1643,6 @@ $(call split-long-arguments,$($(PRIVATE_2ND_ARCH_VAR_PREFIX)$(PRIVATE_PREFIX)AR)
     $(PRIVATE_ALL_OBJECTS) $(call get-dummy.o-if-no-objs,$@.tmp))
 $(call delete-dummy.o-if-no-objs,$@.tmp)
 $(hide) mv -f $@.tmp $@
-=======
-$(foreach lib,$(PRIVATE_ALL_WHOLE_STATIC_LIBRARIES), \
-    $(call _extract-and-include-single-host-whole-static-lib, $(lib)))
-endef
-
-# Explicitly delete the archive first so that ar doesn't
-# try to add to an existing archive.
-define transform-host-o-to-static-lib
-@mkdir -p $(dir $@)
-@rm -f $@
-$(extract-and-include-host-whole-static-libs)
-@echo "host StaticLib: $(PRIVATE_MODULE) ($@)"
-$(call split-long-arguments,$(HOST_AR) $(HOST_GLOBAL_ARFLAGS) $(PRIVATE_ARFLAGS) $@,$(filter %.o, $^))
->>>>>>> origin
 endef
 
 
@@ -2373,7 +1655,6 @@ endef
 ifneq ($(HOST_CUSTOM_LD_COMMAND),true)
 define transform-host-o-to-shared-lib-inner
 $(hide) $(PRIVATE_CXX) \
-<<<<<<< HEAD
 	-Wl,-rpath,\$$ORIGIN/../$(notdir $($(PRIVATE_2ND_ARCH_VAR_PREFIX)$(PRIVATE_PREFIX)OUT_SHARED_LIBRARIES)) \
 	-Wl,-rpath,\$$ORIGIN/$(notdir $($(PRIVATE_2ND_ARCH_VAR_PREFIX)$(PRIVATE_PREFIX)OUT_SHARED_LIBRARIES)) \
 	-shared -Wl,-soname,$(notdir $@) \
@@ -2391,48 +1672,20 @@ $(hide) $(PRIVATE_CXX) \
 	$(if $(filter true,$(NATIVE_COVERAGE)),-lgcov) \
 	$(if $(filter true,$(NATIVE_COVERAGE)),$(PRIVATE_HOST_LIBPROFILE_RT)) \
 	$(PRIVATE_ALL_SHARED_LIBRARIES) \
-=======
-	-Wl,-rpath-link=$(HOST_OUT_INTERMEDIATE_LIBRARIES) \
-	-Wl,-rpath,\$$ORIGIN/../lib \
-	-shared -Wl,-soname,$(notdir $@) \
-	$(PRIVATE_LDFLAGS) \
-	$(HOST_GLOBAL_LD_DIRS) \
-	$(if $(PRIVATE_NO_DEFAULT_COMPILER_FLAGS),, \
-	   $(HOST_GLOBAL_LDFLAGS) \
-	) \
-	$(PRIVATE_ALL_OBJECTS) \
-	-Wl,--whole-archive \
-	$(call normalize-host-libraries,$(PRIVATE_ALL_WHOLE_STATIC_LIBRARIES)) \
-	-Wl,--no-whole-archive \
-	$(if $(PRIVATE_GROUP_STATIC_LIBRARIES),-Wl$(comma)--start-group) \
-	$(call normalize-host-libraries,$(PRIVATE_ALL_STATIC_LIBRARIES)) \
-	$(if $(PRIVATE_GROUP_STATIC_LIBRARIES),-Wl$(comma)--end-group) \
-	$(call normalize-host-libraries,$(PRIVATE_ALL_SHARED_LIBRARIES)) \
->>>>>>> origin
 	-o $@ \
 	$(PRIVATE_LDLIBS)
 endef
 endif
 
 define transform-host-o-to-shared-lib
-<<<<<<< HEAD
 @echo "$($(PRIVATE_PREFIX)DISPLAY) SharedLib: $(PRIVATE_MODULE) ($@)"
 @mkdir -p $(dir $@)
-=======
-@mkdir -p $(dir $@)
-@echo "host SharedLib: $(PRIVATE_MODULE) ($@)"
->>>>>>> origin
 $(transform-host-o-to-shared-lib-inner)
 endef
 
 define transform-host-o-to-package
-<<<<<<< HEAD
 @echo "$($(PRIVATE_PREFIX)DISPLAY) Package: $(PRIVATE_MODULE) ($@)"
 @mkdir -p $(dir $@)
-=======
-@mkdir -p $(dir $@)
-@echo "host Package: $(PRIVATE_MODULE) ($@)"
->>>>>>> origin
 $(transform-host-o-to-shared-lib-inner)
 endef
 
@@ -2441,7 +1694,6 @@ endef
 ## Commands for running gcc to link a shared library or package
 ###########################################################
 
-<<<<<<< HEAD
 define transform-o-to-shared-lib-inner
 $(hide) $(PRIVATE_CXX) \
 	-nostdlib -Wl,-soname,$(notdir $@) \
@@ -2473,70 +1725,10 @@ define transform-o-to-shared-lib
 $(transform-o-to-shared-lib-inner)
 endef
 
-=======
-#echo >$@.vers "{"; \
-#echo >>$@.vers " global:"; \
-#$(BUILD_SYSTEM)/filter_symbols.sh $(TARGET_NM) "  " ";" $(filter %.o,$^) | sort -u >>$@.vers; \
-#echo >>$@.vers " local:"; \
-#echo >>$@.vers "  *;"; \
-#echo >>$@.vers "};"; \
-
-#	-Wl,--version-script=$@.vers \
-
-# ld just seems to be so finicky with command order that we allow
-# it to be overriden en-masse see combo/linux-arm.make for an example.
-ifneq ($(TARGET_CUSTOM_LD_COMMAND),true)
-define transform-o-to-shared-lib-inner
-$(hide) $(PRIVATE_CXX) \
-	$(PRIVATE_TARGET_GLOBAL_LDFLAGS) \
-	-Wl,-rpath-link=$(TARGET_OUT_INTERMEDIATE_LIBRARIES) \
-	-Wl,-rpath,\$$ORIGIN/../lib \
-	-shared -Wl,-soname,$(notdir $@) \
-	$(PRIVATE_LDFLAGS) \
-	$(PRIVATE_TARGET_GLOBAL_LD_DIRS) \
-	$(PRIVATE_ALL_OBJECTS) \
-	-Wl,--whole-archive \
-	$(call normalize-target-libraries,$(PRIVATE_ALL_WHOLE_STATIC_LIBRARIES)) \
-	-Wl,--no-whole-archive \
-	$(if $(PRIVATE_GROUP_STATIC_LIBRARIES),-Wl$(comma)--start-group) \
-	$(call normalize-target-libraries,$(PRIVATE_ALL_STATIC_LIBRARIES)) \
-	$(if $(PRIVATE_GROUP_STATIC_LIBRARIES),-Wl$(comma)--end-group) \
-	$(call normalize-target-libraries,$(PRIVATE_ALL_SHARED_LIBRARIES)) \
-	-o $@ \
-	$(PRIVATE_LDLIBS)
-endef
-endif
-
-define transform-o-to-shared-lib
-@mkdir -p $(dir $@)
-@echo "target SharedLib: $(PRIVATE_MODULE) ($@)"
-$(transform-o-to-shared-lib-inner)
-endef
-
-define transform-o-to-package
-@mkdir -p $(dir $@)
-@echo "target Package: $(PRIVATE_MODULE) ($@)"
-$(transform-o-to-shared-lib-inner)
-endef
-
-
-###########################################################
-## Commands for filtering a target executable or library
-###########################################################
-
-define transform-to-stripped
-@mkdir -p $(dir $@)
-@echo "target Strip: $(PRIVATE_MODULE) ($@)"
-$(hide) $(TARGET_STRIP_COMMAND)
-endef
-
-
->>>>>>> origin
 ###########################################################
 ## Commands for running gcc to link an executable
 ###########################################################
 
-<<<<<<< HEAD
 define transform-o-to-executable-inner
 $(hide) $(PRIVATE_CXX) -pie \
 	-nostdlib -Bdynamic \
@@ -2566,40 +1758,11 @@ endef
 define transform-o-to-executable
 @echo "$($(PRIVATE_PREFIX)DISPLAY) Executable: $(PRIVATE_MODULE) ($@)"
 @mkdir -p $(dir $@)
-=======
-ifneq ($(TARGET_CUSTOM_LD_COMMAND),true)
-define transform-o-to-executable-inner
-$(hide) $(PRIVATE_CXX) \
-	$(TARGET_GLOBAL_LDFLAGS) \
-	-Wl,-rpath-link=$(TARGET_OUT_INTERMEDIATE_LIBRARIES) \
-	$(TARGET_GLOBAL_LD_DIRS) \
-	-Wl,-rpath-link=$(TARGET_OUT_INTERMEDIATE_LIBRARIES) \
-	-Wl,-rpath,\$$ORIGIN/../lib \
-	$(PRIVATE_LDFLAGS) \
-	$(TARGET_GLOBAL_LD_DIRS) \
-	$(PRIVATE_ALL_OBJECTS) \
-	-Wl,--whole-archive \
-	$(call normalize-target-libraries,$(PRIVATE_ALL_WHOLE_STATIC_LIBRARIES)) \
-	-Wl,--no-whole-archive \
-	$(if $(PRIVATE_GROUP_STATIC_LIBRARIES),-Wl$(comma)--start-group) \
-	$(call normalize-target-libraries,$(PRIVATE_ALL_STATIC_LIBRARIES)) \
-	$(if $(PRIVATE_GROUP_STATIC_LIBRARIES),-Wl$(comma)--end-group) \
-	$(call normalize-target-libraries,$(PRIVATE_ALL_SHARED_LIBRARIES)) \
-	-o $@ \
-	$(PRIVATE_LDLIBS)
-endef
-endif
-
-define transform-o-to-executable
-@mkdir -p $(dir $@)
-@echo "target Executable: $(PRIVATE_MODULE) ($@)"
->>>>>>> origin
 $(transform-o-to-executable-inner)
 endef
 
 
 ###########################################################
-<<<<<<< HEAD
 ## Commands for linking a static executable. In practice,
 ## we only use this on arm, so the other platforms don't
 ## have transform-o-to-static-executable defined.
@@ -2638,22 +1801,6 @@ endef
 define transform-o-to-static-executable
 @echo "$($(PRIVATE_PREFIX)DISPLAY) StaticExecutable: $(PRIVATE_MODULE) ($@)"
 @mkdir -p $(dir $@)
-=======
-## Commands for running gcc to link a statically linked
-## executable.  In practice, we only use this on arm, so
-## the other platforms don't have the
-## transform-o-to-static-executable defined
-###########################################################
-
-ifneq ($(TARGET_CUSTOM_LD_COMMAND),true)
-define transform-o-to-static-executable-inner
-endef
-endif
-
-define transform-o-to-static-executable
-@mkdir -p $(dir $@)
-@echo "target StaticExecutable: $(PRIVATE_MODULE) ($@)"
->>>>>>> origin
 $(transform-o-to-static-executable-inner)
 endef
 
@@ -2667,7 +1814,6 @@ define transform-host-o-to-executable-inner
 $(hide) $(PRIVATE_CXX) \
 	$(PRIVATE_ALL_OBJECTS) \
 	-Wl,--whole-archive \
-<<<<<<< HEAD
 	$(PRIVATE_ALL_WHOLE_STATIC_LIBRARIES) \
 	-Wl,--no-whole-archive \
 	$(if $(PRIVATE_GROUP_STATIC_LIBRARIES),-Wl$(comma)--start-group) \
@@ -2682,34 +1828,14 @@ $(hide) $(PRIVATE_CXX) \
 		$(PRIVATE_HOST_GLOBAL_LDFLAGS) \
 	) \
 	$(PRIVATE_LDFLAGS) \
-=======
-	$(call normalize-host-libraries,$(PRIVATE_ALL_WHOLE_STATIC_LIBRARIES)) \
-	-Wl,--no-whole-archive \
-	$(if $(PRIVATE_GROUP_STATIC_LIBRARIES),-Wl$(comma)--start-group) \
-	$(call normalize-host-libraries,$(PRIVATE_ALL_STATIC_LIBRARIES)) \
-	$(if $(PRIVATE_GROUP_STATIC_LIBRARIES),-Wl$(comma)--end-group) \
-	$(call normalize-host-libraries,$(PRIVATE_ALL_SHARED_LIBRARIES)) \
-	-Wl,-rpath-link=$(HOST_OUT_INTERMEDIATE_LIBRARIES) \
-	-Wl,-rpath,\$$ORIGIN/../lib \
-	$(HOST_GLOBAL_LD_DIRS) \
-	$(PRIVATE_LDFLAGS) \
-	$(if $(PRIVATE_NO_DEFAULT_COMPILER_FLAGS),, \
-		$(HOST_GLOBAL_LDFLAGS) \
-	) \
->>>>>>> origin
 	-o $@ \
 	$(PRIVATE_LDLIBS)
 endef
 endif
 
 define transform-host-o-to-executable
-<<<<<<< HEAD
 @echo "$($(PRIVATE_PREFIX)DISPLAY) Executable: $(PRIVATE_MODULE) ($@)"
 @mkdir -p $(dir $@)
-=======
-@mkdir -p $(dir $@)
-@echo "host Executable: $(PRIVATE_MODULE) ($@)"
->>>>>>> origin
 $(transform-host-o-to-executable-inner)
 endef
 
@@ -2718,13 +1844,8 @@ endef
 ## Commands for running javac to make .class files
 ###########################################################
 
-<<<<<<< HEAD
 # b/37750224
 AAPT_ASAN_OPTIONS := ASAN_OPTIONS=detect_leaks=0
-=======
-#@echo "Source intermediates dir: $(PRIVATE_SOURCE_INTERMEDIATES_DIR)"
-#@echo "Source intermediates: $$(find $(PRIVATE_SOURCE_INTERMEDIATES_DIR) -name '*.java')"
->>>>>>> origin
 
 # TODO: Right now we generate the asset resources twice, first as part
 # of generating the Java classes, then at the end when packaging the final
@@ -2738,20 +1859,12 @@ AAPT_ASAN_OPTIONS := ASAN_OPTIONS=detect_leaks=0
 # This rule creates the R.java and Manifest.java files, both of which
 # are PRODUCT-neutral.  Don't pass PRIVATE_PRODUCT_AAPT_CONFIG to this invocation.
 define create-resource-java-files
-<<<<<<< HEAD
 @mkdir -p $(dir $(PRIVATE_RESOURCE_PUBLICS_OUTPUT))
 rm -rf $(PRIVATE_JAVA_GEN_DIR)
 mkdir -p $(PRIVATE_JAVA_GEN_DIR)
 $(hide) $(AAPT_ASAN_OPTIONS) $(AAPT) package $(PRIVATE_AAPT_FLAGS) -m \
     $(eval # PRIVATE_PRODUCT_AAPT_CONFIG is intentionally missing-- see comment.) \
     $(addprefix -J , $(PRIVATE_JAVA_GEN_DIR)) \
-=======
-@mkdir -p $(PRIVATE_SOURCE_INTERMEDIATES_DIR)
-@mkdir -p $(dir $(PRIVATE_RESOURCE_PUBLICS_OUTPUT))
-$(hide) $(AAPT) package $(PRIVATE_AAPT_FLAGS) -m \
-    $(eval # PRIVATE_PRODUCT_AAPT_CONFIG is intentionally missing-- see comment.) \
-    $(addprefix -J , $(PRIVATE_SOURCE_INTERMEDIATES_DIR)) \
->>>>>>> origin
     $(addprefix -M , $(PRIVATE_ANDROID_MANIFEST)) \
     $(addprefix -P , $(PRIVATE_RESOURCE_PUBLICS_OUTPUT)) \
     $(addprefix -S , $(PRIVATE_RESOURCE_DIR)) \
@@ -2760,7 +1873,6 @@ $(hide) $(AAPT) package $(PRIVATE_AAPT_FLAGS) -m \
     $(addprefix -G , $(PRIVATE_PROGUARD_OPTIONS_FILE)) \
     $(addprefix --min-sdk-version , $(PRIVATE_DEFAULT_APP_TARGET_SDK)) \
     $(addprefix --target-sdk-version , $(PRIVATE_DEFAULT_APP_TARGET_SDK)) \
-<<<<<<< HEAD
     $(if $(filter --version-code,$(PRIVATE_AAPT_FLAGS)),,--version-code $(PLATFORM_SDK_VERSION)) \
     $(if $(filter --version-name,$(PRIVATE_AAPT_FLAGS)),,--version-name $(APPS_DEFAULT_VERSION_NAME)) \
     $(addprefix --rename-manifest-package , $(PRIVATE_MANIFEST_PACKAGE_NAME)) \
@@ -2883,25 +1995,6 @@ endef
 
 ###########################################################
 xlint_unchecked := -Xlint:unchecked
-=======
-    $(if $(filter --version-code,$(PRIVATE_AAPT_FLAGS)),,$(addprefix --version-code , $(PLATFORM_SDK_VERSION))) \
-    $(if $(filter --version-name,$(PRIVATE_AAPT_FLAGS)),,$(addprefix --version-name , $(PLATFORM_VERSION)-$(BUILD_NUMBER))) \
-    $(addprefix --rename-manifest-package , $(PRIVATE_MANIFEST_PACKAGE_NAME)) \
-    $(addprefix --rename-instrumentation-target-package , $(PRIVATE_MANIFEST_INSTRUMENTATION_FOR))
-endef
-
-ifeq ($(HOST_OS),windows)
-xlint_unchecked :=
-else
-xlint_unchecked := -Xlint:unchecked
-endif
-
-ifeq (true, $(ENABLE_INCREMENTALJAVAC))
-incremental_dex := --incremental
-else
-incremental_dex :=
-endif
->>>>>>> origin
 
 # emit-line, <word list>, <output file>
 define emit-line
@@ -2911,7 +2004,6 @@ endef
 # dump-words-to-file, <word list>, <output file>
 define dump-words-to-file
         @rm -f $(2)
-<<<<<<< HEAD
         @touch $(2)
         @$(call emit-line,$(wordlist 1,500,$(1)),$(2))
         @$(call emit-line,$(wordlist 501,1000,$(1)),$(2))
@@ -2946,38 +2038,6 @@ endef
 # For a list of jar files, unzip them to a specified directory,
 # but make sure that no META-INF files come along for the ride,
 # unless PRIVATE_DONT_DELETE_JAR_META_INF is set.
-=======
-        @$(call emit-line,$(wordlist 1,200,$(1)),$(2))
-        @$(call emit-line,$(wordlist 201,400,$(1)),$(2))
-        @$(call emit-line,$(wordlist 401,600,$(1)),$(2))
-        @$(call emit-line,$(wordlist 601,800,$(1)),$(2))
-        @$(call emit-line,$(wordlist 801,1000,$(1)),$(2))
-        @$(call emit-line,$(wordlist 1001,1200,$(1)),$(2))
-        @$(call emit-line,$(wordlist 1201,1400,$(1)),$(2))
-        @$(call emit-line,$(wordlist 1401,1600,$(1)),$(2))
-        @$(call emit-line,$(wordlist 1601,1800,$(1)),$(2))
-        @$(call emit-line,$(wordlist 1801,2000,$(1)),$(2))
-        @$(call emit-line,$(wordlist 2001,2200,$(1)),$(2))
-        @$(call emit-line,$(wordlist 2201,2400,$(1)),$(2))
-        @$(call emit-line,$(wordlist 2401,2600,$(1)),$(2))
-        @$(call emit-line,$(wordlist 2601,2800,$(1)),$(2))
-        @$(call emit-line,$(wordlist 2801,3000,$(1)),$(2))
-        @$(call emit-line,$(wordlist 3001,3200,$(1)),$(2))
-        @$(call emit-line,$(wordlist 3201,3400,$(1)),$(2))
-        @$(call emit-line,$(wordlist 3401,3600,$(1)),$(2))
-        @$(call emit-line,$(wordlist 3601,3800,$(1)),$(2))
-        @$(call emit-line,$(wordlist 3801,4000,$(1)),$(2))
-        @$(call emit-line,$(wordlist 4001,4200,$(1)),$(2))
-        @$(call emit-line,$(wordlist 4201,4400,$(1)),$(2))
-        @$(call emit-line,$(wordlist 4401,4600,$(1)),$(2))
-        @$(call emit-line,$(wordlist 4601,4800,$(1)),$(2))
-        @$(call emit-line,$(wordlist 4801,5000,$(1)),$(2))
-        @$(if $(wordlist 5001,5002,$(1)),$(error Too many words ($(words $(1)))))
-endef
-
-# For a list of jar files, unzip them to a specified directory,
-# but make sure that no META-INF files come along for the ride.
->>>>>>> origin
 #
 # $(1): files to unzip
 # $(2): destination directory
@@ -2989,7 +2049,6 @@ define unzip-jar-files
       exit 1; \
     fi; \
     unzip -qo $$f -d $(2); \
-<<<<<<< HEAD
     rm -f $(2)/module-info.class; \
   done
   $(if $(PRIVATE_DONT_DELETE_JAR_META_INF),,$(hide) rm -rf $(2)/META-INF)
@@ -3015,20 +2074,11 @@ $(if $(PRIVATE_HAS_PROTO_SOURCES), \
     $(hide) find $(PRIVATE_PROTO_SOURCE_INTERMEDIATES_DIR) -name '*.java' -and -not -name '.*' >> $(1))
 endef
 
-=======
-    (cd $(2) && rm -rf META-INF); \
-  done
-endef
-
-# Common definition to invoke javac on the host and target.
-#
->>>>>>> origin
 # Some historical notes:
 # - below we write the list of java files to java-source-list to avoid argument
 #   list length problems with Cygwin
 # - we filter out duplicate java file names because eclipse's compiler
 #   doesn't like them.
-<<<<<<< HEAD
 define write-java-source-list
 @echo "$($(PRIVATE_PREFIX)DISPLAY) Java source list: $(PRIVATE_MODULE)"
 $(hide) rm -f $@
@@ -3195,126 +2245,6 @@ $(hide) $(DX_COMMAND) $(DEX_FLAGS) \
         $(filter-out --core-library --multi-dex --minimal-main-dex,$(PRIVATE_DX_FLAGS))) \
     $(dir $@)d8_input.jar
 $(hide) rm -f $(dir $@)d8_input.jar
-=======
-#
-# $(1): javac
-# $(2): bootclasspath
-define compile-java
-$(hide) rm -f $@
-$(hide) rm -rf $(PRIVATE_CLASS_INTERMEDIATES_DIR)
-$(hide) mkdir -p $(dir $@)
-$(hide) mkdir -p $(PRIVATE_CLASS_INTERMEDIATES_DIR)
-$(call unzip-jar-files,$(PRIVATE_STATIC_JAVA_LIBRARIES),$(PRIVATE_CLASS_INTERMEDIATES_DIR))
-$(call dump-words-to-file,$(PRIVATE_JAVA_SOURCES),$(PRIVATE_CLASS_INTERMEDIATES_DIR)/java-source-list)
-$(hide) if [ -d "$(PRIVATE_SOURCE_INTERMEDIATES_DIR)" ]; then \
-	    find $(PRIVATE_SOURCE_INTERMEDIATES_DIR) -name '*.java' >> $(PRIVATE_CLASS_INTERMEDIATES_DIR)/java-source-list; \
-fi
-$(hide) tr ' ' '\n' < $(PRIVATE_CLASS_INTERMEDIATES_DIR)/java-source-list \
-    | sort -u > $(PRIVATE_CLASS_INTERMEDIATES_DIR)/java-source-list-uniq
-$(hide) $(1) -encoding UTF-8 \
-    $(strip $(PRIVATE_JAVAC_DEBUG_FLAGS)) \
-    $(if $(findstring true,$(LOCAL_WARNINGS_ENABLE)),$(xlint_unchecked),) \
-    $(2) \
-    $(addprefix -classpath ,$(strip \
-        $(call normalize-path-list,$(PRIVATE_ALL_JAVA_LIBRARIES)))) \
-    $(if $(findstring true,$(LOCAL_WARNINGS_ENABLE)),$(xlint_unchecked),) \
-    -extdirs "" -d $(PRIVATE_CLASS_INTERMEDIATES_DIR) \
-    $(PRIVATE_JAVACFLAGS) \
-    \@$(PRIVATE_CLASS_INTERMEDIATES_DIR)/java-source-list-uniq \
-    || ( rm -rf $(PRIVATE_CLASS_INTERMEDIATES_DIR) ; exit 41 )
-$(hide) rm -f $(PRIVATE_CLASS_INTERMEDIATES_DIR)/java-source-list
-$(hide) rm -f $(PRIVATE_CLASS_INTERMEDIATES_DIR)/java-source-list-uniq
-$(hide) jar $(if $(strip $(PRIVATE_JAR_MANIFEST)),-cfm,-cf) \
-    $@ $(PRIVATE_JAR_MANIFEST) -C $(PRIVATE_CLASS_INTERMEDIATES_DIR) .
-endef
-
-define transform-java-to-classes.jar
-@echo "target Java: $(PRIVATE_MODULE) ($(PRIVATE_CLASS_INTERMEDIATES_DIR))"
-$(call compile-java,$(TARGET_JAVAC),$(PRIVATE_BOOTCLASSPATH))
-$(hide) rm -rf $(PRIVATE_CLASS_INTERMEDIATES_DIR)
-endef
-
-# Override the above definitions if we want to do incremetal javac
-ifeq (true, $(ENABLE_INCREMENTALJAVAC))
-define compile-java
-$(hide) mkdir -p $(dir $@)
-$(hide) mkdir -p $(PRIVATE_CLASS_INTERMEDIATES_DIR)
-$(hide) touch $(PRIVATE_CLASS_INTERMEDIATES_DIR)/newstamp
-$(call unzip-jar-files,$(PRIVATE_STATIC_JAVA_LIBRARIES),$(PRIVATE_CLASS_INTERMEDIATES_DIR))
-$(hide) if [ -e $(PRIVATE_CLASS_INTERMEDIATES_DIR)/stamp ] ; then \
-        newerFlag=$$(echo -n "-newer $(PRIVATE_CLASS_INTERMEDIATES_DIR)/stamp") ; \
-    fi ; \
-    find $(PRIVATE_JAVA_SOURCES) $$newerFlag > $(PRIVATE_CLASS_INTERMEDIATES_DIR)/java-source-list ; \
-    if [ -d "$(PRIVATE_SOURCE_INTERMEDIATES_DIR)" ]; then \
-        find $(PRIVATE_SOURCE_INTERMEDIATES_DIR) -name '*.java' $$newerFlag >> $(PRIVATE_CLASS_INTERMEDIATES_DIR)/java-source-list; \
-    fi
-$(hide) tr ' ' '\n' < $(PRIVATE_CLASS_INTERMEDIATES_DIR)/java-source-list \
-    | sort -u > $(PRIVATE_CLASS_INTERMEDIATES_DIR)/java-source-list-uniq
-@echo "(Incremental) build source files:"
-@cat $(PRIVATE_CLASS_INTERMEDIATES_DIR)/java-source-list-uniq
-$(hide) if [ -s $(PRIVATE_CLASS_INTERMEDIATES_DIR)/java-source-list-uniq ] ; then \
-    $(1) -encoding UTF-8 \
-    $(strip $(PRIVATE_JAVAC_DEBUG_FLAGS)) \
-    $(if $(findstring true,$(LOCAL_WARNINGS_ENABLE)),$(xlint_unchecked),) \
-    $(2) \
-    $(addprefix -classpath ,$(strip \
-        $(call normalize-path-list,$(PRIVATE_ALL_JAVA_LIBRARIES) $(PRIVATE_CLASS_INTERMEDIATES_DIR)))) \
-    $(if $(findstring true,$(LOCAL_WARNINGS_ENABLE)),$(xlint_unchecked),) \
-    -extdirs "" -d $(PRIVATE_CLASS_INTERMEDIATES_DIR) \
-    $(PRIVATE_JAVACFLAGS) \
-    \@$(PRIVATE_CLASS_INTERMEDIATES_DIR)/java-source-list-uniq \
-    || ( exit 41 ) \
-fi
-$(hide) rm -f $(PRIVATE_CLASS_INTERMEDIATES_DIR)/java-source-list
-$(hide) rm -f $(PRIVATE_CLASS_INTERMEDIATES_DIR)/java-source-list-uniq
-$(hide) rm -f $@
-$(hide) jar $(if $(strip $(PRIVATE_JAR_MANIFEST)),-cfm,-cf) \
-    $@ $(PRIVATE_JAR_MANIFEST) -C $(PRIVATE_CLASS_INTERMEDIATES_DIR) .
-$(hide) mv $(PRIVATE_CLASS_INTERMEDIATES_DIR)/newstamp $(PRIVATE_CLASS_INTERMEDIATES_DIR)/stamp
-endef
-
-define transform-java-to-classes.jar
-@echo "target Java: $(PRIVATE_MODULE) ($(PRIVATE_CLASS_INTERMEDIATES_DIR))"
-$(call compile-java,$(TARGET_JAVAC),$(PRIVATE_BOOTCLASSPATH))
-endef
-endif # ENABLE_INCREMENTALJAVAC
-
-define transform-classes.jar-to-emma
-$(hide) java -classpath $(EMMA_JAR) emma instr -outmode fullcopy -outfile \
-    $(PRIVATE_EMMA_COVERAGE_FILE) -ip $< -d $(PRIVATE_EMMA_INTERMEDIATES_DIR) \
-    $(addprefix -ix , $(PRIVATE_EMMA_COVERAGE_FILTER))
-endef
-
-#TODO: use a smaller -Xmx value for most libraries;
-#      only core.jar and framework.jar need a heap this big.
-# Avoid the memory arguments on Windows, dx fails to load for some reason with them.
-define transform-classes.jar-to-dex
-@echo "target Dex: $(PRIVATE_MODULE)"
-@mkdir -p $(dir $@)
-$(hide) $(DX) \
-    $(if $(findstring windows,$(HOST_OS)),,-JXms16M -JXmx2048M) \
-    --dex --output=$@ \
-    $(incremental_dex) \
-    $(if $(NO_OPTIMIZE_DX), \
-        --no-optimize) \
-    $(if $(GENERATE_DEX_DEBUG), \
-	    --debug --verbose \
-	    --dump-to=$(@:.dex=.lst) \
-	    --dump-width=1000) \
-    $(PRIVATE_DX_FLAGS) \
-    $<
-endef
-
-# Create a mostly-empty .jar file that we'll add to later.
-# The MacOS jar tool doesn't like creating empty jar files,
-# so we need to give it something.
-define create-empty-package
-@mkdir -p $(dir $@)
-$(hide) touch $(dir $@)/dummy
-$(hide) (cd $(dir $@) && jar cf $(notdir $@) dummy)
-$(hide) zip -qd $@ dummy
-$(hide) rm $(dir $@)/dummy
->>>>>>> origin
 endef
 
 #TODO: we kinda want to build different asset packages for
@@ -3326,25 +2256,17 @@ endef
 #Note that the version numbers are given to aapt as simple default
 #values; applications can override these by explicitly stating
 #them in their manifest.
-<<<<<<< HEAD
 # $(1) the package file
 define create-assets-package
 $(hide) $(AAPT_ASAN_OPTIONS) $(AAPT) package $(PRIVATE_AAPT_FLAGS) \
     $(addprefix -c , $(PRIVATE_PRODUCT_AAPT_CONFIG)) \
     $(addprefix --preferred-density , $(PRIVATE_PRODUCT_AAPT_PREF_CONFIG)) \
-=======
-define add-assets-to-package
-$(hide) $(AAPT) package -u $(PRIVATE_AAPT_FLAGS) \
-    $(addprefix -c , $(PRIVATE_PRODUCT_AAPT_CONFIG)) \
-    $(addprefix --preferred-configurations , $(PRIVATE_PRODUCT_AAPT_PREF_CONFIG)) \
->>>>>>> origin
     $(addprefix -M , $(PRIVATE_ANDROID_MANIFEST)) \
     $(addprefix -S , $(PRIVATE_RESOURCE_DIR)) \
     $(addprefix -A , $(PRIVATE_ASSET_DIR)) \
     $(addprefix -I , $(PRIVATE_AAPT_INCLUDES)) \
     $(addprefix --min-sdk-version , $(PRIVATE_DEFAULT_APP_TARGET_SDK)) \
     $(addprefix --target-sdk-version , $(PRIVATE_DEFAULT_APP_TARGET_SDK)) \
-<<<<<<< HEAD
     $(if $(filter --product,$(PRIVATE_AAPT_FLAGS)),,$(addprefix --product , $(PRIVATE_TARGET_AAPT_CHARACTERISTICS))) \
     $(if $(filter --version-code,$(PRIVATE_AAPT_FLAGS)),,--version-code $(PLATFORM_SDK_VERSION)) \
     $(if $(filter --version-name,$(PRIVATE_AAPT_FLAGS)),,--version-name $(APPS_DEFAULT_VERSION_NAME)) \
@@ -3417,43 +2339,11 @@ endef
 # $(2): the input jar
 define extract-resources-jar
   $(ZIP2ZIP) -i $(2) -o $(1) -x '**/*.class' -x '**/*/'
-=======
-    $(addprefix --product , $(TARGET_AAPT_CHARACTERISTICS)) \
-    $(if $(filter --version-code,$(PRIVATE_AAPT_FLAGS)),,$(addprefix --version-code , $(PLATFORM_SDK_VERSION))) \
-    $(if $(filter --version-name,$(PRIVATE_AAPT_FLAGS)),,$(addprefix --version-name , $(PLATFORM_VERSION)-$(BUILD_NUMBER))) \
-    $(addprefix --rename-manifest-package , $(PRIVATE_MANIFEST_PACKAGE_NAME)) \
-    $(addprefix --rename-instrumentation-target-package , $(PRIVATE_MANIFEST_INSTRUMENTATION_FOR)) \
-    -F $@
-endef
-
-define add-jni-shared-libs-to-package
-$(hide) rm -rf $(dir $@)lib
-$(hide) mkdir -p $(dir $@)lib/$(PRIVATE_JNI_SHARED_LIBRARIES_ABI)
-$(hide) cp $(PRIVATE_JNI_SHARED_LIBRARIES) $(dir $@)lib/$(PRIVATE_JNI_SHARED_LIBRARIES_ABI)
-$(hide) (cd $(dir $@) && zip -r $(notdir $@) lib)
-$(hide) rm -rf $(dir $@)lib
-endef
-
-#TODO: update the manifest to point to the dex file
-define add-dex-to-package
-$(if $(filter classes.dex,$(notdir $(PRIVATE_DEX_FILE))),\
-$(hide) $(AAPT) add -k $@ $(PRIVATE_DEX_FILE),\
-$(hide) _adtp_classes_dex=$(dir $(PRIVATE_DEX_FILE))classes.dex; \
-cp $(PRIVATE_DEX_FILE) $$_adtp_classes_dex && \
-$(AAPT) add -k $@ $$_adtp_classes_dex && rm -f $$_adtp_classes_dex)
-endef
-
-define add-java-resources-to-package
-$(call dump-words-to-file, $(PRIVATE_EXTRA_JAR_ARGS), $(dir $@)jar-arg-list)
-$(hide) jar uf $@ @$(dir $@)jar-arg-list
-@rm -f $(dir $@)jar-arg-list
->>>>>>> origin
 endef
 
 # Sign a package using the specified key/cert.
 #
 define sign-package
-<<<<<<< HEAD
 $(call sign-package-arg,$@)
 endef
 
@@ -3550,34 +2440,6 @@ define uncompress-prebuilt-embedded-jni-libs
         $(addprefix -X ,$(PRIVATE_EMBEDDED_JNI_LIBS))) && \
     mv -f $@.tmp $@ ; \
   fi
-=======
-$(hide) mv $@ $@.unsigned
-$(hide) java -jar $(SIGNAPK_JAR) \
-	$(PRIVATE_CERTIFICATE) $(PRIVATE_PRIVATE_KEY) $@.unsigned $@.signed
-$(hide) mv $@.signed $@
-endef
-
-# Align STORED entries of a package on 4-byte boundaries
-# to make them easier to mmap.
-#
-define align-package
-$(hide) mv $@ $@.unaligned
-$(hide) $(ZIPALIGN) -f 4 $@.unaligned $@.aligned
-$(hide) mv $@.aligned $@
-endef
-
-define install-dex-debug
-$(hide) if [ -f "$(PRIVATE_INTERMEDIATES_DIR)/classes.dex" ]; then \
-	    mkdir -p $(TOP)/dalvik/DEBUG-FILES; \
-	    $(ACP) $(PRIVATE_INTERMEDIATES_DIR)/classes.dex \
-		$(TOP)/dalvik/DEBUG-FILES/$(PRIVATE_MODULE).dex; \
-	fi
-$(hide) if [ -f "$(PRIVATE_INTERMEDIATES_DIR)/classes.lst" ]; then \
-	    mkdir -p $(TOP)/dalvik/DEBUG-FILES; \
-	    $(ACP) $(PRIVATE_INTERMEDIATES_DIR)/classes.lst \
-		$(TOP)/dalvik/DEBUG-FILES/$(PRIVATE_MODULE).lst; \
-	fi
->>>>>>> origin
 endef
 
 # TODO(joeo): If we can ever upgrade to post 3.81 make and get the
@@ -3587,7 +2449,6 @@ endef
 # Note: we intentionally don't clean PRIVATE_CLASS_INTERMEDIATES_DIR
 # in transform-java-to-classes for the sake of vm-tests.
 define transform-host-java-to-package
-<<<<<<< HEAD
 @echo "Host Java: $(PRIVATE_MODULE) ($(PRIVATE_CLASS_INTERMEDIATES_DIR))"
 $(call compile-java,$(HOST_JAVAC),$(PRIVATE_ALL_JAVA_LIBRARIES))
 endef
@@ -3597,40 +2458,6 @@ endef
 define transform-host-java-to-dalvik-package
 @echo "Dalvik Java: $(PRIVATE_MODULE) ($(PRIVATE_CLASS_INTERMEDIATES_DIR))"
 $(call compile-java,$(HOST_JAVAC),$(PRIVATE_ALL_JAVA_HEADER_LIBRARIES))
-=======
-@echo "host Java: $(PRIVATE_MODULE) ($(PRIVATE_CLASS_INTERMEDIATES_DIR))"
-$(call compile-java,$(HOST_JAVAC),$(PRIVATE_BOOTCLASSPATH))
-$(if $(PRIVATE_EXTRA_JAR_ARGS), $(call add-java-resources-to-package))
-endef
-
-###########################################################
-## Obfuscate a jar file
-###########################################################
-
-# PRIVATE_KEEP_FILE is a file containing a list of classes
-# PRIVATE_INTERMEDIATES_DIR is a directory we can use for temporary files
-# The module using this must depend on
-#        $(HOST_OUT_JAVA_LIBRARIES)/proguard-4.0.1.jar
-define obfuscate-jar
-@echo "Obfuscate jar: $(notdir $@) ($@)"
-@mkdir -p $(dir $@)
-@rm -f $@
-@mkdir -p $(PRIVATE_INTERMEDIATES_DIR)
-$(hide) sed -e 's/^/-keep class /' < $(PRIVATE_KEEP_FILE) > \
-		$(PRIVATE_INTERMEDIATES_DIR)/keep.pro
-$(hide) java -Xmx512M -jar $(HOST_OUT_JAVA_LIBRARIES)/proguard-4.0.1.jar \
-		-injars $< \
-		-outjars $@ \
-		-target 1.5 \
-		-dontnote -dontwarn \
-		-printmapping $(PRIVATE_INTERMEDIATES_DIR)/out.map \
-		-forceprocessing \
-		-renamesourcefileattribute SourceFile \
-		-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod \
-		-repackageclasses \
-		-keepclassmembers "class * { public protected *; }" \
-		@$(PRIVATE_INTERMEDIATES_DIR)/keep.pro
->>>>>>> origin
 endef
 
 ###########################################################
@@ -3650,16 +2477,11 @@ endef
 # $(1): source file
 # $(2): destination file
 define copy-one-file
-<<<<<<< HEAD
 $(2): $(1)
-=======
-$(2): $(1) | $(ACP)
->>>>>>> origin
 	@echo "Copy: $$@"
 	$$(copy-file-to-target)
 endef
 
-<<<<<<< HEAD
 define copy-and-uncompress-dexs
 $(2): $(1) $(ZIPALIGN) $(ZIP2ZIP)
 	@echo "Uncompress dexs in: $$@"
@@ -3774,8 +2596,6 @@ $(foreach f, $(1), $(strip \
     $(_cmf_dest)))
 endef
 
-=======
->>>>>>> origin
 # The -t option to acp and the -p option to cp is
 # required for OSX.  OSX has a ridiculous restriction
 # where it's an error for a .a file's modification time
@@ -3785,7 +2605,6 @@ endef
 # Copy a single file from one place to another,
 # preserving permissions and overwriting any existing
 # file.
-<<<<<<< HEAD
 # When we used acp, it could not handle high resolution timestamps
 # on file systems like ext4. Because of that, '-t' option was disabled
 # and copy-file-to-target was identical to copy-file-to-new-target.
@@ -3795,42 +2614,21 @@ define copy-file-to-target
 @mkdir -p $(dir $@)
 $(hide) rm -f $@
 $(hide) cp "$<" "$@"
-=======
-# We disable the "-t" option for acp can not handle
-# high resolution timestamp correctly on file systems like ext4.
-# Therefore copy-file-to-target is the same as copy-file-to-new-target.
-define copy-file-to-target
-@mkdir -p $(dir $@)
-$(hide) $(ACP) -fp $< $@
->>>>>>> origin
 endef
 
 # The same as copy-file-to-target, but use the local
 # cp command instead of acp.
 define copy-file-to-target-with-cp
 @mkdir -p $(dir $@)
-<<<<<<< HEAD
 $(hide) rm -f $@
 $(hide) cp -p "$<" "$@"
-=======
-$(hide) cp -fp $< $@
-endef
-
-# The same as copy-file-to-target, but use the zipalign tool to do so.
-define copy-file-to-target-with-zipalign
-@mkdir -p $(dir $@)
-$(hide) $(ZIPALIGN) -f 4 $< $@
->>>>>>> origin
 endef
 
 # The same as copy-file-to-target, but strip out "# comment"-style
 # comments (for config files and such).
 define copy-file-to-target-strip-comments
 @mkdir -p $(dir $@)
-<<<<<<< HEAD
 $(hide) rm -f $@
-=======
->>>>>>> origin
 $(hide) sed -e 's/#.*$$//' -e 's/[ \t]*$$//' -e '/^$$/d' < $< > $@
 endef
 
@@ -3838,29 +2636,20 @@ endef
 # the old modification time.
 define copy-file-to-new-target
 @mkdir -p $(dir $@)
-<<<<<<< HEAD
 $(hide) rm -f $@
 $(hide) cp $< $@
-=======
-$(hide) $(ACP) -fp $< $@
->>>>>>> origin
 endef
 
 # The same as copy-file-to-new-target, but use the local
 # cp command instead of acp.
 define copy-file-to-new-target-with-cp
 @mkdir -p $(dir $@)
-<<<<<<< HEAD
 $(hide) rm -f $@
 $(hide) cp $< $@
-=======
-$(hide) cp -f $< $@
->>>>>>> origin
 endef
 
 # Copy a prebuilt file to a target location.
 define transform-prebuilt-to-target
-<<<<<<< HEAD
 @echo "$($(PRIVATE_PREFIX)DISPLAY) Prebuilt: $(PRIVATE_MODULE) ($@)"
 $(copy-file-to-target)
 endef
@@ -3950,92 +2739,13 @@ $(hide) $(R8_COMPAT_PROGUARD) $(DEX_FLAGS) \
     $(PRIVATE_DX_FLAGS)
 $(hide) touch $(PRIVATE_PROGUARD_DICTIONARY)
 endef
-=======
-@echo "$(if $(PRIVATE_IS_HOST_MODULE),host,target) Prebuilt: $(PRIVATE_MODULE) ($@)"
-$(copy-file-to-target)
-endef
-
-# Copy a prebuilt file to a target location, using zipalign on it.
-define transform-prebuilt-to-target-with-zipalign
-@echo "$(if $(PRIVATE_IS_HOST_MODULE),host,target) Prebuilt APK: $(PRIVATE_MODULE) ($@)"
-$(copy-file-to-target-with-zipalign)
-endef
-
-# Copy a prebuilt file to a target location, stripping "# comment" comments.
-define transform-prebuilt-to-target-strip-comments
-@echo "$(if $(PRIVATE_IS_HOST_MODULE),host,target) Prebuilt: $(PRIVATE_MODULE) ($@)"
-$(copy-file-to-target-strip-comments)
-endef
-
-###########################################################
-## On some platforms (MacOS), after copying a static
-## library, ranlib must be run to update an internal
-## timestamp!?!?!
-###########################################################
-
-ifeq ($(HOST_RUN_RANLIB_AFTER_COPYING),true)
-define transform-host-ranlib-copy-hack
-    $(hide) ranlib $@ || true
-endef
-else
-define transform-host-ranlib-copy-hack
-@true
-endef
-endif
-
-ifeq ($(TARGET_RUN_RANLIB_AFTER_COPYING),true)
-define transform-ranlib-copy-hack
-    $(hide) ranlib $@
-endef
-else
-define transform-ranlib-copy-hack
-@true
-endef
-endif
-
-
-###########################################################
-## Commands to call Proguard
-###########################################################
-
-# Command to copy the file with acp, if proguard is disabled.
-define proguard-disabled-commands
-@echo Copying: $@
-$(hide) $(ACP) -fp $< $@
-endef
-
-# Command to call Proguard
-# $(1): extra flags for instrumentation.
-define proguard-enabled-commands
-@echo Proguard: $@
-$(hide) $(PROGUARD) -injars $< -outjars $@ $(PRIVATE_PROGUARD_FLAGS) $(1)
-endef
-
-# Figure out the proguard dictionary file of the module that is instrumentationed for.
-define get-instrumentation-proguard-flags
-$(if $(PRIVATE_INSTRUMENTATION_FOR),$(if $(ALL_MODULES.$(PRIVATE_INSTRUMENTATION_FOR).PROGUARD_ENABLED),-applymapping $(call intermediates-dir-for,APPS,$(PRIVATE_INSTRUMENTATION_FOR),,COMMON)/proguard_dictionary))
-endef
-
-define transform-jar-to-proguard
-$(eval _instrumentation_proguard_flags:=$(call get-instrumentation-proguard-flags))
-$(eval _enable_proguard:=$(PRIVATE_PROGUARD_ENABLED)$(_instrumentation_proguard_flags))
-$(if $(_enable_proguard),$(call proguard-enabled-commands,$(_instrumentation_proguard_flags)),$(call proguard-disabled-commands))
-$(eval _instrumentation_proguard_flags:=)
-$(eval _enable_proguard:=)
-endef
-
->>>>>>> origin
 
 ###########################################################
 ## Stuff source generated from one-off tools
 ###########################################################
 
 define transform-generated-source
-<<<<<<< HEAD
 @echo "$($(PRIVATE_PREFIX)DISPLAY) Generated: $(PRIVATE_MODULE) <= $<"
-=======
-@echo "target Generated: $(PRIVATE_MODULE) <= $<"
->>>>>>> origin
 @mkdir -p $(dir $@)
 $(hide) $(PRIVATE_CUSTOM_TOOL)
 endef
@@ -4050,57 +2760,16 @@ ifndef get-file-size
 $(error HOST_OS must define get-file-size)
 endif
 
-<<<<<<< HEAD
 # $(1): The file(s) to check (often $@)
 # $(2): The partition size.
 define assert-max-image-size
-=======
-# Convert a partition data size (eg, as reported in /proc/mtd) to the
-# size of the image used to flash that partition (which includes a
-# spare area for each page).
-# $(1): the partition data size
-define image-size-from-data-size
-$(strip $(eval _isfds_value := $$(shell echo $$$$(($(1) / $(BOARD_NAND_PAGE_SIZE) * \
-  ($(BOARD_NAND_PAGE_SIZE)+$(BOARD_NAND_SPARE_SIZE))))))\
-$(if $(filter 0, $(_isfds_value)),$(shell echo $$(($(BOARD_NAND_PAGE_SIZE)+$(BOARD_NAND_SPARE_SIZE)))),$(_isfds_value))\
-$(eval _isfds_value :=))
-endef
-
-# $(1): The file(s) to check (often $@)
-# $(2): The maximum total image size, in decimal bytes
-# $(3): the type of filesystem "yaffs" or "raw"
-#
-# If $(2) is empty, evaluates to "true"
-#
-# Reserve bad blocks.  Make sure that MAX(1% of partition size, 2 blocks)
-# is left over after the image has been flashed.  Round the 1% up to the
-# next whole flash block size.
-define assert-max-file-size
->>>>>>> origin
 $(if $(2), \
   size=$$(for i in $(1); do $(call get-file-size,$$i); echo +; done; echo 0); \
   total=$$(( $$( echo "$$size" ) )); \
   printname=$$(echo -n "$(1)" | tr " " +); \
-<<<<<<< HEAD
   maxsize=$$(($(2))); \
   if [ "$$total" -gt "$$maxsize" ]; then \
     echo "error: $$printname too large ($$total > $$maxsize)"; \
-=======
-  echo "$$printname total size is $$total"; \
-  img_blocksize=$(call image-size-from-data-size,$(BOARD_FLASH_BLOCK_SIZE)); \
-  if [ "$(3)" == "yaffs" ]; then \
-    reservedblocks=8; \
-  else \
-    reservedblocks=0; \
-  fi; \
-  twoblocks=$$((img_blocksize * 2)); \
-  onepct=$$((((($(2) / 100) - 1) / img_blocksize + 1) * img_blocksize)); \
-  reserve=$$(((twoblocks > onepct ? twoblocks : onepct) + \
-               reservedblocks * img_blocksize)); \
-  maxsize=$$(($(2) - reserve)); \
-  if [ "$$total" -gt "$$maxsize" ]; then \
-    echo "error: $$printname too large ($$total > [$(2) - $$reserve])"; \
->>>>>>> origin
     false; \
   elif [ "$$total" -gt $$((maxsize - 32768)) ]; then \
     echo "WARNING: $$printname approaching size limit ($$total now; limit $$maxsize)"; \
@@ -4110,29 +2779,11 @@ $(if $(2), \
  )
 endef
 
-<<<<<<< HEAD
-=======
-# Like assert-max-file-size, but the second argument is a partition
-# size, which we'll convert to a max image size before checking it
-# against the files.
-#
-# $(1): The file(s) to check (often $@)
-# $(2): The partition size.
-define assert-max-image-size
-$(if $(2), \
-  $(call assert-max-file-size,$(1),$(call image-size-from-data-size,$(2))), \
-  true)
-endef
-
->>>>>>> origin
 
 ###########################################################
 ## Define device-specific radio files
 ###########################################################
-<<<<<<< HEAD
 INSTALLED_RADIOIMAGE_TARGET :=
-=======
->>>>>>> origin
 
 # Copy a radio image file to the output location, and add it to
 # INSTALLED_RADIOIMAGE_TARGET.
@@ -4142,7 +2793,6 @@ define add-radio-file
 endef
 define add-radio-file-internal
 INSTALLED_RADIOIMAGE_TARGET += $$(PRODUCT_OUT)/$(2)
-<<<<<<< HEAD
 $$(PRODUCT_OUT)/$(2) : $$(LOCAL_PATH)/$(1)
 	$$(transform-prebuilt-to-target)
 endef
@@ -4159,9 +2809,6 @@ define add-radio-file-checked-internal
 INSTALLED_RADIOIMAGE_TARGET += $$(PRODUCT_OUT)/$(2)
 BOARD_INFO_CHECK += $(3):$(LOCAL_PATH)/$(1)
 $$(PRODUCT_OUT)/$(2) : $$(LOCAL_PATH)/$(1)
-=======
-$$(PRODUCT_OUT)/$(2) : $$(LOCAL_PATH)/$(1) | $$(ACP)
->>>>>>> origin
 	$$(transform-prebuilt-to-target)
 endef
 
@@ -4178,29 +2825,18 @@ endef
 #  $(5): New LOCAL_CERTIFICATE value.
 #  $(6): New LOCAL_INSTRUMENTATION_FOR value.
 #  $(7): New LOCAL_MANIFEST_INSTRUMENTATION_FOR value.
-<<<<<<< HEAD
 #  $(8): New LOCAL_COMPATIBILITY_SUITE value.
-=======
->>>>>>> origin
 #
 # Note that LOCAL_PACKAGE_OVERRIDES is NOT cleared in
 # clear_vars.mk.
 ###########################################################
 define inherit-package
-<<<<<<< HEAD
   $(eval $(call inherit-package-internal,$(1),$(2),$(3),$(4),$(5),$(6),$(7),$(8)))
-=======
-  $(eval $(call inherit-package-internal,$(1),$(2),$(3),$(4),$(5),$(6),$(7)))
->>>>>>> origin
 endef
 
 define inherit-package-internal
   LOCAL_PACKAGE_OVERRIDES \
-<<<<<<< HEAD
       := $(strip $(1))||$(strip $(2))||$(strip $(3))||$(strip $(4))||&&$(strip $(5))||&&$(strip $(6))||&&$(strip $(7))||&&$(strip $(8)) $(LOCAL_PACKAGE_OVERRIDES)
-=======
-      := $(strip $(1))||$(strip $(2))||$(strip $(3))||$(strip $(4))||&&$(strip $(5))||&&$(strip $(6))||&&$(strip $(7)) $(LOCAL_PACKAGE_OVERRIDES)
->>>>>>> origin
   include $(1)
   LOCAL_PACKAGE_OVERRIDES \
       := $(wordlist 1,$(words $(LOCAL_PACKAGE_OVERRIDES)), $(LOCAL_PACKAGE_OVERRIDES))
@@ -4225,16 +2861,12 @@ define set-inherited-package-variables-internal
     $(call keep-or-override,LOCAL_CERTIFICATE,$(patsubst &&%,%,$(word 5,$(_o)))) \
     $(call keep-or-override,LOCAL_INSTRUMENTATION_FOR,$(patsubst &&%,%,$(word 6,$(_o)))) \
     $(call keep-or-override,LOCAL_MANIFEST_INSTRUMENTATION_FOR,$(patsubst &&%,%,$(word 7,$(_o)))) \
-<<<<<<< HEAD
     $(call keep-or-override,LOCAL_COMPATIBILITY_SUITE,$(patsubst &&%,%,$(word 8,$(_o)))) \
-=======
->>>>>>> origin
     $(eval LOCAL_OVERRIDES_PACKAGES := $(sort $(LOCAL_OVERRIDES_PACKAGES) $(word 2,$(_o)))) \
     true \
   ,)
 endef
 
-<<<<<<< HEAD
 ###########################################################
 ## API Check
 ###########################################################
@@ -4622,8 +3254,6 @@ $(strip $(1)\
       '*' is only supported at the end of a filter in LOCAL_JACK_COVERAGE_INCLUDE_FILTER or LOCAL_JACK_COVERAGE_EXCLUDE_FILTER))\
   ))
 endef
-=======
->>>>>>> origin
 
 ###########################################################
 ## Other includes
@@ -4634,7 +3264,6 @@ endef
 # when requested.
 include $(BUILD_SYSTEM)/distdir.mk
 
-<<<<<<< HEAD
 # Include any vendor specific definitions.mk file
 -include $(TOPDIR)vendor/*/build/core/definitions.mk
 -include $(TOPDIR)device/*/build/core/definitions.mk
@@ -4715,12 +3344,6 @@ DISABLED_USER_MODULES := \
     dexlayout \
     libart-disassembler \
     libart \
-=======
-# -----------------------------------------------------------------
-# The modules allowed to use a user tag
-include $(BUILD_SYSTEM)/user_tags.mk
-
->>>>>>> origin
 # broken:
 #	$(foreach file,$^,$(if $(findstring,.a,$(suffix $file)),-l$(file),$(file)))
 
@@ -4750,7 +3373,6 @@ include $(BUILD_SYSTEM)/user_tags.mk
 #	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 #	      -e '/^$$/ d' -e 's/$$/ :/' < $*.d >> $*.P; \
 #	  rm -f $*.d
-<<<<<<< HEAD
 
 
 ###########################################################
@@ -4870,5 +3492,3 @@ $(hide) CLANG_BIN="$(LLVM_PREBUILTS_PATH)" \
 	XZ="$(XZ)" \
 	$(LIBRARY_IDENTITY_CHECK_SCRIPT) $(SOONG_STRIP_PATH) $(1) $(2)
 endef
-=======
->>>>>>> origin

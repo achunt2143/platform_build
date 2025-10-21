@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-<<<<<<< HEAD
 from __future__ import print_function
 
 import collections
@@ -32,24 +31,12 @@ import re
 import shlex
 import shutil
 import string
-=======
-import copy
-import errno
-import getopt
-import getpass
-import imp
-import os
-import platform
-import re
-import shutil
->>>>>>> origin
 import subprocess
 import sys
 import tempfile
 import threading
 import time
 import zipfile
-<<<<<<< HEAD
 from hashlib import sha1, sha256
 
 import blockimgdiff
@@ -102,32 +89,10 @@ OPTIONS = Options()
 
 # The block size that's used across the releasetools scripts.
 BLOCK_SIZE = 4096
-=======
-
-try:
-  from hashlib import sha1 as sha1
-except ImportError:
-  from sha import sha as sha1
-
-# missing in Python 2.4 and before
-if not hasattr(os, "SEEK_SET"):
-  os.SEEK_SET = 0
-
-class Options(object): pass
-OPTIONS = Options()
-OPTIONS.search_path = "out/host/linux-x86"
-OPTIONS.verbose = False
-OPTIONS.tempfiles = []
-OPTIONS.device_specific = None
-OPTIONS.extras = {}
-OPTIONS.info_dict = None
-
->>>>>>> origin
 
 # Values for "certificate" in apkcerts that mean special things.
 SPECIAL_CERT_STRINGS = ("PRESIGNED", "EXTERNAL")
 
-<<<<<<< HEAD
 # The partitions allowed to be signed by AVB (Android verified boot 2.0).
 AVB_PARTITIONS = ('boot', 'recovery', 'system', 'vendor', 'product',
                   'product_services', 'dtbo', 'odm')
@@ -290,20 +255,6 @@ def RoundUpTo4K(value):
   return rounded_up - (rounded_up % 4096)
 
 
-=======
-
-class ExternalError(RuntimeError): pass
-
-
-def Run(args, **kwargs):
-  """Create and return a subprocess.Popen object, printing the command
-  line on the terminal if -v was specified."""
-  if OPTIONS.verbose:
-    print "  running: ", " ".join(args)
-  return subprocess.Popen(args, **kwargs)
-
-
->>>>>>> origin
 def CloseInheritedPipes():
   """ Gmake in MAC OS has file descriptor (PIPE) leak. We close those fds
   before doing other work."""
@@ -320,7 +271,6 @@ def CloseInheritedPipes():
       pass
 
 
-<<<<<<< HEAD
 def LoadInfoDict(input_file, repacking=False):
   """Loads the key/value pairs from the given input target_files.
 
@@ -415,59 +365,6 @@ def LoadInfoDict(input_file, repacking=False):
         logger.warning(
             "Failed to find vendor base fs file: %s", vendor_base_fs_file)
         del d["vendor_base_fs_file"]
-=======
-def LoadInfoDict(zip):
-  """Read and parse the META/misc_info.txt key/value pairs from the
-  input target files and return a dict."""
-
-  d = {}
-  try:
-    for line in zip.read("META/misc_info.txt").split("\n"):
-      line = line.strip()
-      if not line or line.startswith("#"): continue
-      k, v = line.split("=", 1)
-      d[k] = v
-  except KeyError:
-    # ok if misc_info.txt doesn't exist
-    pass
-
-  # backwards compatibility: These values used to be in their own
-  # files.  Look for them, in case we're processing an old
-  # target_files zip.
-
-  if "mkyaffs2_extra_flags" not in d:
-    try:
-      d["mkyaffs2_extra_flags"] = zip.read("META/mkyaffs2-extra-flags.txt").strip()
-    except KeyError:
-      # ok if flags don't exist
-      pass
-
-  if "recovery_api_version" not in d:
-    try:
-      d["recovery_api_version"] = zip.read("META/recovery-api-version.txt").strip()
-    except KeyError:
-      raise ValueError("can't find recovery API version in input target-files")
-
-  if "tool_extensions" not in d:
-    try:
-      d["tool_extensions"] = zip.read("META/tool-extensions.txt").strip()
-    except KeyError:
-      # ok if extensions don't exist
-      pass
-
-  try:
-    data = zip.read("META/imagesizes.txt")
-    for line in data.split("\n"):
-      if not line: continue
-      name, value = line.split(" ", 1)
-      if not value: continue
-      if name == "blocksize":
-        d[name] = value
-      else:
-        d[name + "_size"] = value
-  except KeyError:
-    pass
->>>>>>> origin
 
   def makeint(key):
     if key in d:
@@ -476,7 +373,6 @@ def LoadInfoDict(zip):
   makeint("recovery_api_version")
   makeint("blocksize")
   makeint("system_size")
-<<<<<<< HEAD
   makeint("vendor_size")
   makeint("userdata_size")
   makeint("cache_size")
@@ -627,65 +523,11 @@ def LoadRecoveryFSTab(read_helper, fstab_version, recovery_fstab_path,
   if system_root_image:
     assert not d.has_key("/system") and d.has_key("/")
     d["/system"] = d["/"]
-=======
-  makeint("userdata_size")
-  makeint("recovery_size")
-  makeint("boot_size")
-
-  d["fstab"] = LoadRecoveryFSTab(zip)
-  return d
-
-def LoadRecoveryFSTab(zip):
-  class Partition(object):
-    pass
-
-  try:
-    data = zip.read("RECOVERY/RAMDISK/etc/recovery.fstab")
-  except KeyError:
-    print "Warning: could not find RECOVERY/RAMDISK/etc/recovery.fstab in %s." % zip
-    data = ""
-
-  d = {}
-  for line in data.split("\n"):
-    line = line.strip()
-    if not line or line.startswith("#"): continue
-    pieces = line.split()
-    if not (3 <= len(pieces) <= 4):
-      raise ValueError("malformed recovery.fstab line: \"%s\"" % (line,))
-
-    p = Partition()
-    p.mount_point = pieces[0]
-    p.fs_type = pieces[1]
-    p.device = pieces[2]
-    p.length = 0
-    options = None
-    if len(pieces) >= 4:
-      if pieces[3].startswith("/"):
-        p.device2 = pieces[3]
-        if len(pieces) >= 5:
-          options = pieces[4]
-      else:
-        p.device2 = None
-        options = pieces[3]
-    else:
-      p.device2 = None
-
-    if options:
-      options = options.split(",")
-      for i in options:
-        if i.startswith("length="):
-          p.length = int(i[7:])
-        else:
-          print "%s: unknown option \"%s\"" % (p.mount_point, i)
-
-    d[p.mount_point] = p
->>>>>>> origin
   return d
 
 
 def DumpInfoDict(d):
   for k, v in sorted(d.items()):
-<<<<<<< HEAD
     logger.info("%-25s = (%s) %s", k, type(v).__name__, v)
 
 
@@ -783,34 +625,6 @@ def _BuildBootableImage(sourcedir, fs_config_file, info_dict=None,
   if os.access(fn, os.F_OK):
     cmd.append("--dtb")
     cmd.append(fn)
-=======
-    print "%-25s = (%s) %s" % (k, type(v).__name__, v)
-
-def BuildBootableImage(sourcedir):
-  """Take a kernel, cmdline, and ramdisk directory from the input (in
-  'sourcedir'), and turn them into a boot image.  Return the image
-  data, or None if sourcedir does not appear to contains files for
-  building the requested image."""
-
-  if (not os.access(os.path.join(sourcedir, "RAMDISK"), os.F_OK) or
-      not os.access(os.path.join(sourcedir, "kernel"), os.F_OK)):
-    return None
-
-  ramdisk_img = tempfile.NamedTemporaryFile()
-  img = tempfile.NamedTemporaryFile()
-
-  p1 = Run(["mkbootfs", os.path.join(sourcedir, "RAMDISK")],
-           stdout=subprocess.PIPE)
-  p2 = Run(["minigzip"],
-           stdin=p1.stdout, stdout=ramdisk_img.file.fileno())
-
-  p2.wait()
-  p1.wait()
-  assert p1.returncode == 0, "mkbootfs of %s ramdisk failed" % (targetname,)
-  assert p2.returncode == 0, "minigzip of %s ramdisk failed" % (targetname,)
-
-  cmd = ["mkbootimg", "--kernel", os.path.join(sourcedir, "kernel")]
->>>>>>> origin
 
   fn = os.path.join(sourcedir, "cmdline")
   if os.access(fn, os.F_OK):
@@ -827,7 +641,6 @@ def BuildBootableImage(sourcedir):
     cmd.append("--pagesize")
     cmd.append(open(fn).read().rstrip("\n"))
 
-<<<<<<< HEAD
   args = info_dict.get("mkbootimg_args")
   if args and args.strip():
     cmd.extend(shlex.split(args))
@@ -908,31 +721,17 @@ def BuildBootableImage(sourcedir):
     if args and args.strip():
       cmd.extend(shlex.split(args))
     RunAndCheckOutput(cmd)
-=======
-  cmd.extend(["--ramdisk", ramdisk_img.name,
-              "--output", img.name])
-
-  p = Run(cmd, stdout=subprocess.PIPE)
-  p.communicate()
-  assert p.returncode == 0, "mkbootimg of %s image failed" % (
-      os.path.basename(sourcedir),)
->>>>>>> origin
 
   img.seek(os.SEEK_SET, 0)
   data = img.read()
 
-<<<<<<< HEAD
   if has_ramdisk:
     ramdisk_img.close()
-=======
-  ramdisk_img.close()
->>>>>>> origin
   img.close()
 
   return data
 
 
-<<<<<<< HEAD
 def GetBootableImage(name, prebuilt_name, unpack_dir, tree_subdir,
                      info_dict=None, two_step_image=False):
   """Return a File object with the desired bootable image.
@@ -1172,55 +971,6 @@ def GetSparseImage(which, tmpdir, input_zip, allow_shared_blocks,
       ranges.extra['incomplete'] = True
 
   return image
-=======
-def GetBootableImage(name, prebuilt_name, unpack_dir, tree_subdir):
-  """Return a File object (with name 'name') with the desired bootable
-  image.  Look for it in 'unpack_dir'/BOOTABLE_IMAGES under the name
-  'prebuilt_name', otherwise construct it from the source files in
-  'unpack_dir'/'tree_subdir'."""
-
-  prebuilt_path = os.path.join(unpack_dir, "BOOTABLE_IMAGES", prebuilt_name)
-  if os.path.exists(prebuilt_path):
-    print "using prebuilt %s..." % (prebuilt_name,)
-    return File.FromLocalFile(name, prebuilt_path)
-  else:
-    print "building image from target_files %s..." % (tree_subdir,)
-    return File(name, BuildBootableImage(os.path.join(unpack_dir, tree_subdir)))
-
-
-def UnzipTemp(filename, pattern=None):
-  """Unzip the given archive into a temporary directory and return the name.
-
-  If filename is of the form "foo.zip+bar.zip", unzip foo.zip into a
-  temp dir, then unzip bar.zip into that_dir/BOOTABLE_IMAGES.
-
-  Returns (tempdir, zipobj) where zipobj is a zipfile.ZipFile (of the
-  main file), open for reading.
-  """
-
-  tmp = tempfile.mkdtemp(prefix="targetfiles-")
-  OPTIONS.tempfiles.append(tmp)
-
-  def unzip_to_dir(filename, dirname):
-    cmd = ["unzip", "-o", "-q", filename, "-d", dirname]
-    if pattern is not None:
-      cmd.append(pattern)
-    p = Run(cmd, stdout=subprocess.PIPE)
-    p.communicate()
-    if p.returncode != 0:
-      raise ExternalError("failed to unzip input target-files \"%s\"" %
-                          (filename,))
-
-  m = re.match(r"^(.*[.]zip)\+(.*[.]zip)$", filename, re.IGNORECASE)
-  if m:
-    unzip_to_dir(m.group(1), tmp)
-    unzip_to_dir(m.group(2), os.path.join(tmp, "BOOTABLE_IMAGES"))
-    filename = m.group(1)
-  else:
-    unzip_to_dir(filename, tmp)
-
-  return tmp, zipfile.ZipFile(filename, "r")
->>>>>>> origin
 
 
 def GetKeyPasswords(keylist):
@@ -1230,10 +980,7 @@ def GetKeyPasswords(keylist):
 
   no_passwords = []
   need_passwords = []
-<<<<<<< HEAD
   key_passwords = {}
-=======
->>>>>>> origin
   devnull = open("/dev/null", "w+b")
   for k in sorted(keylist):
     # We don't need a password for things that aren't really keys.
@@ -1241,18 +988,13 @@ def GetKeyPasswords(keylist):
       no_passwords.append(k)
       continue
 
-<<<<<<< HEAD
     p = Run(["openssl", "pkcs8", "-in", k+OPTIONS.private_key_suffix,
-=======
-    p = Run(["openssl", "pkcs8", "-in", k+".pk8",
->>>>>>> origin
              "-inform", "DER", "-nocrypt"],
             stdin=devnull.fileno(),
             stdout=devnull.fileno(),
             stderr=subprocess.STDOUT)
     p.communicate()
     if p.returncode == 0:
-<<<<<<< HEAD
       # Definitely an unencrypted key.
       no_passwords.append(k)
     else:
@@ -1343,25 +1085,10 @@ def GetMinSdkVersionInt(apk_name, codename_to_api_level_map):
 def SignFile(input_name, output_name, key, password, min_api_level=None,
              codename_to_api_level_map=None, whole_file=False,
              extra_signapk_args=None):
-=======
-      no_passwords.append(k)
-    else:
-      need_passwords.append(k)
-  devnull.close()
-
-  key_passwords = PasswordManager().GetPasswords(need_passwords)
-  key_passwords.update(dict.fromkeys(no_passwords, None))
-  return key_passwords
-
-
-def SignFile(input_name, output_name, key, password, align=None,
-             whole_file=False):
->>>>>>> origin
   """Sign the input_name zip/jar/apk, producing output_name.  Use the
   given key and password (the latter may be None if the key does not
   have a password.
 
-<<<<<<< HEAD
   If whole_file is true, use the "-w" option to SignApk to embed a
   signature that covers the whole file in the archive comment of the
   zip file.
@@ -1453,73 +1180,11 @@ def CheckSize(data, target, info_dict):
           "Mismatching image size for %s: expected %d actual %d" % (
               target, limit, size))
   else:
-=======
-  If align is an integer > 1, zipalign is run to align stored files in
-  the output zip on 'align'-byte boundaries.
-
-  If whole_file is true, use the "-w" option to SignApk to embed a
-  signature that covers the whole file in the archive comment of the
-  zip file.
-  """
-
-  if align == 0 or align == 1:
-    align = None
-
-  if align:
-    temp = tempfile.NamedTemporaryFile()
-    sign_name = temp.name
-  else:
-    sign_name = output_name
-
-  cmd = ["java", "-Xmx2048m", "-jar",
-           os.path.join(OPTIONS.search_path, "framework", "signapk.jar")]
-  if whole_file:
-    cmd.append("-w")
-  cmd.extend([key + ".x509.pem", key + ".pk8",
-              input_name, sign_name])
-
-  p = Run(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-  if password is not None:
-    password += "\n"
-  p.communicate(password)
-  if p.returncode != 0:
-    raise ExternalError("signapk.jar failed: return code %s" % (p.returncode,))
-
-  if align:
-    p = Run(["zipalign", "-f", str(align), sign_name, output_name])
-    p.communicate()
-    if p.returncode != 0:
-      raise ExternalError("zipalign failed: return code %s" % (p.returncode,))
-    temp.close()
-
-
-def CheckSize(data, target, info_dict):
-  """Check the data string passed against the max size limit, if
-  any, for the given target.  Raise exception if the data is too big.
-  Print a warning if the data is nearing the maximum size."""
-
-  if target.endswith(".img"): target = target[:-4]
-  mount_point = "/" + target
-
-  if info_dict["fstab"]:
-    if mount_point == "/userdata": mount_point = "/data"
-    p = info_dict["fstab"][mount_point]
-    fs_type = p.fs_type
-    limit = info_dict.get(p.device + "_size", None)
-  if not fs_type or not limit: return
-
-  if fs_type == "yaffs2":
-    # image size should be increased by 1/64th to account for the
-    # spare area (64 bytes per 2k page)
-    limit = limit / 2048 * (2048+64)
-    size = len(data)
->>>>>>> origin
     pct = float(size) * 100.0 / limit
     msg = "%s size (%d) is %.2f%% of limit (%d)" % (target, size, pct, limit)
     if pct >= 99.0:
       raise ExternalError(msg)
     elif pct >= 95.0:
-<<<<<<< HEAD
       logger.warning("\n  WARNING: %s\n", msg)
     else:
       logger.info("  %s", msg)
@@ -1617,49 +1282,6 @@ Global options
   -x  (--extra) <key=value>
       Add a key/value pair to the 'extras' dict, which device-specific extension
       code may look at.
-=======
-      print
-      print "  WARNING: ", msg
-      print
-    elif OPTIONS.verbose:
-      print "  ", msg
-
-
-def ReadApkCerts(tf_zip):
-  """Given a target_files ZipFile, parse the META/apkcerts.txt file
-  and return a {package: cert} dict."""
-  certmap = {}
-  for line in tf_zip.read("META/apkcerts.txt").split("\n"):
-    line = line.strip()
-    if not line: continue
-    m = re.match(r'^name="(.*)"\s+certificate="(.*)"\s+'
-                 r'private_key="(.*)"$', line)
-    if m:
-      name, cert, privkey = m.groups()
-      if cert in SPECIAL_CERT_STRINGS and not privkey:
-        certmap[name] = cert
-      elif (cert.endswith(".x509.pem") and
-            privkey.endswith(".pk8") and
-            cert[:-9] == privkey[:-4]):
-        certmap[name] = cert[:-9]
-      else:
-        raise ValueError("failed to parse line from apkcerts.txt:\n" + line)
-  return certmap
-
-
-COMMON_DOCSTRING = """
-  -p  (--path)  <dir>
-      Prepend <dir>/bin to the list of places to search for binaries
-      run by this script, and expect to find jars in <dir>/framework.
-
-  -s  (--device_specific) <file>
-      Path to the python module containing device-specific
-      releasetools code.
-
-  -x  (--extra)  <key=value>
-      Add a key/value pair to the 'extras' dict, which device-specific
-      extension code may look at.
->>>>>>> origin
 
   -v  (--verbose)
       Show command lines being executed.
@@ -1669,13 +1291,8 @@ COMMON_DOCSTRING = """
 """
 
 def Usage(docstring):
-<<<<<<< HEAD
   print(docstring.rstrip("\n"))
   print(COMMON_DOCSTRING)
-=======
-  print docstring.rstrip("\n")
-  print COMMON_DOCSTRING
->>>>>>> origin
 
 
 def ParseOptions(argv,
@@ -1691,7 +1308,6 @@ def ParseOptions(argv,
   try:
     opts, args = getopt.getopt(
         argv, "hvp:s:x:" + extra_opts,
-<<<<<<< HEAD
         ["help", "verbose", "path=", "signapk_path=",
          "signapk_shared_library_path=", "extra_signapk_args=",
          "java_path=", "java_args=", "public_key_suffix=",
@@ -1704,17 +1320,6 @@ def ParseOptions(argv,
     print("**", str(err), "**")
     sys.exit(2)
 
-=======
-        ["help", "verbose", "path=", "device_specific=", "extra="] +
-          list(extra_long_opts))
-  except getopt.GetoptError, err:
-    Usage(docstring)
-    print "**", str(err), "**"
-    sys.exit(2)
-
-  path_specified = False
-
->>>>>>> origin
   for o, a in opts:
     if o in ("-h", "--help"):
       Usage(docstring)
@@ -1723,7 +1328,6 @@ def ParseOptions(argv,
       OPTIONS.verbose = True
     elif o in ("-p", "--path"):
       OPTIONS.search_path = a
-<<<<<<< HEAD
     elif o in ("--signapk_path",):
       OPTIONS.signapk_path = a
     elif o in ("--signapk_shared_library_path",):
@@ -1746,8 +1350,6 @@ def ParseOptions(argv,
       OPTIONS.verity_signer_path = a
     elif o in ("--verity_signer_args",):
       OPTIONS.verity_signer_args = shlex.split(a)
-=======
->>>>>>> origin
     elif o in ("-s", "--device_specific"):
       OPTIONS.device_specific = a
     elif o in ("-x", "--extra"):
@@ -1757,19 +1359,13 @@ def ParseOptions(argv,
       if extra_option_handler is None or not extra_option_handler(o, a):
         assert False, "unknown option \"%s\"" % (o,)
 
-<<<<<<< HEAD
   if OPTIONS.search_path:
     os.environ["PATH"] = (os.path.join(OPTIONS.search_path, "bin") +
                           os.pathsep + os.environ["PATH"])
-=======
-  os.environ["PATH"] = (os.path.join(OPTIONS.search_path, "bin") +
-                        os.pathsep + os.environ["PATH"])
->>>>>>> origin
 
   return args
 
 
-<<<<<<< HEAD
 def MakeTempFile(prefix='tmp', suffix=''):
   """Make a temp file and add it to the list of things to be deleted
   when Cleanup() is called.  Return the filename."""
@@ -1797,25 +1393,12 @@ def Cleanup():
     else:
       os.remove(i)
   del OPTIONS.tempfiles[:]
-=======
-def Cleanup():
-  for i in OPTIONS.tempfiles:
-    if os.path.isdir(i):
-      shutil.rmtree(i)
-    else:
-      os.remove(i)
->>>>>>> origin
 
 
 class PasswordManager(object):
   def __init__(self):
-<<<<<<< HEAD
     self.editor = os.getenv("EDITOR")
     self.pwfile = os.getenv("ANDROID_PW_FILE")
-=======
-    self.editor = os.getenv("EDITOR", None)
-    self.pwfile = os.getenv("ANDROID_PW_FILE", None)
->>>>>>> origin
 
   def GetPasswords(self, items):
     """Get passwords corresponding to each string in 'items',
@@ -1837,22 +1420,14 @@ class PasswordManager(object):
         if i not in current or not current[i]:
           missing.append(i)
       # Are all the passwords already in the file?
-<<<<<<< HEAD
       if not missing:
         return current
-=======
-      if not missing: return current
->>>>>>> origin
 
       for i in missing:
         current[i] = ""
 
       if not first:
-<<<<<<< HEAD
         print("key file %s still missing some passwords." % (self.pwfile,))
-=======
-        print "key file %s still missing some passwords." % (self.pwfile,)
->>>>>>> origin
         answer = raw_input("try to edit again? [y]> ").strip()
         if answer and answer[0] not in 'yY':
           raise RuntimeError("key passwords unavailable")
@@ -1860,11 +1435,7 @@ class PasswordManager(object):
 
       current = self.UpdateAndReadFile(current)
 
-<<<<<<< HEAD
   def PromptResult(self, current): # pylint: disable=no-self-use
-=======
-  def PromptResult(self, current):
->>>>>>> origin
     """Prompt the user to enter a value (password) for each key in
     'current' whose value is fales.  Returns a new dict with all the
     values.
@@ -1875,16 +1446,10 @@ class PasswordManager(object):
         result[k] = v
       else:
         while True:
-<<<<<<< HEAD
           result[k] = getpass.getpass(
               "Enter password for %s key> " % k).strip()
           if result[k]:
             break
-=======
-          result[k] = getpass.getpass("Enter password for %s key> "
-                                      % (k,)).strip()
-          if result[k]: break
->>>>>>> origin
     return result
 
   def UpdateAndReadFile(self, current):
@@ -1892,51 +1457,31 @@ class PasswordManager(object):
       return self.PromptResult(current)
 
     f = open(self.pwfile, "w")
-<<<<<<< HEAD
     os.chmod(self.pwfile, 0o600)
-=======
-    os.chmod(self.pwfile, 0600)
->>>>>>> origin
     f.write("# Enter key passwords between the [[[ ]]] brackets.\n")
     f.write("# (Additional spaces are harmless.)\n\n")
 
     first_line = None
-<<<<<<< HEAD
     sorted_list = sorted([(not v, k, v) for (k, v) in current.iteritems()])
     for i, (_, k, v) in enumerate(sorted_list):
-=======
-    sorted = [(not v, k, v) for (k, v) in current.iteritems()]
-    sorted.sort()
-    for i, (_, k, v) in enumerate(sorted):
->>>>>>> origin
       f.write("[[[  %s  ]]] %s\n" % (v, k))
       if not v and first_line is None:
         # position cursor on first line with no password.
         first_line = i + 4
     f.close()
 
-<<<<<<< HEAD
     RunAndCheckOutput([self.editor, "+%d" % (first_line,), self.pwfile])
-=======
-    p = Run([self.editor, "+%d" % (first_line,), self.pwfile])
-    _, _ = p.communicate()
->>>>>>> origin
 
     return self.ReadFile()
 
   def ReadFile(self):
     result = {}
-<<<<<<< HEAD
     if self.pwfile is None:
       return result
-=======
-    if self.pwfile is None: return result
->>>>>>> origin
     try:
       f = open(self.pwfile, "r")
       for line in f:
         line = line.strip()
-<<<<<<< HEAD
         if not line or line[0] == '#':
           continue
         m = re.match(r"^\[\[\[\s*(.*?)\s*\]\]\]\s*(\S+)$", line)
@@ -2066,28 +1611,6 @@ def ZipClose(zip_file):
   zip_file.close()
 
   zipfile.ZIP64_LIMIT = saved_zip64_limit
-=======
-        if not line or line[0] == '#': continue
-        m = re.match(r"^\[\[\[\s*(.*?)\s*\]\]\]\s*(\S+)$", line)
-        if not m:
-          print "failed to parse password file: ", line
-        else:
-          result[m.group(2)] = m.group(1)
-      f.close()
-    except IOError, e:
-      if e.errno != errno.ENOENT:
-        print "error reading password file: ", str(e)
-    return result
-
-
-def ZipWriteStr(zip, filename, data, perms=0644):
-  # use a fixed timestamp so the output is repeatable.
-  zinfo = zipfile.ZipInfo(filename=filename,
-                          date_time=(2009, 1, 1, 0, 0, 0))
-  zinfo.compress_type = zip.compression
-  zinfo.external_attr = perms << 16
-  zip.writestr(zinfo, data)
->>>>>>> origin
 
 
 class DeviceSpecificParams(object):
@@ -2102,12 +1625,8 @@ class DeviceSpecificParams(object):
 
     if self.module is None:
       path = OPTIONS.device_specific
-<<<<<<< HEAD
       if not path:
         return
-=======
-      if not path: return
->>>>>>> origin
       try:
         if os.path.isdir(path):
           info = imp.find_module("releasetools", [path])
@@ -2117,16 +1636,10 @@ class DeviceSpecificParams(object):
           if x == ".py":
             f = b
           info = imp.find_module(f, [d])
-<<<<<<< HEAD
         logger.info("loaded device-specific extensions from %s", path)
         self.module = imp.load_module("device_specific", *info)
       except ImportError:
         logger.info("unable to load device-specific module; assuming none")
-=======
-        self.module = imp.load_module("device_specific", *info)
-      except ImportError:
-        print "unable to load device-specific module; assuming none"
->>>>>>> origin
 
   def _DoCall(self, function_name, *args, **kwargs):
     """Call the named function in the device-specific module, passing
@@ -2135,11 +1648,7 @@ class DeviceSpecificParams(object):
     module does not define the function, return the value of the
     'default' kwarg (which itself defaults to None)."""
     if self.module is None or not hasattr(self.module, function_name):
-<<<<<<< HEAD
       return kwargs.get("default")
-=======
-      return kwargs.get("default", None)
->>>>>>> origin
     return getattr(self.module, function_name)(*((self,) + args), **kwargs)
 
   def FullOTA_Assertions(self):
@@ -2148,7 +1657,6 @@ class DeviceSpecificParams(object):
     assertions they like."""
     return self._DoCall("FullOTA_Assertions")
 
-<<<<<<< HEAD
   def FullOTA_InstallBegin(self):
     """Called at the start of full OTA installation."""
     return self._DoCall("FullOTA_InstallBegin")
@@ -2160,8 +1668,6 @@ class DeviceSpecificParams(object):
     """
     return self._DoCall("FullOTA_GetBlockDifferences")
 
-=======
->>>>>>> origin
   def FullOTA_InstallEnd(self):
     """Called at the end of full OTA installation; typically this is
     used to install the image for the device's baseband processor."""
@@ -2173,22 +1679,18 @@ class DeviceSpecificParams(object):
     additional assertions they like."""
     return self._DoCall("IncrementalOTA_Assertions")
 
-<<<<<<< HEAD
   def IncrementalOTA_VerifyBegin(self):
     """Called at the start of the verification phase of incremental
     OTA installation; additional checks can be placed here to abort
     the script before any changes are made."""
     return self._DoCall("IncrementalOTA_VerifyBegin")
 
-=======
->>>>>>> origin
   def IncrementalOTA_VerifyEnd(self):
     """Called at the end of the verification phase of incremental OTA
     installation; additional checks can be placed here to abort the
     script before any changes are made."""
     return self._DoCall("IncrementalOTA_VerifyEnd")
 
-<<<<<<< HEAD
   def IncrementalOTA_InstallBegin(self):
     """Called at the start of incremental OTA installation (after
     verification is complete)."""
@@ -2201,15 +1703,12 @@ class DeviceSpecificParams(object):
     """
     return self._DoCall("IncrementalOTA_GetBlockDifferences")
 
-=======
->>>>>>> origin
   def IncrementalOTA_InstallEnd(self):
     """Called at the end of incremental OTA installation; typically
     this is used to install the image for the device's baseband
     processor."""
     return self._DoCall("IncrementalOTA_InstallEnd")
 
-<<<<<<< HEAD
   def VerifyOTA_Assertions(self):
     return self._DoCall("VerifyOTA_Assertions")
 
@@ -2220,13 +1719,6 @@ class File(object):
     self.data = data
     self.size = len(data)
     self.compress_size = compress_size or self.size
-=======
-class File(object):
-  def __init__(self, name, data):
-    self.name = name
-    self.data = data
-    self.size = len(data)
->>>>>>> origin
     self.sha1 = sha1(data).hexdigest()
 
   @classmethod
@@ -2242,7 +1734,6 @@ class File(object):
     t.flush()
     return t
 
-<<<<<<< HEAD
   def WriteToDir(self, d):
     with open(os.path.join(d, self.name), "wb") as fp:
       fp.write(self.data)
@@ -2250,10 +1741,6 @@ class File(object):
   def AddToZip(self, z, compression=None):
     ZipWriteStr(z, self.name, self.data, compress_type=compression)
 
-=======
-  def AddToZip(self, z):
-    ZipWriteStr(z, self.name, self.data)
->>>>>>> origin
 
 DIFF_PROGRAM_BY_EXT = {
     ".gz" : "imgdiff",
@@ -2263,7 +1750,6 @@ DIFF_PROGRAM_BY_EXT = {
     ".img" : "imgdiff",
     }
 
-<<<<<<< HEAD
 
 class Difference(object):
   def __init__(self, tf, sf, diff_program=None):
@@ -2271,13 +1757,6 @@ class Difference(object):
     self.sf = sf
     self.patch = None
     self.diff_program = diff_program
-=======
-class Difference(object):
-  def __init__(self, tf, sf):
-    self.tf = tf
-    self.sf = sf
-    self.patch = None
->>>>>>> origin
 
   def ComputePatch(self):
     """Compute the patch (as a string of data) needed to turn sf into
@@ -2286,16 +1765,11 @@ class Difference(object):
     tf = self.tf
     sf = self.sf
 
-<<<<<<< HEAD
     if self.diff_program:
       diff_program = self.diff_program
     else:
       ext = os.path.splitext(tf.name)[1]
       diff_program = DIFF_PROGRAM_BY_EXT.get(ext, "bsdiff")
-=======
-    ext = os.path.splitext(tf.name)[1]
-    diff_program = DIFF_PROGRAM_BY_EXT.get(ext, "bsdiff")
->>>>>>> origin
 
     ttemp = tf.WriteToTemp()
     stemp = sf.WriteToTemp()
@@ -2312,7 +1786,6 @@ class Difference(object):
       cmd.append(ttemp.name)
       cmd.append(ptemp.name)
       p = Run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-<<<<<<< HEAD
       err = []
       def run():
         _, e = p.communicate()
@@ -2333,12 +1806,6 @@ class Difference(object):
         logger.warning("Failure running %s:\n%s\n", diff_program, "".join(err))
         self.patch = None
         return None, None, None
-=======
-      _, err = p.communicate()
-      if err or p.returncode != 0:
-        print "WARNING: failure running %s:\n%s\n" % (diff_program, err)
-        return None
->>>>>>> origin
       diff = ptemp.read()
     finally:
       ptemp.close()
@@ -2350,27 +1817,17 @@ class Difference(object):
 
 
   def GetPatch(self):
-<<<<<<< HEAD
     """Returns a tuple of (target_file, source_file, patch_data).
 
     patch_data may be None if ComputePatch hasn't been called, or if
     computing the patch failed.
     """
-=======
-    """Return a tuple (target_file, source_file, patch_data).
-    patch_data may be None if ComputePatch hasn't been called, or if
-    computing the patch failed."""
->>>>>>> origin
     return self.tf, self.sf, self.patch
 
 
 def ComputeDifferences(diffs):
   """Call ComputePatch on all the Difference objects in 'diffs'."""
-<<<<<<< HEAD
   logger.info("%d diffs to compute", len(diffs))
-=======
-  print len(diffs), "diffs to compute"
->>>>>>> origin
 
   # Do the largest files first, to try and reduce the long-pole effect.
   by_size = [(i.tf.size, i) for i in diffs]
@@ -2396,7 +1853,6 @@ def ComputeDifferences(diffs):
         else:
           name = "%s (%s)" % (tf.name, sf.name)
         if patch is None:
-<<<<<<< HEAD
           logger.error("patching failed! %40s", name)
         else:
           logger.info(
@@ -2405,15 +1861,6 @@ def ComputeDifferences(diffs):
       lock.release()
     except Exception:
       logger.exception("Failed to compute diff from worker")
-=======
-          print "patching failed!                                  %s" % (name,)
-        else:
-          print "%8.2f sec %8d / %8d bytes (%6.2f%%) %s" % (
-              dur, len(patch), tf.size, 100.0 * len(patch) / tf.size, name)
-      lock.release()
-    except Exception, e:
-      print e
->>>>>>> origin
       raise
 
   # start worker threads; wait for them all to finish.
@@ -2425,7 +1872,6 @@ def ComputeDifferences(diffs):
     threads.pop().join()
 
 
-<<<<<<< HEAD
 class BlockDifference(object):
   def __init__(self, partition, tgt, src=None, check_first_block=False,
                version=None, disable_imgdiff=False):
@@ -2709,16 +2155,10 @@ PARTITION_TYPES = {
     "squashfs": "EMMC"
 }
 
-=======
-# map recovery.fstab's fs_types to mount/format "partition types"
-PARTITION_TYPES = { "yaffs2": "MTD", "mtd": "MTD",
-                    "ext4": "EMMC", "emmc": "EMMC" }
->>>>>>> origin
 
 def GetTypeAndDevice(mount_point, info):
   fstab = info["fstab"]
   if fstab:
-<<<<<<< HEAD
     return (PARTITION_TYPES[fstab[mount_point].fs_type],
             fstab[mount_point].device)
   else:
@@ -3101,8 +2541,3 @@ class DynamicPartitionsDifference(object):
         comment('Move partition %s from default to %s' %
                 (p, u.tgt_group))
         append('move %s %s' % (p, u.tgt_group))
-=======
-    return PARTITION_TYPES[fstab[mount_point].fs_type], fstab[mount_point].device
-  else:
-    return None
->>>>>>> origin

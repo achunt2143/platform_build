@@ -90,7 +90,6 @@ debug_printf(const char* format, ...)
     }
 }
 
-<<<<<<< HEAD
 // Escape the filename so that it can be added to the makefile properly.
 static string
 escape_filename(const string& name)
@@ -111,8 +110,6 @@ escape_filename(const string& name)
     return new_name.str();
 }
 
-=======
->>>>>>> origin
 int
 main(int argc, char* const* argv)
 {
@@ -347,12 +344,8 @@ main(int argc, char* const* argv)
             for (vector<FileRecord>::iterator it=files.begin();
                                 it!=files.end(); it++) {
                 if (!it->sourceIsDir) {
-<<<<<<< HEAD
                     fprintf(f, "%s \\\n",
                             escape_filename(it->sourcePath).c_str());
-=======
-                    fprintf(f, "%s \\\n", it->sourcePath.c_str());
->>>>>>> origin
                 }
             }
             fprintf(f, "\n");

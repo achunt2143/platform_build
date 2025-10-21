@@ -25,19 +25,12 @@ print_help(void)
 {
 	fprintf(stderr, "fs_get_stats: retrieve the target file stats "
 	        "for the specified file\n");
-<<<<<<< HEAD
 	fprintf(stderr, "usage: fs_get_stats cur_perms is_dir filename targetout\n");
-=======
-	fprintf(stderr, "usage: fs_get_stats cur_perms is_dir filename\n");
->>>>>>> origin
 	fprintf(stderr, "\tcur_perms - The current permissions of "
 	        "the file\n");
 	fprintf(stderr, "\tis_dir    - Is filename is a dir, 1. Otherwise, 0.\n");
 	fprintf(stderr, "\tfilename  - The filename to lookup\n");
-<<<<<<< HEAD
 	fprintf(stderr, "\ttargetout - The target out path to query device specific FS configs\n");
-=======
->>>>>>> origin
 	fprintf(stderr, "\n");
 }
 
@@ -50,11 +43,7 @@ main(int argc, const char *argv[])
 	unsigned uid = (unsigned)-1;
 	unsigned gid = (unsigned)-1;
 
-<<<<<<< HEAD
 	if (argc < 5) {
-=======
-	if (argc < 4) {
->>>>>>> origin
 		ERROR("Invalid arguments\n");
 		print_help();
 		exit(-1);
@@ -69,12 +58,8 @@ main(int argc, const char *argv[])
 	if (!strcmp(argv[2], "1"))
 		is_dir = 1;
 
-<<<<<<< HEAD
 	uint64_t capabilities;
 	fs_config(argv[3], is_dir, argv[4], &uid, &gid, &perms, &capabilities);
-=======
-	fs_config(argv[3], is_dir, &uid, &gid, &perms);
->>>>>>> origin
 	fprintf(stdout, "%d %d 0%o\n", uid, gid, perms);
 
 	return 0;

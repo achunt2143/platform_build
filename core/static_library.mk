@@ -1,30 +1,41 @@
+$(call record-module-type,STATIC_LIBRARY)
+my_prefix := TARGET_
+include $(BUILD_SYSTEM)/multilib.mk
+
+ifndef my_module_multilib
+# libraries default to building for both architecturess
+my_module_multilib := both
+endif
+
+LOCAL_2ND_ARCH_VAR_PREFIX :=
+include $(BUILD_SYSTEM)/module_arch_supported.mk
+
+ifeq ($(my_module_arch_supported),true)
+include $(BUILD_SYSTEM)/static_library_internal.mk
+endif
+
+ifdef TARGET_2ND_ARCH
+
+LOCAL_2ND_ARCH_VAR_PREFIX := $(TARGET_2ND_ARCH_VAR_PREFIX)
+include $(BUILD_SYSTEM)/module_arch_supported.mk
+
+ifeq ($(my_module_arch_supported),true)
+# Build for TARGET_2ND_ARCH
+LOCAL_BUILT_MODULE :=
+LOCAL_INSTALLED_MODULE :=
+LOCAL_INTERMEDIATE_TARGETS :=
+
+include $(BUILD_SYSTEM)/static_library_internal.mk
+
+endif
+
+LOCAL_2ND_ARCH_VAR_PREFIX :=
+
+endif # TARGET_2ND_ARCH
+
+my_module_arch_supported :=
+
 ###########################################################
-## Standard rules for building a static library.
-##
-## Additional inputs from base_rules.make:
-## None.
-##
-## LOCAL_MODULE_SUFFIX will be set for you.
+## Copy headers to the install tree
 ###########################################################
-
-ifeq ($(strip $(LOCAL_MODULE_CLASS)),)
-LOCAL_MODULE_CLASS := STATIC_LIBRARIES
-endif
-ifeq ($(strip $(LOCAL_MODULE_SUFFIX)),)
-LOCAL_MODULE_SUFFIX := .a
-endif
-LOCAL_UNINSTALLABLE_MODULE := true
-
-include $(BUILD_SYSTEM)/binary.mk
-
-ifeq ($(LOCAL_RAW_STATIC_LIBRARY),true)
-LOCAL_RAW_STATIC_LIBRARY:=
-$(all_objects) : PRIVATE_TARGET_PROJECT_INCLUDES :=
-$(all_objects) : PRIVATE_TARGET_C_INCLUDES :=
-$(all_objects) : PRIVATE_TARGET_GLOBAL_CFLAGS :=
-$(all_objects) : PRIVATE_TARGET_GLOBAL_CPPFLAGS :=
-endif
-
-$(LOCAL_BUILT_MODULE): $(built_whole_libraries)
-$(LOCAL_BUILT_MODULE): $(all_objects)
-	$(transform-o-to-static-lib)
+include $(BUILD_COPY_HEADERS)

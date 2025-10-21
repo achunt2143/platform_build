@@ -1,78 +1,14 @@
 ###########################################################
 ## Standard rules for building binary object files from
-<<<<<<< HEAD
 ## asm/c/cpp/yacc/lex/etc source files.
-=======
-## asm/c/cpp/yacc/lex source files.
->>>>>>> origin
 ##
 ## The list of object files is exported in $(all_objects).
 ###########################################################
 
-<<<<<<< HEAD
 #######################################
 include $(BUILD_SYSTEM)/base_rules.mk
 include $(BUILD_SYSTEM)/use_lld_setup.mk
 #######################################
-=======
-######################################
-## Sanity check for LOCAL_NDK_VERSION
-######################################
-my_ndk_version_root :=
-ifdef LOCAL_NDK_VERSION
-  ifdef LOCAL_IS_HOST_MODULE
-    $(error $(LOCAL_PATH): LOCAL_NDK_VERSION can not be used in host module)
-  endif
-  ifneq ($(filter-out SHARED_LIBRARIES STATIC_LIBRARIES,$(LOCAL_MODULE_CLASS)),)
-    $(error $(LOCAL_PATH): LOCAL_NDK_VERSION can only be used to build target shared/static libraries, \
-          while your module is of class $(LOCAL_MODULE_CLASS))
-  endif
-  ifeq ($(filter $(LOCAL_NDK_VERSION),$(TARGET_AVAILABLE_NDK_VERSIONS)),)
-    $(error $(LOCAL_PATH): Invalid LOCAL_NDK_VERSION '$(LOCAL_NDK_VERSION)' \
-           Choices are $(TARGET_AVAILABLE_NDK_VERSIONS))
-  endif
-  ifndef LOCAL_SDK_VERSION
-    $(error $(LOCAL_PATH): LOCAL_NDK_VERSION must be defined with LOCAL_SDK_VERSION)
-  endif
-  my_ndk_source_root := $(HISTORICAL_NDK_VERSIONS_ROOT)/android-ndk-r$(LOCAL_NDK_VERSION)/sources
-  my_ndk_version_root := $(HISTORICAL_NDK_VERSIONS_ROOT)/android-ndk-r$(LOCAL_NDK_VERSION)/platforms/android-$(LOCAL_SDK_VERSION)/arch-$(TARGET_ARCH)
-  ifeq ($(wildcard $(my_ndk_version_root)),)
-    $(error $(LOCAL_PATH): ndk version root does not exist: $(my_ndk_version_root))
-  endif
-
-  # Set up the NDK stl variant. Starting from NDK-r5 the c++ stl resides in a separate location.
-  # See ndk/docs/CPLUSPLUS-SUPPORT.html
-  my_ndk_stl_include_path :=
-  my_ndk_stl_shared_lib_fullpath :=
-  my_ndk_stl_shared_lib :=
-  my_ndk_stl_static_lib :=
-  ifeq (,$(LOCAL_NDK_STL_VARIANT))
-    LOCAL_NDK_STL_VARIANT := system
-  endif
-  ifneq (1,$(words $(filter system stlport_static stlport_shared gnustl_static, $(LOCAL_NDK_STL_VARIANT))))
-    $(error $(LOCAL_PATH): Unkown LOCAL_NDK_STL_VARIANT $(LOCAL_NDK_STL_VARIANT))
-  endif
-  ifeq (system,$(LOCAL_NDK_STL_VARIANT))
-    my_ndk_stl_include_path := $(my_ndk_source_root)/cxx-stl/system/include
-    # for "system" variant, the shared library exists in the system library and -lstdc++ is added by default.
-  else # LOCAL_NDK_STL_VARIANT is not system
-  ifneq (,$(filter stlport_%, $(LOCAL_NDK_STL_VARIANT)))
-    my_ndk_stl_include_path := $(my_ndk_source_root)/cxx-stl/stlport/stlport
-    ifeq (stlport_static,$(LOCAL_NDK_STL_VARIANT))
-      my_ndk_stl_static_lib := $(my_ndk_source_root)/cxx-stl/stlport/libs/$(TARGET_CPU_ABI)/libstlport_static.a
-    else
-      my_ndk_stl_shared_lib_fullpath := $(my_ndk_source_root)/cxx-stl/stlport/libs/$(TARGET_CPU_ABI)/libstlport_shared.so
-      my_ndk_stl_shared_lib := -lstlport_shared
-    endif
-  else
-    # LOCAL_NDK_STL_VARIANT is gnustl_static
-    my_ndk_stl_include_path := $(my_ndk_source_root)/cxx-stl/gnu-libstdc++/libs/$(TARGET_CPU_ABI)/include \
-                               $(my_ndk_source_root)/cxx-stl/gnu-libstdc++/include
-    my_ndk_stl_static_lib := $(my_ndk_source_root)/cxx-stl/gnu-libstdc++/libs/$(TARGET_CPU_ABI)/libstdc++.a
-  endif
-  endif
-endif
->>>>>>> origin
 
 ##################################################
 # Compute the dependency of the shared libraries
@@ -83,7 +19,6 @@ endif
 # supply that, for example, when building libc itself.
 ifdef LOCAL_IS_HOST_MODULE
   ifeq ($(LOCAL_SYSTEM_SHARED_LIBRARIES),none)
-<<<<<<< HEAD
       my_system_shared_libraries :=
   else
       my_system_shared_libraries := $(LOCAL_SYSTEM_SHARED_LIBRARIES)
@@ -525,136 +460,24 @@ ifneq ($(filter true always, $(LOCAL_FDO_SUPPORT)),)
   # can handle -fprofile-use properly.
   my_cc_wrapper := $(filter $(GOMA_CC),$(my_cc_wrapper))
   my_cxx_wrapper := $(filter $(GOMA_CC),$(my_cxx_wrapper))
-=======
-      LOCAL_SYSTEM_SHARED_LIBRARIES :=
-  endif
-else
-  ifeq ($(LOCAL_SYSTEM_SHARED_LIBRARIES),none)
-      LOCAL_SYSTEM_SHARED_LIBRARIES := $(TARGET_DEFAULT_SYSTEM_SHARED_LIBRARIES)
-  endif
-endif
-
-# Logging used to be part of libcutils (target) and libutils (sim);
-# hack modules that use those other libs to also include liblog.
-# All of this complexity is to make sure that liblog only appears
-# once, and appears just before libcutils or libutils on the link
-# line.
-# TODO: remove this hack and change all modules to use liblog
-# when necessary.
-define insert-liblog
-  $(if $(filter liblog,$(1)),$(1), \
-    $(if $(filter libcutils,$(1)), \
-      $(patsubst libcutils,liblog libcutils,$(1)) \
-     , \
-      $(patsubst libutils,liblog libutils,$(1)) \
-     ) \
-   )
-endef
-ifneq (,$(filter libcutils libutils,$(LOCAL_SHARED_LIBRARIES)))
-  LOCAL_SHARED_LIBRARIES := $(call insert-liblog,$(LOCAL_SHARED_LIBRARIES))
-endif
-ifneq (,$(filter libcutils libutils,$(LOCAL_STATIC_LIBRARIES)))
-  LOCAL_STATIC_LIBRARIES := $(call insert-liblog,$(LOCAL_STATIC_LIBRARIES))
-endif
-ifneq (,$(filter libcutils libutils,$(LOCAL_WHOLE_STATIC_LIBRARIES)))
-  LOCAL_WHOLE_STATIC_LIBRARIES := $(call insert-liblog,$(LOCAL_WHOLE_STATIC_LIBRARIES))
-endif
-
-ifdef LOCAL_NDK_VERSION
-  # Get the list of INSTALLED libraries as module names.
-  # We can not compute the full path of the LOCAL_SHARED_LIBRARIES for
-  # they may cusomize their install path with LOCAL_MODULE_PATH
-  installed_shared_library_module_names := \
-      $(LOCAL_SHARED_LIBRARIES)
-else
-  installed_shared_library_module_names := \
-      $(LOCAL_SYSTEM_SHARED_LIBRARIES) $(LOCAL_SHARED_LIBRARIES)
-endif
-# The real dependency will be added after all Android.mks are loaded and the install paths
-# of the shared libraries are determined.
-LOCAL_REQUIRED_MODULES += $(installed_shared_library_module_names)
-
-#######################################
-include $(BUILD_SYSTEM)/base_rules.mk
-#######################################
-
-####################################################
-## Add FDO flags if FDO is turned on and supported
-####################################################
-ifeq ($(strip $(LOCAL_NO_FDO_SUPPORT)),)
-  LOCAL_CFLAGS += $(TARGET_FDO_CFLAGS)
-  LOCAL_CPPFLAGS += $(TARGET_FDO_CFLAGS)
-  LOCAL_LDFLAGS += $(TARGET_FDO_CFLAGS)
->>>>>>> origin
 endif
 
 ###########################################################
 ## Explicitly declare assembly-only __ASSEMBLY__ macro for
 ## assembly source
 ###########################################################
-<<<<<<< HEAD
 my_asflags += -D__ASSEMBLY__
 
 ###########################################################
-=======
-LOCAL_ASFLAGS += -D__ASSEMBLY__
-
-###########################################################
-## Define PRIVATE_ variables from global vars
-###########################################################
-ifdef LOCAL_NDK_VERSION
-my_target_project_includes :=
-my_target_c_inclues := $(my_ndk_stl_include_path) $(my_ndk_version_root)/usr/include
-# TODO: more reliable way to remove platform stuff.
-my_target_global_cflags := $(filter-out -include -I system/%, $(TARGET_GLOBAL_CFLAGS))
-my_target_global_cppflags := $(filter-out -include -I system/%, $(TARGET_GLOBAL_CPPFLAGS))
-else
-my_target_project_includes := $(TARGET_PROJECT_INCLUDES)
-my_target_c_inclues := $(TARGET_C_INCLUDES)
-my_target_global_cflags := $(TARGET_GLOBAL_CFLAGS)
-my_target_global_cppflags := $(TARGET_GLOBAL_CPPFLAGS)
-endif
-$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_TARGET_PROJECT_INCLUDES := $(my_target_project_includes)
-$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_TARGET_C_INCLUDES := $(my_target_c_inclues)
-$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_TARGET_GLOBAL_CFLAGS := $(my_target_global_cflags)
-$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_TARGET_GLOBAL_CPPFLAGS := $(my_target_global_cppflags)
-
-###########################################################
-## Define PRIVATE_ variables used by multiple module types
-###########################################################
-$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_NO_DEFAULT_COMPILER_FLAGS := \
-	$(strip $(LOCAL_NO_DEFAULT_COMPILER_FLAGS))
-
-ifeq ($(strip $(LOCAL_CC)),)
-  LOCAL_CC := $($(my_prefix)CC)
-endif
-$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_CC := $(LOCAL_CC)
-
-ifeq ($(strip $(LOCAL_CXX)),)
-  LOCAL_CXX := $($(my_prefix)CXX)
-endif
-$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_CXX := $(LOCAL_CXX)
-
-ifeq ($(strip $(LOCAL_OBJCC)),)
-  LOCAL_OBJCC := $($(my_prefix)OBJCC)
-endif
-$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_OBJCC := $(LOCAL_OBJCC)
-
->>>>>>> origin
 # TODO: support a mix of standard extensions so that this isn't necessary
 LOCAL_CPP_EXTENSION := $(strip $(LOCAL_CPP_EXTENSION))
 ifeq ($(LOCAL_CPP_EXTENSION),)
   LOCAL_CPP_EXTENSION := .cpp
 endif
-<<<<<<< HEAD
-=======
-$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_CPP_EXTENSION := $(LOCAL_CPP_EXTENSION)
->>>>>>> origin
 
 # Certain modules like libdl have to have symbols resolved at runtime and blow
 # up if --no-undefined is passed to the linker.
 ifeq ($(strip $(LOCAL_NO_DEFAULT_COMPILER_FLAGS)),)
-<<<<<<< HEAD
   ifeq ($(my_allow_undefined_symbols),)
     ifneq ($(HOST_OS),darwin)
       my_ldflags += -Wl,--no-undefined
@@ -667,11 +490,6 @@ ifeq ($(strip $(LOCAL_NO_DEFAULT_COMPILER_FLAGS)),)
       endif
     endif
   endif
-=======
-ifeq ($(strip $(LOCAL_ALLOW_UNDEFINED_SYMBOLS)),)
-  LOCAL_LDFLAGS := $(LOCAL_LDFLAGS) $($(my_prefix)NO_UNDEFINED_LDFLAGS)
-endif
->>>>>>> origin
 endif
 
 ifeq (true,$(LOCAL_GROUP_STATIC_LIBRARIES))
@@ -684,30 +502,16 @@ endif
 ## Define arm-vs-thumb-mode flags.
 ###########################################################
 LOCAL_ARM_MODE := $(strip $(LOCAL_ARM_MODE))
-<<<<<<< HEAD
 ifeq ($($(my_prefix)$(LOCAL_2ND_ARCH_VAR_PREFIX)ARCH),arm)
-=======
-ifeq ($(TARGET_ARCH),arm)
-arm_objects_mode := $(if $(LOCAL_ARM_MODE),$(LOCAL_ARM_MODE),arm)
->>>>>>> origin
 normal_objects_mode := $(if $(LOCAL_ARM_MODE),$(LOCAL_ARM_MODE),thumb)
 
 # Read the values from something like TARGET_arm_CFLAGS or
 # TARGET_thumb_CFLAGS.  HOST_(arm|thumb)_CFLAGS values aren't
 # actually used (although they are usually empty).
-<<<<<<< HEAD
 normal_objects_cflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)$(my_prefix)$(normal_objects_mode)_CFLAGS)
 
 else
 normal_objects_mode :=
-=======
-arm_objects_cflags := $($(my_prefix)$(arm_objects_mode)_CFLAGS)
-normal_objects_cflags := $($(my_prefix)$(normal_objects_mode)_CFLAGS)
-else
-arm_objects_mode :=
-normal_objects_mode :=
-arm_objects_cflags :=
->>>>>>> origin
 normal_objects_cflags :=
 endif
 
@@ -724,7 +528,6 @@ else
   debug_cflags :=
 endif
 
-<<<<<<< HEAD
 ####################################################
 ## Keep track of src -> obj mapping
 ####################################################
@@ -1045,105 +848,12 @@ $(ll_lex_cpps): $(intermediates)/%$(LOCAL_CPP_EXTENSION): \
 $(call track-src-file-gen,$(ll_lex_sources),$(ll_lex_cpps))
 
 my_generated_sources += $(ll_lex_cpps)
-=======
-###########################################################
-## Stuff source generated from one-off tools
-###########################################################
-$(LOCAL_GENERATED_SOURCES): PRIVATE_MODULE := $(LOCAL_MODULE)
-
-ALL_GENERATED_SOURCES += $(LOCAL_GENERATED_SOURCES)
-
-
-###########################################################
-## Compile the .proto files to .cc and then to .o
-###########################################################
-proto_sources := $(filter %.proto,$(LOCAL_SRC_FILES))
-proto_generated_objects :=
-proto_generated_headers :=
-ifneq ($(proto_sources),)
-proto_sources_fullpath := $(addprefix $(LOCAL_PATH)/, $(proto_sources))
-proto_generated_cc_sources_dir := $(intermediates)/proto
-proto_generated_cc_sources := $(addprefix $(proto_generated_cc_sources_dir)/, \
-	$(patsubst %.proto,%.pb.cc,$(proto_sources_fullpath)))
-proto_generated_objects := $(patsubst %.cc,%.o, $(proto_generated_cc_sources))
-
-$(proto_generated_cc_sources): PRIVATE_PROTO_INCLUDES := $(TOP)
-$(proto_generated_cc_sources): PRIVATE_PROTO_CC_OUTPUT_DIR := $(proto_generated_cc_sources_dir)
-$(proto_generated_cc_sources): PRIVATE_PROTOC_FLAGS := $(LOCAL_PROTOC_FLAGS)
-$(proto_generated_cc_sources): $(proto_generated_cc_sources_dir)/%.pb.cc: %.proto $(PROTOC)
-	$(transform-proto-to-cc)
-
-proto_generated_headers := $(patsubst %.pb.cc,%.pb.h, $(proto_generated_cc_sources))
-$(proto_generated_headers): $(proto_generated_cc_sources_dir)/%.pb.h: $(proto_generated_cc_sources_dir)/%.pb.cc
-
-$(proto_generated_cc_sources): PRIVATE_ARM_MODE := $(normal_objects_mode)
-$(proto_generated_cc_sources): PRIVATE_ARM_CFLAGS := $(normal_objects_cflags)
-$(proto_generated_objects): $(proto_generated_cc_sources_dir)/%.o: $(proto_generated_cc_sources_dir)/%.cc
-	$(transform-$(PRIVATE_HOST)cpp-to-o)
--include $(proto_generated_objects:%.o=%.P)
-
-LOCAL_C_INCLUDES += external/protobuf/src $(proto_generated_cc_sources_dir)
-LOCAL_CFLAGS += -DGOOGLE_PROTOBUF_NO_RTTI
-ifeq ($(LOCAL_PROTOC_OPTIMIZE_TYPE),full)
-LOCAL_STATIC_LIBRARIES += libprotobuf-cpp-2.3.0-full
-else
-LOCAL_STATIC_LIBRARIES += libprotobuf-cpp-2.3.0-lite
-endif
-endif
-
-
-###########################################################
-## YACC: Compile .y files to .cpp and the to .o.
-###########################################################
-
-yacc_sources := $(filter %.y,$(LOCAL_SRC_FILES))
-yacc_cpps := $(addprefix \
-	$(intermediates)/,$(yacc_sources:.y=$(LOCAL_CPP_EXTENSION)))
-yacc_headers := $(yacc_cpps:$(LOCAL_CPP_EXTENSION)=.h)
-yacc_objects := $(yacc_cpps:$(LOCAL_CPP_EXTENSION)=.o)
-
-ifneq ($(strip $(yacc_cpps)),)
-$(yacc_cpps): $(intermediates)/%$(LOCAL_CPP_EXTENSION): \
-		$(TOPDIR)$(LOCAL_PATH)/%.y \
-		$(lex_cpps) $(LOCAL_ADDITIONAL_DEPENDENCIES)
-	$(call transform-y-to-cpp,$(PRIVATE_CPP_EXTENSION))
-$(yacc_headers): $(intermediates)/%.h: $(intermediates)/%$(LOCAL_CPP_EXTENSION)
-
-$(yacc_objects): PRIVATE_ARM_MODE := $(normal_objects_mode)
-$(yacc_objects): PRIVATE_ARM_CFLAGS := $(normal_objects_cflags)
-$(yacc_objects): $(intermediates)/%.o: $(intermediates)/%$(LOCAL_CPP_EXTENSION)
-	$(transform-$(PRIVATE_HOST)cpp-to-o)
-endif
-
-###########################################################
-## LEX: Compile .l files to .cpp and then to .o.
-###########################################################
-
-lex_sources := $(filter %.l,$(LOCAL_SRC_FILES))
-lex_cpps := $(addprefix \
-	$(intermediates)/,$(lex_sources:.l=$(LOCAL_CPP_EXTENSION)))
-lex_objects := $(lex_cpps:$(LOCAL_CPP_EXTENSION)=.o)
-
-ifneq ($(strip $(lex_cpps)),)
-$(lex_cpps): $(intermediates)/%$(LOCAL_CPP_EXTENSION): \
-		$(TOPDIR)$(LOCAL_PATH)/%.l
-	$(transform-l-to-cpp)
-
-$(lex_objects): PRIVATE_ARM_MODE := $(normal_objects_mode)
-$(lex_objects): PRIVATE_ARM_CFLAGS := $(normal_objects_cflags)
-$(lex_objects): $(intermediates)/%.o: \
-		$(intermediates)/%$(LOCAL_CPP_EXTENSION) \
-		$(LOCAL_ADDITIONAL_DEPENDENCIES) \
-		$(yacc_headers)
-	$(transform-$(PRIVATE_HOST)cpp-to-o)
->>>>>>> origin
 endif
 
 ###########################################################
 ## C++: Compile .cpp files to .o.
 ###########################################################
 
-<<<<<<< HEAD
 ifneq ($(filter %$(LOCAL_CPP_EXTENSION).arm,$(my_src_files)),)
 $(call pretty-error,Files ending in $(LOCAL_CPP_EXTENSION).arm are deprecated. See $(CHANGES_URL)#file_arm)
 endif
@@ -1173,36 +883,10 @@ endif
 
 cpp_objects += $(dotdot_objects)
 
-=======
-# we also do this on host modules, even though
-# it's not really arm, because there are files that are shared.
-cpp_arm_sources    := $(patsubst %$(LOCAL_CPP_EXTENSION).arm,%$(LOCAL_CPP_EXTENSION),$(filter %$(LOCAL_CPP_EXTENSION).arm,$(LOCAL_SRC_FILES)))
-cpp_arm_objects    := $(addprefix $(intermediates)/,$(cpp_arm_sources:$(LOCAL_CPP_EXTENSION)=.o))
-
-cpp_normal_sources := $(filter %$(LOCAL_CPP_EXTENSION),$(LOCAL_SRC_FILES))
-cpp_normal_objects := $(addprefix $(intermediates)/,$(cpp_normal_sources:$(LOCAL_CPP_EXTENSION)=.o))
-
-$(cpp_arm_objects):    PRIVATE_ARM_MODE := $(arm_objects_mode)
-$(cpp_arm_objects):    PRIVATE_ARM_CFLAGS := $(arm_objects_cflags)
-$(cpp_normal_objects): PRIVATE_ARM_MODE := $(normal_objects_mode)
-$(cpp_normal_objects): PRIVATE_ARM_CFLAGS := $(normal_objects_cflags)
-
-cpp_objects        := $(cpp_arm_objects) $(cpp_normal_objects)
-
-ifneq ($(strip $(cpp_objects)),)
-$(cpp_objects): $(intermediates)/%.o: \
-		$(TOPDIR)$(LOCAL_PATH)/%$(LOCAL_CPP_EXTENSION) \
-		$(yacc_cpps) $(proto_generated_headers) $(LOCAL_ADDITIONAL_DEPENDENCIES)
-	$(transform-$(PRIVATE_HOST)cpp-to-o)
--include $(cpp_objects:%.o=%.P)
-endif
-
->>>>>>> origin
 ###########################################################
 ## C++: Compile generated .cpp files to .o.
 ###########################################################
 
-<<<<<<< HEAD
 gen_cpp_sources := $(filter %$(LOCAL_CPP_EXTENSION),$(my_generated_sources))
 gen_cpp_objects := $(gen_cpp_sources:%$(LOCAL_CPP_EXTENSION)=%.o)
 $(call track-gen-file-obj,$(gen_cpp_sources),$(gen_cpp_objects))
@@ -1216,26 +900,12 @@ $(gen_cpp_objects): $(intermediates)/%.o: \
     $(my_additional_dependencies)
 	$(transform-$(PRIVATE_HOST)cpp-to-o)
 $(call include-depfiles-for-objs, $(gen_cpp_objects))
-=======
-gen_cpp_sources := $(filter %$(LOCAL_CPP_EXTENSION),$(LOCAL_GENERATED_SOURCES))
-gen_cpp_objects := $(gen_cpp_sources:%$(LOCAL_CPP_EXTENSION)=%.o)
-
-ifneq ($(strip $(gen_cpp_objects)),)
-# Compile all generated files as thumb.
-# TODO: support compiling certain generated files as arm.
-$(gen_cpp_objects): PRIVATE_ARM_MODE := $(normal_objects_mode)
-$(gen_cpp_objects): PRIVATE_ARM_CFLAGS := $(normal_objects_cflags)
-$(gen_cpp_objects): $(intermediates)/%.o: $(intermediates)/%$(LOCAL_CPP_EXTENSION) $(yacc_cpps) $(proto_generated_headers) $(LOCAL_ADDITIONAL_DEPENDENCIES)
-	$(transform-$(PRIVATE_HOST)cpp-to-o)
--include $(gen_cpp_objects:%.o=%.P)
->>>>>>> origin
 endif
 
 ###########################################################
 ## S: Compile generated .S and .s files to .o.
 ###########################################################
 
-<<<<<<< HEAD
 gen_S_sources := $(filter %.S,$(my_generated_sources))
 gen_S_objects := $(gen_S_sources:%.S=%.o)
 $(call track-gen-file-obj,$(gen_S_sources),$(gen_S_objects))
@@ -1265,33 +935,11 @@ $(gen_asm_objects): PRIVATE_ARM_CFLAGS := $(normal_objects_cflags)
 ###########################################################
 
 gen_o_objects := $(filter %.o,$(my_generated_sources))
-=======
-gen_S_sources := $(filter %.S,$(LOCAL_GENERATED_SOURCES))
-gen_S_objects := $(gen_S_sources:%.S=%.o)
-
-ifneq ($(strip $(gen_S_sources)),)
-$(gen_S_objects): $(intermediates)/%.o: $(intermediates)/%.S $(LOCAL_ADDITIONAL_DEPENDENCIES)
-	$(transform-$(PRIVATE_HOST)s-to-o)
--include $(gen_S_objects:%.o=%.P)
-endif
-
-gen_s_sources := $(filter %.s,$(LOCAL_GENERATED_SOURCES))
-gen_s_objects := $(gen_s_sources:%.s=%.o)
-
-ifneq ($(strip $(gen_s_objects)),)
-$(gen_s_objects): $(intermediates)/%.o: $(intermediates)/%.s $(LOCAL_ADDITIONAL_DEPENDENCIES)
-	$(transform-$(PRIVATE_HOST)s-to-o-no-deps)
--include $(gen_s_objects:%.o=%.P)
-endif
-
-gen_asm_objects := $(gen_S_objects) $(gen_s_objects)
->>>>>>> origin
 
 ###########################################################
 ## C: Compile .c files to .o.
 ###########################################################
 
-<<<<<<< HEAD
 ifneq ($(filter %.c.arm,$(my_src_files)),)
 $(call pretty-error,Files ending in .c.arm are deprecated. See $(CHANGES_URL)#file_arm)
 endif
@@ -1320,32 +968,10 @@ endif
 
 c_objects += $(dotdot_objects)
 
-=======
-c_arm_sources    := $(patsubst %.c.arm,%.c,$(filter %.c.arm,$(LOCAL_SRC_FILES)))
-c_arm_objects    := $(addprefix $(intermediates)/,$(c_arm_sources:.c=.o))
-
-c_normal_sources := $(filter %.c,$(LOCAL_SRC_FILES))
-c_normal_objects := $(addprefix $(intermediates)/,$(c_normal_sources:.c=.o))
-
-$(c_arm_objects):    PRIVATE_ARM_MODE := $(arm_objects_mode)
-$(c_arm_objects):    PRIVATE_ARM_CFLAGS := $(arm_objects_cflags)
-$(c_normal_objects): PRIVATE_ARM_MODE := $(normal_objects_mode)
-$(c_normal_objects): PRIVATE_ARM_CFLAGS := $(normal_objects_cflags)
-
-c_objects        := $(c_arm_objects) $(c_normal_objects)
-
-ifneq ($(strip $(c_objects)),)
-$(c_objects): $(intermediates)/%.o: $(TOPDIR)$(LOCAL_PATH)/%.c $(yacc_cpps) $(proto_generated_headers) $(LOCAL_ADDITIONAL_DEPENDENCIES)
-	$(transform-$(PRIVATE_HOST)c-to-o)
--include $(c_objects:%.o=%.P)
-endif
-
->>>>>>> origin
 ###########################################################
 ## C: Compile generated .c files to .o.
 ###########################################################
 
-<<<<<<< HEAD
 gen_c_sources := $(filter %.c,$(my_generated_sources))
 gen_c_objects := $(gen_c_sources:%.c=%.o)
 $(call track-gen-file-obj,$(gen_c_sources),$(gen_c_objects))
@@ -1358,26 +984,12 @@ $(gen_c_objects): $(intermediates)/%.o: $(intermediates)/%.c \
     $(my_additional_dependencies)
 	$(transform-$(PRIVATE_HOST)c-to-o)
 $(call include-depfiles-for-objs, $(gen_c_objects))
-=======
-gen_c_sources := $(filter %.c,$(LOCAL_GENERATED_SOURCES))
-gen_c_objects := $(gen_c_sources:%.c=%.o)
-
-ifneq ($(strip $(gen_c_objects)),)
-# Compile all generated files as thumb.
-# TODO: support compiling certain generated files as arm.
-$(gen_c_objects): PRIVATE_ARM_MODE := $(normal_objects_mode)
-$(gen_c_objects): PRIVATE_ARM_CFLAGS := $(normal_objects_cflags)
-$(gen_c_objects): $(intermediates)/%.o: $(intermediates)/%.c $(yacc_cpps) $(proto_generated_headers) $(LOCAL_ADDITIONAL_DEPENDENCIES)
-	$(transform-$(PRIVATE_HOST)c-to-o)
--include $(gen_c_objects:%.o=%.P)
->>>>>>> origin
 endif
 
 ###########################################################
 ## ObjC: Compile .m files to .o
 ###########################################################
 
-<<<<<<< HEAD
 objc_sources := $(filter %.m,$(my_src_files))
 objc_objects := $(addprefix $(intermediates)/,$(objc_sources:.m=.o))
 $(call track-src-file-obj,$(objc_sources),$(objc_objects))
@@ -1403,22 +1015,12 @@ $(objcpp_objects): $(intermediates)/%.o: $(TOPDIR)$(LOCAL_PATH)/%.mm \
     $(my_additional_dependencies)
 	$(transform-$(PRIVATE_HOST)mm-to-o)
 $(call include-depfiles-for-objs, $(objcpp_objects))
-=======
-objc_sources := $(filter %.m,$(LOCAL_SRC_FILES))
-objc_objects := $(addprefix $(intermediates)/,$(objc_sources:.m=.o))
-
-ifneq ($(strip $(objc_objects)),)
-$(objc_objects): $(intermediates)/%.o: $(TOPDIR)$(LOCAL_PATH)/%.m $(yacc_cpps) $(proto_generated_headers) $(LOCAL_ADDITIONAL_DEPENDENCIES)
-	$(transform-$(PRIVATE_HOST)m-to-o)
--include $(objc_objects:%.o=%.P)
->>>>>>> origin
 endif
 
 ###########################################################
 ## AS: Compile .S files to .o.
 ###########################################################
 
-<<<<<<< HEAD
 asm_sources_S := $(filter %.S,$(my_src_files))
 dotdot_sources := $(filter ../%,$(asm_sources_S))
 asm_sources_S := $(filter-out ../%,$(asm_sources_S))
@@ -1634,34 +1236,10 @@ my_2nd_arch_prefix := $(LOCAL_2ND_ARCH_VAR_PREFIX)
 my_common :=
 include $(BUILD_SYSTEM)/link_type.mk
 
-=======
-asm_sources_S := $(filter %.S,$(LOCAL_SRC_FILES))
-asm_objects_S := $(addprefix $(intermediates)/,$(asm_sources_S:.S=.o))
-
-ifneq ($(strip $(asm_objects_S)),)
-$(asm_objects_S): $(intermediates)/%.o: $(TOPDIR)$(LOCAL_PATH)/%.S $(LOCAL_ADDITIONAL_DEPENDENCIES)
-	$(transform-$(PRIVATE_HOST)s-to-o)
--include $(asm_objects_S:%.o=%.P)
-endif
-
-asm_sources_s := $(filter %.s,$(LOCAL_SRC_FILES))
-asm_objects_s := $(addprefix $(intermediates)/,$(asm_sources_s:.s=.o))
-
-ifneq ($(strip $(asm_objects_s)),)
-$(asm_objects_s): $(intermediates)/%.o: $(TOPDIR)$(LOCAL_PATH)/%.s $(LOCAL_ADDITIONAL_DEPENDENCIES)
-	$(transform-$(PRIVATE_HOST)s-to-o-no-deps)
--include $(asm_objects_s:%.o=%.P)
-endif
-
-asm_objects := $(asm_objects_S) $(asm_objects_s)
-
-
->>>>>>> origin
 ###########################################################
 ## Common object handling.
 ###########################################################
 
-<<<<<<< HEAD
 my_unused_src_files := $(filter-out $(logtags_sources) $(my_tracked_src_files),$(my_src_files) $(my_gen_src_files))
 ifneq ($(my_unused_src_files),)
   $(error $(LOCAL_MODULE_MAKEFILE): $(LOCAL_MODULE): Unused source files: $(my_unused_src_files))
@@ -1724,36 +1302,6 @@ $(normal_objects) : | $(my_generated_sources)
 $(all_objects) : $(import_includes)
 ALL_C_CPP_ETC_OBJECTS += $(all_objects)
 
-=======
-# some rules depend on asm_objects being first.  If your code depends on
-# being first, it's reasonable to require it to be assembly
-all_objects := \
-	$(asm_objects) \
-	$(cpp_objects) \
-	$(gen_cpp_objects) \
-	$(gen_asm_objects) \
-	$(c_objects) \
-	$(gen_c_objects) \
-	$(objc_objects) \
-	$(yacc_objects) \
-	$(lex_objects) \
-	$(proto_generated_objects) \
-	$(addprefix $(TOPDIR)$(LOCAL_PATH)/,$(LOCAL_PREBUILT_OBJ_FILES))
-
-LOCAL_C_INCLUDES += $(TOPDIR)$(LOCAL_PATH) $(intermediates) $(base_intermediates)
-
-ifndef LOCAL_NDK_VERSION
-  LOCAL_C_INCLUDES += $(JNI_H_INCLUDE)
-endif
-
-$(all_objects) : | $(LOCAL_GENERATED_SOURCES)
-ALL_C_CPP_ETC_OBJECTS += $(all_objects)
-
-###########################################################
-## Copy headers to the install tree
-###########################################################
-include $(BUILD_COPY_HEADERS)
->>>>>>> origin
 
 ###########################################################
 # Standard library handling.
@@ -1788,7 +1336,6 @@ include $(BUILD_COPY_HEADERS)
 so_suffix := $($(my_prefix)SHLIB_SUFFIX)
 a_suffix := $($(my_prefix)STATIC_LIB_SUFFIX)
 
-<<<<<<< HEAD
 ifneq ($(LOCAL_SDK_VERSION),)
 built_shared_libraries := \
     $(foreach lib,$(my_shared_libraries), \
@@ -1830,61 +1377,17 @@ built_static_libraries := \
         STATIC_LIBRARIES,$(lib),$(my_kind),,$(LOCAL_2ND_ARCH_VAR_PREFIX),$(my_host_cross))/$(lib)$(a_suffix))
 
 ifdef LOCAL_SDK_VERSION
-=======
-ifdef LOCAL_NDK_VERSION
-built_shared_libraries := \
-    $(addprefix $($(my_prefix)OUT_INTERMEDIATE_LIBRARIES)/, \
-      $(addsuffix $(so_suffix), \
-        $(LOCAL_SHARED_LIBRARIES)))
-
-ifeq ($(ENABLE_GLOBAL_PRELINK),1)
-# Prelinker creates dependencies on system libraries.
-built_system_shared_libraries := \
-    $(addprefix $($(my_prefix)OUT_INTERMEDIATE_LIBRARIES)/, \
-      $(addsuffix $(so_suffix), \
-        $(LOCAL_SYSTEM_SHARED_LIBRARIES)))
-endif
-
-my_system_shared_libraries_fullpath := \
-    $(my_ndk_stl_shared_lib_fullpath) \
-    $(addprefix $(my_ndk_version_root)/usr/lib/, \
-        $(addsuffix $(so_suffix), $(LOCAL_SYSTEM_SHARED_LIBRARIES)))
-
-built_shared_libraries += $(my_system_shared_libraries_fullpath)
-LOCAL_SHARED_LIBRARIES += $(LOCAL_SYSTEM_SHARED_LIBRARIES)
-else
-LOCAL_SHARED_LIBRARIES += $(LOCAL_SYSTEM_SHARED_LIBRARIES)
-built_shared_libraries := \
-    $(addprefix $($(my_prefix)OUT_INTERMEDIATE_LIBRARIES)/, \
-      $(addsuffix $(so_suffix), \
-        $(LOCAL_SHARED_LIBRARIES)))
-endif
-
-built_static_libraries := \
-    $(foreach lib,$(LOCAL_STATIC_LIBRARIES), \
-      $(call intermediates-dir-for, \
-        STATIC_LIBRARIES,$(lib),$(LOCAL_IS_HOST_MODULE))/$(lib)$(a_suffix))
-
-ifdef LOCAL_NDK_VERSION
->>>>>>> origin
 built_static_libraries += $(my_ndk_stl_static_lib)
 endif
 
 built_whole_libraries := \
-<<<<<<< HEAD
     $(foreach lib,$(my_whole_static_libraries), \
       $(call intermediates-dir-for, \
         STATIC_LIBRARIES,$(lib),$(my_kind),,$(LOCAL_2ND_ARCH_VAR_PREFIX),$(my_host_cross))/$(lib)$(a_suffix))
-=======
-    $(foreach lib,$(LOCAL_WHOLE_STATIC_LIBRARIES), \
-      $(call intermediates-dir-for, \
-        STATIC_LIBRARIES,$(lib),$(LOCAL_IS_HOST_MODULE))/$(lib)$(a_suffix))
->>>>>>> origin
 
 # We don't care about installed static libraries, since the
 # libraries have already been linked into the module at that point.
 # We do, however, care about the NOTICE files for any static
-<<<<<<< HEAD
 # libraries that we use. (see notice_files.mk)
 #
 # Don't do this in mm, since many of the targets won't exist.
@@ -1898,13 +1401,6 @@ endif
 
 $(notice_target): | $(installed_static_library_notice_file_targets)
 $(LOCAL_INSTALLED_MODULE): | $(notice_target)
-=======
-# libraries that we use. (see notice_files.make)
-
-installed_static_library_notice_file_targets := \
-    $(foreach lib,$(LOCAL_STATIC_LIBRARIES) $(LOCAL_WHOLE_STATIC_LIBRARIES), \
-      NOTICE-$(if $(LOCAL_IS_HOST_MODULE),HOST,TARGET)-STATIC_LIBRARIES-$(lib))
->>>>>>> origin
 
 # Default is -fno-rtti.
 ifeq ($(strip $(LOCAL_RTTI_FLAG)),)
@@ -1914,7 +1410,6 @@ endif
 ###########################################################
 # Rule-specific variable definitions
 ###########################################################
-<<<<<<< HEAD
 
 my_cflags += $(LOCAL_CLANG_CFLAGS)
 my_conlyflags += $(LOCAL_CLANG_CONLYFLAGS)
@@ -2222,36 +1717,19 @@ $(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_LDLIBS := $(my_ldlibs)
 $(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_TIDY_CHECKS := $(my_tidy_checks)
 $(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_TIDY_FLAGS := $(my_tidy_flags)
 $(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_ARFLAGS := $(my_arflags)
-=======
-$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_YACCFLAGS := $(LOCAL_YACCFLAGS)
-$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_ASFLAGS := $(LOCAL_ASFLAGS)
-$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_CFLAGS := $(LOCAL_CFLAGS)
-$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_CPPFLAGS := $(LOCAL_CPPFLAGS)
-$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_RTTI_FLAG := $(LOCAL_RTTI_FLAG)
-$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_DEBUG_CFLAGS := $(debug_cflags)
-$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_C_INCLUDES := $(LOCAL_C_INCLUDES)
-$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_LDFLAGS := $(LOCAL_LDFLAGS)
-$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_LDLIBS := $(LOCAL_LDLIBS)
-$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_NO_CRT := $(LOCAL_NO_CRT)
->>>>>>> origin
 
 # this is really the way to get the files onto the command line instead
 # of using $^, because then LOCAL_ADDITIONAL_DEPENDENCIES doesn't work
 $(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_ALL_SHARED_LIBRARIES := $(built_shared_libraries)
 $(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_ALL_STATIC_LIBRARIES := $(built_static_libraries)
 $(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_ALL_WHOLE_STATIC_LIBRARIES := $(built_whole_libraries)
-<<<<<<< HEAD
 $(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_ALL_OBJECTS := $(strip $(all_objects))
-=======
-$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_ALL_OBJECTS := $(all_objects)
->>>>>>> origin
 
 ###########################################################
 # Define library dependencies.
 ###########################################################
 # all_libraries is used for the dependencies on LOCAL_BUILT_MODULE.
 all_libraries := \
-<<<<<<< HEAD
     $(built_shared_library_deps) \
     $(my_system_shared_libraries_fullpath) \
     $(built_static_libraries) \
@@ -2337,14 +1815,3 @@ my_gcno_objects := \
 LOCAL_GCNO_FILES := $(patsubst %.o,%.gcno,$(my_gcno_objects))
 $(foreach f,$(my_gcno_objects),$(eval $(call gcno-touch-rule,$(f),$(f:.o=.gcno))))
 endif
-=======
-    $(built_system_shared_libraries) \
-    $(built_shared_libraries) \
-    $(built_static_libraries) \
-    $(built_whole_libraries)
-
-# Also depend on the notice files for any static libraries that
-# are linked into this module.  This will force them to be installed
-# when this module is.
-$(LOCAL_INSTALLED_MODULE): | $(installed_static_library_notice_file_targets)
->>>>>>> origin

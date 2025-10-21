@@ -81,7 +81,7 @@ split_line(const char* p, vector<string>* out)
                     state = TEXT;
                     break;
                 }
-                // otherwise fall-through to TEXT case
+                [[fallthrough]];
             case TEXT:
                 if (state != IN_QUOTE && isspace(*p)) {
                     if (q != p) {
@@ -425,8 +425,6 @@ list_dir(const string& path, const FileRecord& rec,
                 const vector<string>& excludes,
                 vector<FileRecord>* more)
 {
-    int err;
-
     string full = path_append(rec.sourceBase, rec.sourceName);
     full = path_append(full, path);
 
@@ -447,14 +445,7 @@ list_dir(const string& path, const FileRecord& rec,
             continue;
         }
         string entry = path_append(path, ent->d_name);
-#ifdef HAVE_DIRENT_D_TYPE
-		bool is_directory = (ent->d_type == DT_DIR);
-#else
-	    // If dirent.d_type is missing, then use stat instead
-		struct stat stat_buf;
-		stat(entry.c_str(), &stat_buf);
-		bool is_directory = S_ISDIR(stat_buf.st_mode);
-#endif
+        bool is_directory = (ent->d_type == DT_DIR);
         add_more(entry, is_directory, rec, more);
         if (is_directory) {
             dirs.push_back(entry);

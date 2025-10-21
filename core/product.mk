@@ -16,33 +16,23 @@
 
 #
 # Functions for including AndroidProducts.mk files
-<<<<<<< HEAD
 # PRODUCT_MAKEFILES is set up in AndroidProducts.mks.
 # Format of PRODUCT_MAKEFILES:
 # <product_name>:<path_to_the_product_makefile>
 # If the <product_name> is the same as the base file name (without dir
 # and the .mk suffix) of the product makefile, "<product_name>:" can be
 # omitted.
-=======
-#
->>>>>>> origin
 
 #
 # Returns the list of all AndroidProducts.mk files.
 # $(call ) isn't necessary.
 #
 define _find-android-products-files
-<<<<<<< HEAD
 $(file <$(OUT_DIR)/.module_paths/AndroidProducts.mk.list) \
-=======
-$(shell test -d device && find device -maxdepth 6 -name AndroidProducts.mk) \
-  $(shell test -d vendor && find vendor -maxdepth 6 -name AndroidProducts.mk) \
->>>>>>> origin
   $(SRC_TARGET_DIR)/product/AndroidProducts.mk
 endef
 
 #
-<<<<<<< HEAD
 # For entries returned by get-product-makefiles, decode an entry to a short
 # product name. These either may be in the form of <name>:path/to/file.mk or
 # path/to/<name>.mk
@@ -80,13 +70,10 @@ $(strip $(foreach choice,$(1),\
 endef
 
 #
-=======
->>>>>>> origin
 # Returns the sorted concatenation of PRODUCT_MAKEFILES
 # variables set in the given AndroidProducts.mk files.
 # $(1): the list of AndroidProducts.mk files.
 #
-<<<<<<< HEAD
 # As a side-effect, COMMON_LUNCH_CHOICES will be set to a
 # union of all of the COMMON_LUNCH_CHOICES definitions within
 # each AndroidProducts.mk file.
@@ -101,23 +88,12 @@ $(sort \
     $(eval include $(f)) \
     $(call _validate-common-lunch-choices,$(COMMON_LUNCH_CHOICES),$(PRODUCT_MAKEFILES)) \
     $(eval _COMMON_LUNCH_CHOICES += $(COMMON_LUNCH_CHOICES)) \
-=======
-define get-product-makefiles
-$(sort \
-  $(foreach f,$(1), \
-    $(eval PRODUCT_MAKEFILES :=) \
-    $(eval LOCAL_DIR := $(patsubst %/,%,$(dir $(f)))) \
-    $(eval include $(f)) \
->>>>>>> origin
     $(PRODUCT_MAKEFILES) \
    ) \
   $(eval PRODUCT_MAKEFILES :=) \
   $(eval LOCAL_DIR :=) \
-<<<<<<< HEAD
   $(eval COMMON_LUNCH_CHOICES := $(sort $(_COMMON_LUNCH_CHOICES))) \
   $(eval _COMMON_LUNCH_CHOICES :=) \
-=======
->>>>>>> origin
  )
 endef
 
@@ -130,7 +106,6 @@ define get-all-product-makefiles
 $(call get-product-makefiles,$(_find-android-products-files))
 endef
 
-<<<<<<< HEAD
 _product_var_list :=
 _product_var_list += PRODUCT_NAME
 _product_var_list += PRODUCT_MODEL
@@ -375,44 +350,6 @@ $(warning ==== $(1) ====)\
 $(foreach v,$(_product_var_list),\
 $(warning PRODUCTS.$(1).$(v) := $(PRODUCTS.$(1).$(v))))\
 $(warning --------)
-=======
-#
-# Functions for including product makefiles
-#
-
-_product_var_list := \
-    PRODUCT_NAME \
-    PRODUCT_MODEL \
-    PRODUCT_LOCALES \
-    PRODUCT_AAPT_CONFIG \
-    PRODUCT_AAPT_PREF_CONFIG \
-    PRODUCT_PACKAGES \
-    PRODUCT_DEVICE \
-    PRODUCT_MANUFACTURER \
-    PRODUCT_BRAND \
-    PRODUCT_PROPERTY_OVERRIDES \
-    PRODUCT_DEFAULT_PROPERTY_OVERRIDES \
-    PRODUCT_CHARACTERISTICS \
-    PRODUCT_COPY_FILES \
-    PRODUCT_OTA_PUBLIC_KEYS \
-    PRODUCT_EXTRA_RECOVERY_KEYS \
-    PRODUCT_PACKAGE_OVERLAYS \
-    DEVICE_PACKAGE_OVERLAYS \
-    PRODUCT_TAGS \
-    PRODUCT_SDK_ADDON_NAME \
-    PRODUCT_SDK_ADDON_COPY_FILES \
-    PRODUCT_SDK_ADDON_COPY_MODULES \
-    PRODUCT_SDK_ADDON_DOC_MODULES \
-    PRODUCT_DEFAULT_WIFI_CHANNELS \
-    PRODUCT_DEFAULT_DEV_CERTIFICATE \
-
-
-define dump-product
-$(info ==== $(1) ====)\
-$(foreach v,$(_product_var_list),\
-$(info PRODUCTS.$(1).$(v) := $(PRODUCTS.$(1).$(v))))\
-$(info --------)
->>>>>>> origin
 endef
 
 define dump-products
@@ -420,7 +357,6 @@ $(foreach p,$(PRODUCTS),$(call dump-product,$(p)))
 endef
 
 #
-<<<<<<< HEAD
 # Functions for including product makefiles
 #
 
@@ -468,25 +404,6 @@ define enforce-product-packages-exist
   $(eval .KATI_READONLY := PRODUCTS.$(current_mk).PRODUCT_ENFORCE_PACKAGES_EXIST) \
   $(eval .KATI_READONLY := PRODUCTS.$(current_mk).PRODUCT_ENFORCE_PACKAGES_EXIST_WHITELIST)
 endef
-=======
-# $(1): product to inherit
-#
-# Does three things:
-#  1. Inherits all of the variables from $1.
-#  2. Records the inheritance in the .INHERITS_FROM variable
-#  3. Records that we've visited this node, in ALL_PRODUCTS
-#
-define inherit-product
-  $(foreach v,$(_product_var_list), \
-      $(eval $(v) := $($(v)) $(INHERIT_TAG)$(strip $(1)))) \
-  $(eval inherit_var := \
-      PRODUCTS.$(strip $(word 1,$(_include_stack))).INHERITS_FROM) \
-  $(eval $(inherit_var) := $(sort $($(inherit_var)) $(strip $(1)))) \
-  $(eval inherit_var:=) \
-  $(eval ALL_PRODUCTS := $(sort $(ALL_PRODUCTS) $(word 1,$(_include_stack))))
-endef
-
->>>>>>> origin
 
 #
 # Do inherit-product only if $(1) exists
@@ -530,11 +447,7 @@ $(if ,, \
     $(eval pb := $(strip $(PRODUCTS.$(p).PRODUCT_BRAND))) \
     $(if $(pb),,$(error $(p): PRODUCT_BRAND must be defined.)) \
     $(foreach cf,$(strip $(PRODUCTS.$(p).PRODUCT_COPY_FILES)), \
-<<<<<<< HEAD
       $(if $(filter 2 3,$(words $(subst :,$(space),$(cf)))),, \
-=======
-      $(if $(filter 2,$(words $(subst :,$(space),$(cf)))),, \
->>>>>>> origin
         $(error $(p): malformed COPY_FILE "$(cf)") \
        ) \
      ) \
@@ -569,7 +482,6 @@ define resolve-short-product-name
 $(strip $(call _resolve-short-product-name,$(1)))
 endef
 
-<<<<<<< HEAD
 # BoardConfig variables that are also inherited in product mks. Should ideally
 # be cleaned up to not be product variables.
 _readonly_late_variables := \
@@ -635,76 +547,3 @@ $(eval _c := $(subst $(space),$(_PSMC_SP_PLACE_HOLDER),$(strip $(2))))\
 $(eval PRODUCT_SANITIZER_MODULE_CONFIGS += \
   $(foreach m,$(1),$(m)=$(_c)))
 endef
-=======
-
-_product_stash_var_list := $(_product_var_list) \
-	TARGET_ARCH \
-	TARGET_ARCH_VARIANT \
-	TARGET_BOARD_PLATFORM \
-	TARGET_BOARD_PLATFORM_GPU \
-	TARGET_BOOTLOADER_BOARD_NAME \
-	TARGET_COMPRESS_MODULE_SYMBOLS \
-	TARGET_NO_BOOTLOADER \
-	TARGET_NO_KERNEL \
-	TARGET_NO_RECOVERY \
-	TARGET_NO_RADIOIMAGE \
-	TARGET_HARDWARE_3D \
-	TARGET_PROVIDES_INIT_RC \
-	TARGET_CPU_ABI \
-	TARGET_CPU_ABI2 \
-	TARGET_CPU_SMP \
-
-
-_product_stash_var_list += \
-	BOARD_WPA_SUPPLICANT_DRIVER \
-	BOARD_WLAN_DEVICE \
-	BOARD_USES_GENERIC_AUDIO \
-	BOARD_KERNEL_CMDLINE \
-	BOARD_KERNEL_BASE \
-	BOARD_HAVE_BLUETOOTH \
-	BOARD_HAVE_BLUETOOTH_BCM \
-	BOARD_VENDOR_QCOM_AMSS_VERSION \
-	BOARD_VENDOR_USE_AKMD \
-	BOARD_EGL_CFG \
-	BOARD_BOOTIMAGE_PARTITION_SIZE \
-	BOARD_RECOVERYIMAGE_PARTITION_SIZE \
-	BOARD_SYSTEMIMAGE_PARTITION_SIZE \
-	BOARD_USERDATAIMAGE_PARTITION_SIZE \
-	BOARD_FLASH_BLOCK_SIZE \
-	BOARD_SYSTEMIMAGE_PARTITION_SIZE \
-	BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE \
-	BOARD_VENDOR_QCOM_GPS_LOC_API_AMSS_VERSION \
-	BOARD_INSTALLER_CMDLINE \
-
-
-_product_stash_var_list += \
-	DEFAULT_SYSTEM_DEV_CERTIFICATE
-
-#
-# Stash vaues of the variables in _product_stash_var_list.
-# $(1): Renamed prefix
-#
-define stash-product-vars
-$(foreach v,$(_product_stash_var_list), \
-        $(eval $(strip $(1))_$(call rot13,$(v)):=$$($$(v))) \
- )
-endef
-
-#
-# Assert that the the variable stashed by stash-product-vars remains untouched.
-# $(1): The prefix as supplied to stash-product-vars
-#
-define assert-product-vars
-$(strip \
-  $(eval changed_variables:=)
-  $(foreach v,$(_product_stash_var_list), \
-    $(if $(call streq,$($(v)),$($(strip $(1))_$(call rot13,$(v)))),, \
-        $(eval $(warning $(v) has been modified: $($(v)))) \
-        $(eval $(warning previous value: $($(strip $(1))_$(call rot13,$(v))))) \
-        $(eval changed_variables := $(changed_variables) $(v))) \
-   ) \
-  $(if $(changed_variables),\
-    $(eval $(error The following variables have been changed: $(changed_variables))),)
-)
-endef
->>>>>>> origin

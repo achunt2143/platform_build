@@ -16,7 +16,14 @@
 
 #
 # A central place to define mappings to paths, to avoid hard-coding
-# them in Android.mk files.
+# them in Android.mk files. Not meant for header file include directories,
+# despite the fact that it was historically used for that!
+#
+# If you want this for a library's header files, use LOCAL_EXPORT_C_INCLUDES
+# instead. Then users of the library don't have to do anything --- they'll
+# have the correct header files added to their include path automatically.
+#
+
 #
 # TODO: Allow each project to define stuff like this before the per-module
 #       Android.mk files are included, so we don't need to have a big central
@@ -27,31 +34,21 @@
 # A mapping from shorthand names to include directories.
 #
 pathmap_INCL := \
-    bluedroid:system/bluetooth/bluedroid/include \
-    bluez:external/bluetooth/bluez \
-    glib:external/bluetooth/glib \
-    bootloader:bootable/bootloader/legacy/include \
-    corecg:external/skia/include/core \
-    dbus:external/dbus \
+    camera:system/media/camera/include \
     frameworks-base:frameworks/base/include \
-    graphics:external/skia/include/core \
-    libc:bionic/libc/include \
-    libdrm1:frameworks/base/media/libdrm/mobile1/include \
+    frameworks-native:frameworks/native/include \
     libhardware:hardware/libhardware/include \
     libhardware_legacy:hardware/libhardware_legacy/include \
-    libhost:build/libs/host/include \
-    libm:bionic/libm/include \
-    libnativehelper:dalvik/libnativehelper/include \
-    libpagemap:system/extras/libpagemap/include \
     libril:hardware/ril/include \
-    libstdc++:bionic/libstdc++/include \
-    libthread_db:bionic/libthread_db/include \
-    mkbootimg:system/core/mkbootimg \
     recovery:bootable/recovery \
     system-core:system/core/include \
-    wilhelm:system/media/wilhelm/include \
-    wilhelm-ut:system/media/wilhelm/src/ut \
-    speex:external/speex/include
+    audio:system/media/audio/include \
+    audio-effects:system/media/audio_effects/include \
+    audio-utils:system/media/audio_utils/include \
+    audio-route:system/media/audio_route/include \
+    wilhelm:frameworks/wilhelm/include \
+    wilhelm-ut:frameworks/wilhelm/src/ut \
+    mediandk:frameworks/av/media/ndk/
 
 #
 # Returns the path to the requested module's include directory,
@@ -65,19 +62,8 @@ $(foreach n,$(1),$(patsubst $(n):%,%,$(filter $(n):%,$(pathmap_INCL))))
 endef
 
 #
-# Many modules expect to be able to say "#include <jni.h>",
-# so make it easy for them to find the correct path.
-#
-JNI_H_INCLUDE := $(call include-path-for,libnativehelper)/nativehelper
-
-#
 # A list of all source roots under frameworks/base, which will be
 # built into the android.jar.
-#
-# Note - "common" is included here, even though it is also built
-# into a static library (android-common) for unbundled use.  This
-# is so common and the other framework libraries can have mutual
-# interdependencies.
 #
 FRAMEWORKS_BASE_SUBDIRS := \
 	$(addsuffix /java, \
@@ -85,14 +71,18 @@ FRAMEWORKS_BASE_SUBDIRS := \
 	    graphics \
 	    location \
 	    media \
+	    media/mca/effect \
+	    media/mca/filterfw \
+	    media/mca/filterpacks \
 	    drm \
 	    opengl \
 	    sax \
+	    telecomm \
 	    telephony \
 	    wifi \
+	    lowpan \
 	    keystore \
-	    icu4j \
-	    voip \
+	    rs \
 	 )
 
 #
@@ -103,17 +93,3 @@ FRAMEWORKS_BASE_SUBDIRS := \
 #
 FRAMEWORKS_BASE_JAVA_SRC_DIRS := \
 	$(addprefix frameworks/base/,$(FRAMEWORKS_BASE_SUBDIRS))
-
-#
-# A list of all source roots under frameworks/support.
-#
-FRAMEWORKS_SUPPORT_SUBDIRS := \
-	v4 \
-	v13 \
-
-#
-# A version of FRAMEWORKS_SUPPORT_SUBDIRS that is expanded to full paths from
-# the root of the tree.
-#
-FRAMEWORKS_SUPPORT_JAVA_SRC_DIRS := \
-	$(addprefix frameworks/support/,$(FRAMEWORKS_SUPPORT_SUBDIRS))

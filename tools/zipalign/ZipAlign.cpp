@@ -19,14 +19,9 @@
  */
 #include "ZipFile.h"
 
-<<<<<<< HEAD
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-=======
-#include <stdlib.h>
-#include <stdio.h>
->>>>>>> origin
 
 using namespace android;
 
@@ -38,18 +33,12 @@ void usage(void)
     fprintf(stderr, "Zip alignment utility\n");
     fprintf(stderr, "Copyright (C) 2009 The Android Open Source Project\n\n");
     fprintf(stderr,
-<<<<<<< HEAD
         "Usage: zipalign [-f] [-p] [-v] [-z] <align> infile.zip outfile.zip\n"
         "       zipalign -c [-p] [-v] <align> infile.zip\n\n" );
-=======
-        "Usage: zipalign [-f] [-v] <align> infile.zip outfile.zip\n"
-        "       zipalign -c [-v] <align> infile.zip\n\n" );
->>>>>>> origin
     fprintf(stderr,
         "  <align>: alignment in bytes, e.g. '4' provides 32-bit alignment\n");
     fprintf(stderr, "  -c: check alignment only (does not modify file)\n");
     fprintf(stderr, "  -f: overwrite existing outfile.zip\n");
-<<<<<<< HEAD
     fprintf(stderr, "  -p: memory page alignment for stored shared object files\n");
     fprintf(stderr, "  -v: verbose output\n");
     fprintf(stderr, "  -z: recompress using Zopfli\n");
@@ -70,20 +59,13 @@ static int getAlignment(bool pageAlignSharedLibs, int defaultAlignment,
     }
 
     return defaultAlignment;
-=======
-    fprintf(stderr, "  -v: verbose output\n");
->>>>>>> origin
 }
 
 /*
  * Copy all entries from "pZin" to "pZout", aligning as needed.
  */
-<<<<<<< HEAD
 static int copyAndAlign(ZipFile* pZin, ZipFile* pZout, int alignment, bool zopfli,
     bool pageAlignSharedLibs)
-=======
-static int copyAndAlign(ZipFile* pZin, ZipFile* pZout, int alignment)
->>>>>>> origin
 {
     int numEntries = pZin->getNumEntries();
     ZipEntry* pEntry;
@@ -106,7 +88,6 @@ static int copyAndAlign(ZipFile* pZin, ZipFile* pZout, int alignment)
             //    pEntry->getFileName(), (long) pEntry->getFileOffset(),
             //    (long) pEntry->getUncompressedLen());
 
-<<<<<<< HEAD
             if (zopfli) {
                 status = pZout->addRecompress(pZin, pEntry, &pNewEntry);
                 bias += pNewEntry->getCompressedLen() - pEntry->getCompressedLen();
@@ -116,36 +97,21 @@ static int copyAndAlign(ZipFile* pZin, ZipFile* pZout, int alignment)
         } else {
             const int alignTo = getAlignment(pageAlignSharedLibs, alignment, pEntry);
 
-=======
-        } else {
->>>>>>> origin
             /*
              * Copy the entry, adjusting as required.  We assume that the
              * file position in the new file will be equal to the file
              * position in the original.
              */
-<<<<<<< HEAD
             off_t newOffset = pEntry->getFileOffset() + bias;
             padding = (alignTo - (newOffset % alignTo)) % alignTo;
-=======
-            long newOffset = pEntry->getFileOffset() + bias;
-            padding = (alignment - (newOffset % alignment)) % alignment;
->>>>>>> origin
 
             //printf("--- %s: orig at %ld(+%d) len=%ld, adding pad=%d\n",
             //    pEntry->getFileName(), (long) pEntry->getFileOffset(),
             //    bias, (long) pEntry->getUncompressedLen(), padding);
-<<<<<<< HEAD
             status = pZout->add(pZin, pEntry, padding, &pNewEntry);
         }
 
         if (status != OK)
-=======
-        }
-
-        status = pZout->add(pZin, pEntry, padding, &pNewEntry);
-        if (status != NO_ERROR)
->>>>>>> origin
             return 1;
         bias += padding;
         //printf(" added '%s' at %ld (pad=%d)\n",
@@ -161,11 +127,7 @@ static int copyAndAlign(ZipFile* pZin, ZipFile* pZout, int alignment)
  * output file exists and "force" wasn't specified.
  */
 static int process(const char* inFileName, const char* outFileName,
-<<<<<<< HEAD
     int alignment, bool force, bool zopfli, bool pageAlignSharedLibs)
-=======
-    int alignment, bool force)
->>>>>>> origin
 {
     ZipFile zin, zout;
 
@@ -184,17 +146,12 @@ static int process(const char* inFileName, const char* outFileName,
         return 1;
     }
 
-<<<<<<< HEAD
     if (zin.open(inFileName, ZipFile::kOpenReadOnly) != OK) {
-=======
-    if (zin.open(inFileName, ZipFile::kOpenReadOnly) != NO_ERROR) {
->>>>>>> origin
         fprintf(stderr, "Unable to open '%s' as zip archive\n", inFileName);
         return 1;
     }
     if (zout.open(outFileName,
             ZipFile::kOpenReadWrite|ZipFile::kOpenCreate|ZipFile::kOpenTruncate)
-<<<<<<< HEAD
         != OK)
     {
         fprintf(stderr, "Unable to open '%s' as zip archive\n", outFileName);
@@ -202,15 +159,6 @@ static int process(const char* inFileName, const char* outFileName,
     }
 
     int result = copyAndAlign(&zin, &zout, alignment, zopfli, pageAlignSharedLibs);
-=======
-        != NO_ERROR)
-    {
-        fprintf(stderr, "Unable to open '%s' as zip archive\n", inFileName);
-        return 1;
-    }
-
-    int result = copyAndAlign(&zin, &zout, alignment);
->>>>>>> origin
     if (result != 0) {
         printf("zipalign: failed rewriting '%s' to '%s'\n",
             inFileName, outFileName);
@@ -221,12 +169,8 @@ static int process(const char* inFileName, const char* outFileName,
 /*
  * Verify the alignment of a zip archive.
  */
-<<<<<<< HEAD
 static int verify(const char* fileName, int alignment, bool verbose,
     bool pageAlignSharedLibs)
-=======
-static int verify(const char* fileName, int alignment, bool verbose)
->>>>>>> origin
 {
     ZipFile zipFile;
     bool foundBad = false;
@@ -234,11 +178,7 @@ static int verify(const char* fileName, int alignment, bool verbose)
     if (verbose)
         printf("Verifying alignment of %s (%d)...\n", fileName, alignment);
 
-<<<<<<< HEAD
     if (zipFile.open(fileName, ZipFile::kOpenReadOnly) != OK) {
-=======
-    if (zipFile.open(fileName, ZipFile::kOpenReadOnly) != NO_ERROR) {
->>>>>>> origin
         fprintf(stderr, "Unable to open '%s' for verification\n", fileName);
         return 1;
     }
@@ -250,7 +190,6 @@ static int verify(const char* fileName, int alignment, bool verbose)
         pEntry = zipFile.getEntryByIndex(i);
         if (pEntry->isCompressed()) {
             if (verbose) {
-<<<<<<< HEAD
                 printf("%8jd %s (OK - compressed)\n",
                     (intmax_t) pEntry->getFileOffset(), pEntry->getFileName());
             }
@@ -262,29 +201,12 @@ static int verify(const char* fileName, int alignment, bool verbose)
                     printf("%8jd %s (BAD - %jd)\n",
                         (intmax_t) offset, pEntry->getFileName(),
                         (intmax_t) (offset % alignTo));
-=======
-                printf("%8ld %s (OK - compressed)\n",
-                    (long) pEntry->getFileOffset(), pEntry->getFileName());
-            }
-        } else {
-            long offset = pEntry->getFileOffset();
-            if ((offset % alignment) != 0) {
-                if (verbose) {
-                    printf("%8ld %s (BAD - %ld)\n",
-                        (long) offset, pEntry->getFileName(),
-                        offset % alignment);
->>>>>>> origin
                 }
                 foundBad = true;
             } else {
                 if (verbose) {
-<<<<<<< HEAD
                     printf("%8jd %s (OK)\n",
                         (intmax_t) offset, pEntry->getFileName());
-=======
-                    printf("%8ld %s (OK)\n",
-                        (long) offset, pEntry->getFileName());
->>>>>>> origin
                 }
             }
         }
@@ -305,11 +227,8 @@ int main(int argc, char* const argv[])
     bool check = false;
     bool force = false;
     bool verbose = false;
-<<<<<<< HEAD
     bool zopfli = false;
     bool pageAlignSharedLibs = false;
-=======
->>>>>>> origin
     int result = 1;
     int alignment;
     char* endp;
@@ -336,15 +255,12 @@ int main(int argc, char* const argv[])
             case 'v':
                 verbose = true;
                 break;
-<<<<<<< HEAD
             case 'z':
                 zopfli = true;
                 break;
             case 'p':
                 pageAlignSharedLibs = true;
                 break;
-=======
->>>>>>> origin
             default:
                 fprintf(stderr, "ERROR: unknown flag -%c\n", *cp);
                 wantUsage = true;
@@ -372,7 +288,6 @@ int main(int argc, char* const argv[])
 
     if (check) {
         /* check existing archive for correct alignment */
-<<<<<<< HEAD
         result = verify(argv[1], alignment, verbose, pageAlignSharedLibs);
     } else {
         /* create the new archive */
@@ -382,16 +297,6 @@ int main(int argc, char* const argv[])
         if (result == 0) {
             result = verify(argv[2], alignment, verbose, pageAlignSharedLibs);
         }
-=======
-        result = verify(argv[1], alignment, verbose);
-    } else {
-        /* create the new archive */
-        result = process(argv[1], argv[2], alignment, force);
-
-        /* trust, but verify */
-        if (result == 0)
-            result = verify(argv[2], alignment, verbose);
->>>>>>> origin
     }
 
 bail:

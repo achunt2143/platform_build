@@ -1,7 +1,6 @@
 ###########################################################
 ## Track NOTICE files
 ###########################################################
-<<<<<<< HEAD
 $(call record-module-type,NOTICE_FILE)
 
 ifneq ($(LOCAL_NOTICE_FILE),)
@@ -47,39 +46,21 @@ ifdef my_register_name
 ALL_MODULES.$(my_register_name).NOTICES := $(ALL_MODULES.$(my_register_name).NOTICES) $(notice_file)
 endif
 
-=======
-
-notice_file:=$(strip $(wildcard $(LOCAL_PATH)/NOTICE))
-
-ifdef notice_file
-
->>>>>>> origin
 # This relies on the name of the directory in PRODUCT_OUT matching where
 # it's installed on the target - i.e. system, data, etc.  This does
 # not work for root and isn't exact, but it's probably good enough for
 # compliance.
 # Includes the leading slash
 ifdef LOCAL_INSTALLED_MODULE
-<<<<<<< HEAD
   module_installed_filename := $(patsubst $(PRODUCT_OUT)/%,%,$(LOCAL_INSTALLED_MODULE))
 else
   # This module isn't installable
   ifneq ($(filter STATIC_LIBRARIES HEADER_LIBRARIES,$(LOCAL_MODULE_CLASS)),)
-=======
-  module_installed_filename := $(patsubst $(PRODUCT_OUT)%,%,$(LOCAL_INSTALLED_MODULE))
-else
-  # This module isn't installable
-  ifeq ($(LOCAL_MODULE_CLASS),STATIC_LIBRARIES)
->>>>>>> origin
     # Stick the static libraries with the dynamic libraries.
     # We can't use xxx_OUT_STATIC_LIBRARIES because it points into
     # device-obj or host-obj.
     module_installed_filename := \
-<<<<<<< HEAD
         $(patsubst $(PRODUCT_OUT)/%,%,$($(LOCAL_2ND_ARCH_VAR_PREFIX)$(my_prefix)OUT_SHARED_LIBRARIES))/$(notdir $(LOCAL_BUILT_MODULE))
-=======
-        $(patsubst $(PRODUCT_OUT)%,%,$($(my_prefix)OUT_SHARED_LIBRARIES))/$(notdir $(LOCAL_BUILT_MODULE))
->>>>>>> origin
   else
     ifeq ($(LOCAL_MODULE_CLASS),JAVA_LIBRARIES)
       # Stick the static java libraries with the regular java libraries.
@@ -87,7 +68,6 @@ else
       # javalib.jar is the default name for the build module (and isn't meaningful)
       # If that's what we have, substitute the module name instead.  These files
       # aren't included on the device, so this name is synthetic anyway.
-<<<<<<< HEAD
       ifneq ($(filter javalib.jar,$(module_leaf)),)
         module_leaf := $(LOCAL_MODULE).jar
       endif
@@ -96,29 +76,17 @@ else
     else ifeq ($(LOCAL_MODULE_CLASS),ETC)
       # ETC modules may be uninstallable, yet still have a NOTICE file. e.g. apex components
       module_installed_filename :=
-=======
-      ifeq ($(module_leaf),javalib.jar)
-        module_leaf := $(LOCAL_MODULE).jar
-      endif
-      module_installed_filename := \
-          $(patsubst $(PRODUCT_OUT)%,%,$($(my_prefix)OUT_JAVA_LIBRARIES))/$(module_leaf)
->>>>>>> origin
     else
       $(error Cannot determine where to install NOTICE file for $(LOCAL_MODULE))
     endif # JAVA_LIBRARIES
   endif # STATIC_LIBRARIES
 endif
 
-<<<<<<< HEAD
 ifdef module_installed_filename
 
 # In case it's actually a host file
 module_installed_filename := $(patsubst $(HOST_OUT)/%,%,$(module_installed_filename))
 module_installed_filename := $(patsubst $(HOST_CROSS_OUT)/%,%,$(module_installed_filename))
-=======
-# In case it's actually a host file
-module_installed_filename := $(patsubst $(HOST_OUT)%,%,$(module_installed_filename))
->>>>>>> origin
 
 installed_notice_file := $($(my_prefix)OUT_NOTICE_FILES)/src/$(module_installed_filename).txt
 
@@ -127,11 +95,7 @@ $(installed_notice_file): PRIVATE_INSTALLED_MODULE := $(module_installed_filenam
 $(installed_notice_file): $(notice_file)
 	@echo Notice file: $< -- $@
 	$(hide) mkdir -p $(dir $@)
-<<<<<<< HEAD
 	$(hide) cat $< > $@
-=======
-	$(hide) cat $< >> $@
->>>>>>> origin
 
 ifdef LOCAL_INSTALLED_MODULE
 # Make LOCAL_INSTALLED_MODULE depend on NOTICE files if they exist
@@ -140,7 +104,6 @@ ifdef LOCAL_INSTALLED_MODULE
 $(LOCAL_INSTALLED_MODULE): | $(installed_notice_file)
 endif
 
-<<<<<<< HEAD
 # To facilitate collecting NOTICE files for apps_only build,
 # we install the NOTICE file even if a module gets built but not installed,
 # because shared jni libraries won't be installed to the system image.
@@ -156,21 +119,11 @@ endif  # TARGET_BUILD_APPS
 
 endif  # module_installed_filename
 endif  # notice_file
-=======
-else
-# NOTICE file does not exist
-installed_notice_file :=
-endif
->>>>>>> origin
 
 # Create a predictable, phony target to build this notice file.
 # Define it even if the notice file doesn't exist so that other
 # modules can depend on it.
 notice_target := NOTICE-$(if \
-<<<<<<< HEAD
     $(LOCAL_IS_HOST_MODULE),HOST$(if $(my_host_cross),_CROSS,),TARGET)-$(LOCAL_MODULE_CLASS)-$(LOCAL_MODULE)
-=======
-    $(LOCAL_IS_HOST_MODULE),HOST,TARGET)-$(LOCAL_MODULE_CLASS)-$(LOCAL_MODULE)
->>>>>>> origin
 .PHONY: $(notice_target)
 $(notice_target): $(installed_notice_file)

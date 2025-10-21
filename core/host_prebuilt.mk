@@ -14,9 +14,6 @@
 # limitations under the License.
 #
 
-<<<<<<< HEAD
 $(call record-module-type,HOST_PREBUILT)
-=======
->>>>>>> origin
 LOCAL_IS_HOST_MODULE := true
 include $(BUILD_MULTI_PREBUILT)

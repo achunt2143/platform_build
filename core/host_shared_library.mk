@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 $(call record-module-type,HOST_SHARED_LIBRARY)
 LOCAL_IS_HOST_MODULE := true
 my_prefix := HOST_
@@ -39,34 +38,3 @@ my_module_arch_supported :=
 ## Copy headers to the install tree
 ###########################################################
 include $(BUILD_COPY_HEADERS)
-=======
-###########################################################
-## Standard rules for building a normal shared library.
-##
-## Additional inputs from base_rules.make:
-## None.
-##
-## LOCAL_MODULE_SUFFIX will be set for you.
-###########################################################
-
->>>>>>> origin
-LOCAL_IS_HOST_MODULE := true
-
-ifeq ($(strip $(LOCAL_MODULE_CLASS)),)
-LOCAL_MODULE_CLASS := SHARED_LIBRARIES
-endif
-ifeq ($(strip $(LOCAL_MODULE_SUFFIX)),)
-LOCAL_MODULE_SUFFIX := $(HOST_SHLIB_SUFFIX)
-endif
-ifneq ($(strip $(OVERRIDE_BUILT_MODULE_PATH)),)
-$(error $(LOCAL_PATH): Illegal use of OVERRIDE_BUILT_MODULE_PATH)
-endif
-
-# Put the built modules of all shared libraries in a common directory
-# to simplify the link line.
-OVERRIDE_BUILT_MODULE_PATH := $(HOST_OUT_INTERMEDIATE_LIBRARIES)
-
-include $(BUILD_SYSTEM)/binary.mk
-
-$(LOCAL_BUILT_MODULE): $(all_objects) $(all_libraries) $(LOCAL_ADDITIONAL_DEPENDENCIES)
-	$(transform-host-o-to-shared-lib)

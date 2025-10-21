@@ -1,9 +1,5 @@
 #
-<<<<<<< HEAD
 # Copyright (C) 2019 The Android Open Source Project
-=======
-# Copyright (C) 2007 The Android Open Source Project
->>>>>>> origin
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,10 +14,7 @@
 # limitations under the License.
 #
 
-# This is the list of product-level settings that are specific
-# to products that have telephony hardware.
-
-PRODUCT_PACKAGES := \
-    Mms
-
-PRODUCT_COPY_FILES := \
+# All modules for telephony
+$(call inherit-product, $(SRC_TARGET_DIR)/product/telephony_system.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/telephony_vendor.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/telephony_product.mk)
