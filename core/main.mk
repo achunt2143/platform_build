@@ -25,7 +25,6 @@ run_soong_ui:
 $(sort $(MAKECMDGOALS)) : run_soong_ui
 	@#empty
 
-else # KATI
 
 $(info [1/1] initializing build system ...)
 
