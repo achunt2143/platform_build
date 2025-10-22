@@ -16,7 +16,6 @@ ifeq ($(shell uname),Darwin)
 host_prebuilts := darwin-x86
 endif
 endif
->>>>>>> origin
 
 .PHONY: run_soong_ui
 run_soong_ui:
