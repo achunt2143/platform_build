@@ -275,7 +275,6 @@ endif
 
 SDK_HOST_ARCH := x86
 TARGET_OS := linux
->>>>>>> origin
 
 include $(BUILD_SYSTEM)/board_config.mk
 
