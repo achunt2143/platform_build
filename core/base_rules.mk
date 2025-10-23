@@ -555,7 +555,6 @@ ifdef LOCAL_CHECKED_MODULE
 else
   my_checked_module := $(LOCAL_BUILT_MODULE)
 endif
->>>>>>> origin
 
 my_checked_module += $(LOCAL_ADDITIONAL_CHECKED_MODULE)
 
