@@ -15,7 +15,6 @@ host_prebuilts := linux-x86
 ifeq ($(shell uname),Darwin)
 host_prebuilts := darwin-x86
 endif
-endif
 
 .PHONY: run_soong_ui
 run_soong_ui:
@@ -25,8 +24,7 @@ run_soong_ui:
 $(sort $(MAKECMDGOALS)) : run_soong_ui
 	@#empty
 
-
-$(info [1/1] initializing build system ...)
+else # KATI
 
 # Absolute path of the present working direcotry.
 # This overrides the shell variable $PWD, which does not necessarily points to
